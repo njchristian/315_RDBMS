@@ -1,40 +1,40 @@
-#ifndef DATABASE_H
-#define DATABASE_H
+#ifndef DATABASE_H_
+#define DATABASE_H_
 
-#include <iostream>
+#include "Relation.h"
+#include "Type.h"
 #include <vector>
 
-using namespace std;
-class Relation {};
-class Entry {};
-class Condition{};
+class Database{
 
-class Database
-{
+	vector<Relation> relations; //might need to be public
+
+
+
 public:
 	Database( ) { };
 	~Database( ) { };
 
 	//no idea what the arguments should be
-	void addRelationToDatabase( Relation );
-	void addAttributeToRelation( Entry );
-	void addTupleToAttribute( Entry );
+	void addRelationToDatabase(  );
+	void addAttributeToRelation( );
+	void addTupleToAttribute(  );
 
-	void removeRelation( Relation );
-	void removeAttributeFromRelation( Entry );
-	void removeTupleFromAttribute( Entry );
+	void removeRelation(  );
+	void removeAttributeFromRelation(  );
+	void removeTupleFromAttribute( );
 
 	int findRelationinDatabase( );
 	Relation accessRelation( );
-	
+
 	int findAttribute( );
 	Entry accessAttribute( );
 
 	int findTuple( );
 	Entry accessTuple( );
-	
+
 	//print the tuples that satisfy an condition
-	vector<Entry> selection( Condition ); //i don't know how to pass an conidtion
+	vector<Entry> selection(  ); //i don't know how to pass an conidtion
 
 	//subset of attributes in a relation
 	vector<Entry> projection( );
@@ -51,10 +51,7 @@ public:
 	//cross product of two relations given their in index
 	void crossProduct( int relationA, int relationB );
 
-private:
-	vector<Relation> relations; //might need to be public
 
 };
-
 
 #endif
