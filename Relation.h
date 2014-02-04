@@ -14,9 +14,13 @@ class Relation{
 
 public:
 
-	Relation(string givenName, vector<string> givenAttributes, vector<int> givenKeys)
+	Relation(string givenName, vector<Attribute> givenAttributes, vector<int> givenKeys)
 		: relationName(givenName), attributes(givenAttributes), keys(givenKeys){}
 
+	Relation( vector<Attribute> givenAttributes ) : attributes(givenAttributes) {}
+		
+	string getName(){ return relationName; }
+		
 	vector<string> getAttributes(){ return attributes; }
 	vector<vector<Entry>> getAllEntries() { return table; }
 	vector<Entry> getRow(int index){ return table.at(index); }
@@ -29,7 +33,7 @@ public:
 		table.push_back(newRow);
 	}
 
-
+	
 
 };
 
