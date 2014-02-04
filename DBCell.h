@@ -9,6 +9,9 @@ class DBCell{
 
 	Parser parser;
 	Database database;
+	
+	//user defined relations
+	vector<Relation> localRelations;
 
 public:
 

@@ -1,13 +1,26 @@
 #include "Database.h"
 
-void Database::addRelationToDatabase( Relation ) {
+Relation& findRelation( string relationName ){
+
+	
+	
+}
+
+//the parser passes this function a list of attributes (name and type)
+void Database::addRelationToDatabase( vector<Attribute> attributes ) {
+	
+	relations.push_back(Relation(attributes));
 
 }
 
 void Database::addAttributeToRelation( Entry ) {
 
+	
 }
-void Database::addTupleToAttribute( Entry ) {
+
+void Database::addTupleToRelation( vector<Entry> tuple, string relationName ) {
+
+	
 
 }
 
@@ -23,12 +36,6 @@ void Database::removeTupleFromAttribute( Entry ) {
 
 }
 
-int Database::findRelationinDatabase( ) {
-
-	int index = 0;
-
-	return index;
-}
 
 Relation Database::accessRelation( ) {
 
@@ -76,9 +83,22 @@ vector<Entry> Database::selection( Condition ) { //i don't know how to pass an c
 }
 
 //subset of attributes in a relation
-vector<Entry> Database::projection( ) {
+Relation Database::projection( string relationName, vector<string> attributeNames ) {
 
-	vector<Entry> createdRelation;
+	//get types of attributes
+
+	//create new relation with attribute names and types
+	Relation createdRelation(;
+	
+	
+	
+	Relation& r = findRelation(relationName);
+	
+	//go through row by row and add new tuples with target values
+	
+
+
+	
 
 	return createdRelation;
 }
