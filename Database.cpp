@@ -1,8 +1,17 @@
 #include "Database.h"
 
-Relation& findRelation( string relationName ){
+Relation* Database::findRelation( string relationName ){
 
+	Relation* foundRelation = NULL:
+	int i;
+	for( i=0; i<relations.size(); ++i ){
+		if( relations[ i ].getName() == relationName ){
+			foundRelation = relation[ i ];
+			break; //i hope there are no duplicates
+		}
+	}
 	
+	return foundRelation;
 	
 }
 

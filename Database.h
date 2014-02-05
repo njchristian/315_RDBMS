@@ -10,7 +10,7 @@ class Database{
 
 	vector<Relation> relations; //might need to be public
 
-	Relation& findRelation(string relationName);
+	Relation* findRelation(string relationName);
 
 public:
 	Database( ) { };
