@@ -1,0 +1,1 @@
+enum Connector{AND, OR, NONE};

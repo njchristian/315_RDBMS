@@ -36,10 +36,14 @@ public:
 	vector<string> getAttributes(){ return attributes; }
 
 	string getName(){ return relationName; }
-
+	string getAttributeNameAt(int i){ return attributes.at(i).name;}
+	
+	int attributeSize(){ return attributes.size(); }
+	
 	vector<Entry> getRow(int index){ return table.at(index); }
 
-
+	Entry getEntry(int i, int j){ return table.at(i).at(j); }
+	
 };
 
 #endif
