@@ -34,6 +34,10 @@ public:
 		return intEntry;
 	}
 
+	Type getEntryType(){
+		return t;
+	}
+
 	string getEntryVC(){
 		return vcEntry;
 	}
