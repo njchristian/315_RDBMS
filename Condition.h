@@ -1,10 +1,12 @@
 #include "Entry.h"
+#include "Connector.h"
 
 enum Operation{EQUALS, GR, GREQ, LE, LEEQ, NEQ};
 
-enum Connector{AND, OR, NONE};
-
 class Condition{
+
+	bool isLiteral;
+	bool lit;
 
 	//Operand1
 	bool isVar1;
@@ -25,7 +27,9 @@ class Condition{
 	Connector c;
 	
 	// Constructor
-	Condition(Operation givenOperation, Entry givenOperand) : o(givenOperation), operand(givenOperand){ }
+	Condition(Operation givenOperation, Entry givenOperand) : o(givenOperation), operand(givenOperand){
+		isLiteral = false;
+	}
 	
 	// Functions
 	bool firstIsVar(){return isVar1;}
@@ -54,25 +58,28 @@ class Condition{
 	}
 	
 	int getPriority(){ return priority; }
+	void decPriority(){ priority-=1; }
 	
+	void setLiteral(bool l){ lit = l;}
+	void setConnector(Connector c){ connector = c;}
 	
-	bool eval(Entry firstOperand){
+	Connector getConnector(){ return connector; }
 	
-	
-	
-
-	
-	
+	bool eval(){
 	
 	//if integer argument do one switch
 	
 	
-	if(firstOperand.getEntryType() == INTEGER) {
+	if(operand1.getEntryType() == INTEGER) {
+	
+	int a = operand1.getEntryI();
+	int b = operand2.getEntryI();
 	
 		switch (o){
 		
 		case EQUALS:
-
+			//LIKEWISE FOR THE REST OF THE FUNCTION
+			lit = (a==b);
 			break;
 		case GR:
 
@@ -112,8 +119,7 @@ class Condition{
 	
 	
 	
-	
-	//....Finish later
+	isLit = true;
 
 };
 
