@@ -7,6 +7,7 @@
 
 class DBCell{
 
+	// Data Members
 	Parser parser;
 	Database database;
 	
@@ -15,6 +16,7 @@ class DBCell{
 
 public:
 
+	// Public Functions
 	//...for example. This can be edited later
 	void execute(string dmlCommand);
 

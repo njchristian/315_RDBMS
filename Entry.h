@@ -9,12 +9,14 @@ using namespace std;
 
 class Entry{
 
+	// Data Members
 	Type t;
 	int intEntry;
 	string vcEntry;
 
 public:
 
+	// Constructors
 	Entry(){}
 	Entry(int givenInt) : intEntry(givenInt) {
 		t = INTEGER;
@@ -23,6 +25,7 @@ public:
 		t = VARCHAR;
 	}
 
+	// Public Functions
 	bool isInt(){
 		return t==INTEGER;
 	}

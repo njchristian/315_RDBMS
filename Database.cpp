@@ -1,5 +1,7 @@
 #include "Database.h"
 
+// Private Functions
+
 Relation* Database::findRelation( string relationName ){
 
 	Relation* foundRelation = NULL:
@@ -7,7 +9,7 @@ Relation* Database::findRelation( string relationName ){
 	for( i=0; i<relations.size(); ++i ){
 		if( relations[ i ].getName() == relationName ){
 			foundRelation = relation[ i ];
-			break; //i hope there are no duplicates
+			break; //i hope there are no duplicates. is there a possibility for duplicates?
 		}
 	}
 	
@@ -15,51 +17,10 @@ Relation* Database::findRelation( string relationName ){
 	
 }
 
-//the parser passes this function a list of attributes (name and type)
-void Database::addRelationToDatabase( vector<Attribute> attributes ) {
-	
-	relations.push_back(Relation(attributes));
+// ---------------------------------------------------------------------------------------
+// Public Functions
 
-}
-
-void Database::addAttributeToRelation( Entry ) {
-
-	
-}
-
-void Database::addTupleToRelation( vector<Entry> tuple, string relationName ) {
-
-	
-
-}
-
-void Database::removeRelation( Relation ) {
-
-}
-
-void Database::removeAttributeFromRelation( Entry ) {
-
-}
-
-void Database::removeTupleFromAttribute( Entry ) {
-
-}
-
-
-Relation Database::accessRelation( ) {
-
-	Relation relation;
-	
-	return relation;
-}
-	
-int Database::findAttribute( ) {
-
-	int index = 0;
-
-	return index;
-}
-
+//
 Entry Database::accessAttribute( ) {
 
 	Entry entry; //attribute
@@ -68,6 +29,72 @@ Entry Database::accessAttribute( ) {
 
 }
 
+
+//
+Relation Database::accessRelation( ) {
+
+	Relation relation;
+	
+	return relation;
+}
+
+
+//
+Entry Database::accessTuple( ) {
+
+	Entry entry;
+
+	return entry;
+}
+
+
+// why does this take an entry as an argument instead of an attribute?? -Taylor
+void Database::addAttributeToRelation( Entry ) {
+
+	
+}
+
+
+//the parser passes this function a list of attributes (name and type)
+void Database::addRelationToDatabase( vector<Attribute> attributes ) {
+	
+	relations.push_back(Relation(attributes));
+
+}
+
+
+// Add the row (which is a tuple) into the specified relation.
+void Database::addTupleToRelation( vector<Entry> tuple, string relationName ) {
+
+	// find the correct relation
+
+	// push_back the tuple into it
+
+}
+
+
+//cross product of two relations given their in index
+void Database::crossProduct( int relationA, int relationB ){
+
+}
+
+
+//difference of two relations given their in index
+void Database::differenceTwoRelation( int relationA, int relationB ) {
+
+}
+
+
+// 	
+int Database::findAttribute( ) {
+
+	int index = 0;
+
+	return index;
+}
+
+
+//
 int Database::findTuple( ) {
 
 	int index = 0;
@@ -76,20 +103,6 @@ int Database::findTuple( ) {
 
 }
 
-Entry Database::accessTuple( ) {
-
-	Entry entry;
-
-	return entry;
-}
-	
-//print the tuples that satisfy an condition
-vector<Entry> Database::selection( Condition ) { //i don't know how to pass an conidtion
-
-	vector<Entry> createdRelation;
-
-	return createdRelation;
-}
 
 //subset of attributes in a relation
 Relation Database::projection( string relationName, vector<string> attributeNames ) {
@@ -113,22 +126,43 @@ Relation Database::projection( string relationName, vector<string> attributeName
 }
 
 
+//
+void Database::removeRelation( Relation ) {
+
+}
+
+
+//
+void Database::removeAttributeFromRelation( Entry ) {
+
+}
+
+
+//
+void Database::removeTupleFromAttribute( Entry ) {
+
+}
+
+
 //renaming an attribute in a relation
 void Database::renamingAnAttribute( ) {
 
 }
+
+
+//print the tuples that satisfy an condition
+vector<Entry> Database::selection( Condition ) { //i don't know how to pass an conidtion
+
+	vector<Entry> createdRelation;
+
+	return createdRelation;
+}
+
 
 //union two Relation given their index in relations
 void Database::unionTwoRelations( int relationA, int relationB ) {
 
 }
 
-//difference of two relations given their in index
-void Database::differenceTwoRelation( int relationA, int relationB ) {
 
-}
 
-//cross product of two relations given their in index
-void Database::crossProduct( int relationA, int relationB ){
-
-}
