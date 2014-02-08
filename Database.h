@@ -4,20 +4,24 @@
 #include "Relation.h"
 #include "Attribute.h"
 #include "Type.h"
+#include "ConditionList.h"
+#include "Condition.h"
 #include <vector>
 
 class Database {
 
+	//It might be useful to have a relation which we use to store results
+	Relation result;
+
 	// Data Members
-	vector<Relation> relations; //might need to be public
+	vector<Relation*> relations; //might need to be public
 
 	// Private Functions
 	Relation* findRelation( string relationName );
 
 public:
 	// Constructor & Destructor
-	Database( ) {};
-	~Database( ) {};
+	Database( ) {}
 
 	// Public Functions
 
@@ -28,7 +32,7 @@ public:
 	Entry accessTuple( );
 
 	//no idea what the arguments should be
-	void addRelationToDatabase( vector<Attribute> attributes );
+	void addRelationToDatabase( string name, vector<Attribute> attributes, vector<int> keys );
 
 	//void addAttributeToRelation(  );
 	void addTupleToRelation( vector<Entry> tuple, string relationName );
@@ -50,15 +54,13 @@ public:
 	//returns a Relation of all entries in each of the attributes
 	Relation projection( string relationName, vector<string> attributeNames );
 
-	void removeRelation( Relation relationToRemove );
-
 	void removeTupleFromRelation(  );
 
 	//renaming an attribute in a relation
 	void renameAttributes( vector<string> newNames, Relation& correctRelation );
 
 	//print the tuples that satisfy an condition
-	vector<Entry> selection( /* need parameter(s) */ ); //i don't know how to pass an conidtion
+	Relation selection( vector<Condition>, string targetRelationName ); //i don't know how to pass an conidtion
 
 	//union two Relation given their index in relations
 	Relation unionTwoRelations( Relation& relationA, Relation& relationB );

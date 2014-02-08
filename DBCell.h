@@ -1,3 +1,6 @@
+#ifndef DBCELL_H_
+#define DBCELL_H_
+
 #include "Parser.h"
 #include "Database.h"
 
@@ -21,3 +24,5 @@ public:
 	void execute(string dmlCommand);
 
 };
+
+#endif

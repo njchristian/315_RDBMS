@@ -1,9 +1,15 @@
+#ifndef ATTRIBUTE_H_
+#define ATTRIBUTE_H_
+
 #include "Type.h"
-#include <string>
 
 struct Attribute{
 
 	Type t;
-	std::string name;
+	string name;
+
+	Attribute(string n, Type ty) : t(ty), name(n) {}
 
 };
+
+#endif

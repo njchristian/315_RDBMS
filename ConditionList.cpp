@@ -70,13 +70,13 @@
 						i->setLiteral( i->getLiteral() && next->getLiteral());
 						i->decPriority();
 						i->setConnector(next->getConnector());
-						conditions.erase(next);
+						localConditions.erase(next);
 						break;
 					case (OR):
 						i->setLiteral( i->getLiteral() || next->getLiteral());
 						i->decPriority();
 						i->setConnector(next->getConnector());
-						conditions.erase(next);
+						localConditions.erase(next);
 						break;
 					case (NONE):
 						break;

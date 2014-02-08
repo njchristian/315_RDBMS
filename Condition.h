@@ -1,3 +1,6 @@
+#ifndef CONDITION_H_
+#define CONDITION_H_
+
 #include "Entry.h"
 #include "Connector.h"
 
@@ -24,12 +27,22 @@ class Condition{
 	// Data Members
 	Operation o;
 	
-	Connector c;
-	
-	// Constructor
-	Condition(Operation givenOperation, Entry givenOperand) : o(givenOperation), operand(givenOperand){
-		isLiteral = false;
-	}
+	Connector connector;
+
+	int priority;
+
+public:
+
+	// Constructors
+
+	//two literals (Rarely Used..)
+	Condition(Entry o1, Operation givenOp, Entry o2, Connector givenC, int p);
+	//var, lit
+	Condition(string var1, Operation givenOp, Entry o2, Connector givenC, int p);
+	//lit, var
+	Condition(Entry o1, Operation givenOp, string var2, Connector givenC, int p);
+	//var, var
+	Condition(string var1, Operation givenOp, string var2, Connector givenC, int p);
 	
 	// Functions
 	bool firstIsVar(){return isVar1;}
@@ -60,68 +73,13 @@ class Condition{
 	int getPriority(){ return priority; }
 	void decPriority(){ priority-=1; }
 	
-	void setLiteral(bool l){ lit = l;}
+	void setLiteral(bool l){ lit = l; }
 	void setConnector(Connector c){ connector = c;}
 	
+	bool getLiteral(){ return lit; }
 	Connector getConnector(){ return connector; }
 	
-	bool eval(){
-	
-	//if integer argument do one switch
-	
-	
-	if(operand1.getEntryType() == INTEGER) {
-	
-	int a = operand1.getEntryI();
-	int b = operand2.getEntryI();
-	
-		switch (o){
-		
-		case EQUALS:
-			//LIKEWISE FOR THE REST OF THE FUNCTION
-			lit = (a==b);
-			break;
-		case GR:
-
-			break;
-		case GREQ:
-
-			break;
-		case LE:
-
-			break;
-		case LEEQ:
-
-			break;
-		case NEQ:
-
-			break;					
-		default:
-			cout << "Something went wrong...\n";
-			break; // might not need this break
-		}
-	
-	}
-	//else do other switch for strings. We just need equals and not equals right!?
-	else {
-		switch (o) {
-			case EQUALS:
-
-				break;
-			case NEQ:
-			
-				break;	
-			default:
-				cout << "Invalid operation for strings.\n";
-				break;	
-		}
-	}
-	
-	
-	
-	isLit = true;
-
+	void eval();
 };
 
-
-
+#endif

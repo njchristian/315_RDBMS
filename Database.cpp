@@ -1,14 +1,15 @@
 #include "Database.h"
 
+
 // Private Functions
 
 Relation* Database::findRelation( string relationName ){
 
-	Relation* foundRelation = NULL;
+	Relation* foundRelation;
 	int i;
 	for( i=0; i<relations.size(); ++i ){
-		if( relations[ i ].getName() == relationName ){
-			foundRelation = &relations[ i ];
+		if( relations[ i ]->getName() == relationName ){
+			foundRelation = relations[ i ];
 			break; //i hope there are no duplicates. is there a possibility for duplicates?
 		}
 	}
@@ -49,9 +50,11 @@ Entry Database::accessTuple( ) {
 
 
 //the parser passes this function a list of attributes (name and type)
-void Database::addRelationToDatabase( vector<Attribute> attributes ) {
+void Database::addRelationToDatabase( string name, vector<Attribute> attributes, vector<int> keys ) {
 	
-	relations.push_back(Relation(attributes));
+	Relation* newRelation = new Relation(name, attributes, keys);
+
+	relations.push_back(newRelation);
 
 }
 
@@ -59,22 +62,29 @@ void Database::addRelationToDatabase( vector<Attribute> attributes ) {
 // Add the row (which is a tuple) into the specified relation.
 void Database::addTupleToRelation( vector<Entry> tuple, string relationName ) {
 
-	// find the correct relation
+	Relation* targetRelation = findRelation(relationName);
 
-	// push_back the tuple into it
+	vector<Entry*> newRow;
+
+	for(int i = 0; i < tuple.size(); i++){
+		newRow.push_back(new Entry(tuple.at(i)));
+	}
+
+	targetRelation->addRow(newRow);
 
 }
 
 
 //cross product of two relations given their in index
 Relation Database::crossProduct( Relation& relationA, Relation& relationB ){
-
+	return result;
 }
 
 
 //difference of two relations given their in index
 Relation Database::differenceTwoRelation( Relation& relationA, Relation& relationB ) {
 
+	return result;
 }
 
 
@@ -107,7 +117,7 @@ Relation Database::projection( string relationName, vector<string> attributeName
 	
 	
 	// find relation returns a Relation pointer, does it need to change or this??
-	Relation& r = findRelation(relationName);
+	Relation* r = findRelation(relationName);
 	
 	//go through row by row and add new tuples with target values
 	
@@ -116,12 +126,6 @@ Relation Database::projection( string relationName, vector<string> attributeName
 	
 
 	return createdRelation;
-}
-
-
-//
-void Database::removeRelation( Relation relationToRemove ) {
-
 }
 
 
@@ -138,17 +142,38 @@ void Database::renameAttributes( vector<string> newNames, Relation& correctRelat
 
 
 //print the tuples that satisfy an condition
-vector<Entry> Database::selection( /* need parameter(s) */ ) { //i don't know how to pass a condition
+Relation Database::selection( vector<Condition> conditions, string targetRelationName ) {
 
-	vector<Entry> createdRelation;
+	Relation* targetRelation = findRelation(targetRelationName);
 
-	return createdRelation;
+	result.clear();
+
+	ConditionList cl = ConditionList(conditions, targetRelation);
+
+	for(int i = 0; i < targetRelation->getNumTubles(); i++){
+
+		if( cl.evalOnTuple(i) ){
+
+			vector<Entry*> newRow;
+
+			for(int j = 0; j < targetRelation->attributeSize(); j++){
+				
+				newRow.push_back(new Entry(*targetRelation->getRow(i).at(j)));
+				
+			}
+
+			result.addRow( newRow );
+		}
+
+	}
+
+	return result;
 }
 
 
 //union two Relation given their index in relations
 Relation Database::unionTwoRelations( Relation& relationA, Relation& relationB ) {
-
+	return result;
 }
 
 
