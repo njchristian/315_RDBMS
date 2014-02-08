@@ -1,17 +1,26 @@
 #include "Database.h"
+#include "Relation.h"
 #include "Attribute.h"
 #include "Entry.h"
 #include "Condition.h"
 #include "Type.h"
 #include <vector>
+#include <iostream>
+
+using namespace std;
 
 int main(){
 
 	Database d;
 
+	//In the final project, this is stored in the database cell. This is for the relations the
+	//user create via assignment (the <- operator).
+	vector<Relation*> localRelations;
+
 	vector<Attribute> testAtts;
 	vector<int> keys;
 	vector<vector<Entry>> entries;
+	vector<vector<Entry>> e2;
 
 	testAtts.push_back(Attribute("Name", VARCHAR));
 	testAtts.push_back(Attribute("Owner", VARCHAR));
@@ -54,8 +63,42 @@ int main(){
 	c.push_back(Condition("Owner", EQUALS, Entry("Melodie"), OR, 2));
 	c.push_back(Condition("Owner", EQUALS, Entry("Davin"), NONE, 2));
 
-	Relation r = d.selection(c, "Dogs");
+	localRelations.push_back( new Relation( d.selection(c, "Dogs") ));
+	localRelations.at(0)->setName("Selection of Dogs");
 
+	cout<<*localRelations.at(0)<<"\n\n";
+
+	e2.push_back(vector<Entry>());
+	e2.push_back(vector<Entry>());
+	e2.push_back(vector<Entry>());
+
+	e2.at(0).push_back(Entry("Tyler"));
+	e2.at(0).push_back(Entry("Garren"));
+	e2.at(0).push_back(Entry(5));
+
+	e2.at(1).push_back(Entry("Abby"));
+	e2.at(1).push_back(Entry("Amy"));
+	e2.at(1).push_back(Entry(3));
+
+	e2.at(2).push_back(Entry("Dusty"));
+	e2.at(2).push_back(Entry("Rodger"));
+	e2.at(2).push_back(Entry(11));
+
+	d.addRelationToDatabase("More Dogs", testAtts, keys);
+
+	d.addTupleToRelation(e2.at(0), "More Dogs");
+	d.addTupleToRelation(e2.at(1), "More Dogs");
+	d.addTupleToRelation(e2.at(2), "More Dogs");
+
+	localRelations.push_back(new Relation(d.unionTwoRelations("Dogs", "More Dogs") ));
+	localRelations.at(1)->setName("Lots of Dogs");
+
+	cout<<*localRelations.at(1)<<'\n';
+	
+	localRelations.push_back(new Relation(d.differenceTwoRelation("Dogs", "More Dogs") ));
+	localRelations.at(2)->setName("Difference");
+
+	cout<<*localRelations.at(2)<<'\n';
 
 	return 1;
 }

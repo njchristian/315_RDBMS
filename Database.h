@@ -41,7 +41,7 @@ public:
 	Relation crossProduct( Relation& relationA, Relation& relationB );
 
 	//difference of two relations given their in index
-	Relation differenceTwoRelation( Relation& relationA, Relation& relationB );
+	Relation differenceTwoRelation( string relationAName, string relationBName );
 
 	int findAttribute( );
 
@@ -54,7 +54,7 @@ public:
 	//returns a Relation of all entries in each of the attributes
 	Relation projection( string relationName, vector<string> attributeNames );
 
-	void removeTupleFromRelation(  );
+	void removeTupleFromRelation( );
 
 	//renaming an attribute in a relation
 	void renameAttributes( vector<string> newNames, Relation& correctRelation );
@@ -63,7 +63,7 @@ public:
 	Relation selection( vector<Condition>, string targetRelationName ); //i don't know how to pass an conidtion
 
 	//union two Relation given their index in relations
-	Relation unionTwoRelations( Relation& relationA, Relation& relationB );
+	Relation unionTwoRelations( string rA, string rB );
 
 
 };
