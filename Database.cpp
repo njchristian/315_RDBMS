@@ -1,5 +1,5 @@
 #include "Database.h"
-
+#include <iostream>
 
 // Private Functions
 
@@ -141,7 +141,9 @@ void Database::renameAttributes( vector<string> newNames, Relation& correctRelat
 }
 
 
-//print the tuples that satisfy an condition
+//COMPLETE
+
+//Return a relation of tuples that satisfy the conditions
 Relation Database::selection( vector<Condition> conditions, string targetRelationName ) {
 
 	Relation* targetRelation = findRelation(targetRelationName);
@@ -150,7 +152,7 @@ Relation Database::selection( vector<Condition> conditions, string targetRelatio
 
 	ConditionList cl = ConditionList(conditions, targetRelation);
 
-	for(int i = 0; i < targetRelation->getNumTubles(); i++){
+	for(int i = 0; i < targetRelation->getNumTuples(); i++){
 
 		if( cl.evalOnTuple(i) ){
 
@@ -167,14 +169,46 @@ Relation Database::selection( vector<Condition> conditions, string targetRelatio
 
 	}
 
+	result.setAttributes( targetRelation->getAttributes() );
+
 	return result;
 }
 
 
 //union two Relation given their index in relations
-Relation Database::unionTwoRelations( Relation& relationA, Relation& relationB ) {
+Relation Database::unionTwoRelations( string rA, string rB ) {
+
+	Relation* relationA = findRelation(rA);
+	Relation* relationB = findRelation(rB);
+
+	result.clear();
+
+	vector<Attribute> attA = relationA->getAttributes();
+	vector<Attribute> attB = relationB->getAttributes();
+
+	//If not same size, return empty
+	if(attA.size() != attB.size()){
+		return result;
+	}
+
+	for(int i = 0; i < attA.size(); i++){
+
+		//if any attribute different, return empty
+		if(attA.at(i).name != attB.at(i).name || attA.at(i).t != attB.at(i).t){
+			return result;
+		}
+
+	}
+	
+	result = *relationA;
+
+	for(int i = 0; i < relationB->getNumTuples(); i++){
+
+		result.addRow(relationB->getRow(i));
+
+	}
+
 	return result;
 }
-
 
 
