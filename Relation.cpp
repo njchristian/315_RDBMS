@@ -1,14 +1,16 @@
 #include "Relation.h"
 
 
-void Relation::clear(){
+void Relation::clear( ){
 
-	attributes.clear();
-	table.clear();
-	keys.clear();
+	attributes.clear( );
+	table.clear( );
+	keys.clear( );
 
 }
 
+
+/*
 vector<string> Relation::getAttributes(){
 
 	vector<string> result;
@@ -18,4 +20,15 @@ vector<string> Relation::getAttributes(){
 	}
 
 	return result;
+}
+*/
+
+bool Relation::hasTuple( vector<Entry*> tuple ) {
+	for ( unsigned i = 0; i < table.size( ); ++i ) {
+		if ( table[ i ] == tuple ) {
+			return true;
+		}
+	}
+
+	return false;
 }

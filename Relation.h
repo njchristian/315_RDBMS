@@ -17,39 +17,44 @@ class Relation{
 public:
 
 	// Constructors
-	Relation() {}
+	Relation( ) {}
 
-	Relation(string givenName, vector<Attribute> givenAttributes, vector<int> givenKeys)
-		: relationName(givenName), attributes(givenAttributes), keys(givenKeys){}
+	Relation( string givenName, vector<Attribute> givenAttributes, vector<int> givenKeys )
+		: relationName( givenName ), attributes( givenAttributes ), keys( givenKeys ){}
 
-	Relation( vector<Attribute> givenAttributes ) : attributes(givenAttributes) {}
+	Relation( vector<Attribute> givenAttributes ) : attributes( givenAttributes ) {}
 
 	// Public Functions	
-	
-	void addRow(vector<Entry*> newRow){
-		table.push_back(newRow);
-	}
-		
-	void changeAttributeName(int index, string newName){
-		attributes.at(index).name = newName;
+
+	void addRow( vector<Entry*> newRow ){
+		table.push_back( newRow );
 	}
 
-	vector<vector<Entry*>> getAllEntries() { return table; }
+	void changeAttributeName( int index, string newName ){
+		attributes.at( index ).name = newName;
+	}
 
-	vector<string> getAttributes();
+	vector<vector<Entry*>> getAllEntries( ) { return table; }
 
-	string getName(){ return relationName; }
-	string getAttributeNameAt(int i){ return attributes.at(i).name;}
-	
-	int attributeSize(){ return attributes.size(); }
-	int getNumTubles(){ return attributes.size(); }
-	
-	vector<Entry*> getRow(int index){ return table.at(index); }
+	vector<Attribute> getAttributes( ) { return attributes;  }
+	//vector<string> getAttributes();
 
-	Entry* getEntry(int i, int j){ return table.at(i).at(j); }
+	string getName( ){ return relationName; }
+	string getAttributeNameAt( int i ){ return attributes.at( i ).name; }
 
-	void clear();
-	
+	int attributeSize( ){ return attributes.size( ); }
+	int getNumTubles( ){ return attributes.size( ); }
+
+	vector<Entry*> getRow( int index ){ return table.at( index ); }
+
+	Entry* getEntry( int i, int j ){ return table.at( i ).at( j ); }
+
+	bool hasTuple( vector<Entry*> tuple );
+
+	void clear( );
+
+	void setAttributes( vector<Attribute> newAttributes ) { attributes = newAttributes; }
+
 };
 
 #endif
