@@ -1,15 +1,14 @@
 #include "Relation.h"
 
 
-void Relation::clear(){
+void Relation::clear( ){
 
-	attributes.clear();
-	table.clear();
-	keys.clear();
+	attributes.clear( );
+	table.clear( );
+	keys.clear( );
 
 }
 
-vector<string> Relation::getAttributeNames(){
 
 	vector<string> result;
 

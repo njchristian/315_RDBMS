@@ -1,32 +1,32 @@
 #include "ConditionList.h"
 
-	ConditionList::ConditionList(vector<Condition> givenConditions, Relation* r) : targetRelation(r) {
-	
-		highestPriority = 0;
-	
-		//initialize linked list - also set highest priority
-		for(int i = 0; i < givenConditions.size(); i++){
-		
-			if(givenConditions.at(i).getPriority() > highestPriority){
-				highestPriority = givenConditions.at(i).getPriority();
-			}
-			
-			conditions.push_back(givenConditions.at(i));
-		
+ConditionList::ConditionList( vector<Condition> givenConditions, Relation* r ) : targetRelation( r ) {
+
+	highestPriority = 0;
+
+	//initialize linked list - also set highest priority
+	for ( unsigned int i = 0; i < givenConditions.size( ); i++ ){
+
+		if ( givenConditions.at( i ).getPriority( ) > highestPriority ){
+			highestPriority = givenConditions.at( i ).getPriority( );
 		}
-		
-		//replace any variable names with the proper index
-		for(list<Condition>::iterator i = conditions.begin(); i != conditions.end(); i++){
-			if(i->firstIsVar()){
-				i->setVar1Index( findVarNameIndex( targetRelation, i->firstVarName() ) );
-			}
-		
-			if(i->secondIsVar()){
-				i->setVar2Index( findVarNameIndex( targetRelation, i->secondVarName() ) );
-			}
-		}
-	
+
+		conditions.push_back( givenConditions.at( i ) );
+
 	}
+
+	//replace any variable names with the proper index
+	for ( list<Condition>::iterator i = conditions.begin( ); i != conditions.end( ); i++ ){
+		if ( i->firstIsVar( ) ){
+			i->setVar1Index( findVarNameIndex( targetRelation, i->firstVarName( ) ) );
+		}
+
+		if ( i->secondIsVar( ) ){
+			i->setVar2Index( findVarNameIndex( targetRelation, i->secondVarName( ) ) );
+		}
+	}
+
+}
 
 
 	bool ConditionList::evalOnTuple(int tupleIndex){
@@ -102,5 +102,6 @@
 			}
 		
 		}
-	
+		// error value so compile won't complain
+		return -1;
 	}

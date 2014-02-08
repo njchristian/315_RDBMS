@@ -14,11 +14,7 @@ Relation* Database::findRelation( string relationName ){
 			break; //i hope there are no duplicates. is there a possibility for duplicates?
 		}
 	}
-
-	//return foundRelation; // this gives a compile error as being potentially uninitialized 
-	return &result; // so I changed it to this so it would compile -Taylor
-
-}
+	return &result;}
 
 // ---------------------------------------------------------------------------------------
 // Public Functions
@@ -106,13 +102,13 @@ Relation Database::differenceTwoRelation( string relationAName, string relationB
 	}
 
 	// Find all of the tuples that are in A but not in B
-	for ( int i = 0; i < relationA->getNumTuples( ); ++i ) {
+	for ( int i = 0; i < relationA->getNumTubles( ); ++i ) {
 		if ( !relationB->hasTuple( relationA->getRow( i ) ) ) {
 			result.addRow( relationA->getRow( i ) );
 		}
 	}
 
-	return result;
+return result;
 }
 
 
@@ -180,8 +176,7 @@ Relation Database::selection( vector<Condition> conditions, string targetRelatio
 
 	ConditionList cl = ConditionList(conditions, targetRelation);
 
-	for ( int i = 0; i < targetRelation->getNumTuples( ); i++ ){
-
+	for(int i = 0; i < targetRelation->getNumTuples(); i++){
 		if( cl.evalOnTuple(i) ){
 
 			vector<Entry*> newRow;
@@ -230,8 +225,7 @@ Relation Database::unionTwoRelations( string rA, string rB ) {
 
 	result = *relationA;
 
-	for ( int i = 0; i < relationB->getNumTuples( ); i++ ){
-
+	for(int i = 0; i < relationB->getNumTuples(); i++){
 		result.addRow( relationB->getRow( i ) );
 
 	}
