@@ -8,13 +8,15 @@ using namespace std;
 
 struct Attribute{
 
+	// Data members
 	Type t;
 	string name;
 
-	Attribute(string n, Type ty) : t(ty), name(n) {}
+	// Constructor
+	Attribute(string n, Type ty) : t(ty), name(n) { }
 
-	static bool compareAttribute(Attribute a,Attribute b) 
-	{
+	// Functions
+	static bool compareAttribute(Attribute a,Attribute b) {
 		return ( a.name < b.name ); 
 	}
 
@@ -23,7 +25,6 @@ struct Attribute{
 bool operator==( const Attribute& attribute1, const Attribute& attribute2 );
 
 bool operator!=( const Attribute& attribute1, const Attribute& attribute2 );
-
 
 
 #endif

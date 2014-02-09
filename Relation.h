@@ -10,7 +10,9 @@ class Relation{
 
 	// Data Members
 	string relationName;
+
 	vector<Attribute> attributes;
+
 	vector<vector<Entry*>> table;
 
 	vector<int> keys;
@@ -60,7 +62,7 @@ public:
 
 	bool hasTuple( vector<Entry*> tuple );
 
-	void setAttributes( vector<Attribute> newAttributes ) { attributes = newAttributes; }
+	void setAttributes( vector<Attribute> newAttributes );
 
 	void setAttributeNames( vector<string> newNames );
 

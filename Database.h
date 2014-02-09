@@ -20,8 +20,8 @@ class Database {
 	Relation* findRelation( string relationName );
 
 public:
-	// Constructor & Destructor
-	Database( ) {}
+	// Constructor
+	Database( ) { }
 
 	// Public Functions
 
@@ -31,15 +31,13 @@ public:
 
 	Entry accessTuple( );
 
-	void addRelationToDatabase( string name, vector<Attribute> attributes, vector<int> keys );
+	void addRelationToDatabase( string name, vector<Attribute> attributes, 
+		vector<int> keys );
 
-	//void addAttributeToRelation(  );
 	void addTupleToRelation( vector<Entry> tuple, string relationName );
 
-	//cross product of two relations given their in index
 	Relation crossProduct( string relationAName, string relationBName );
 
-	//difference of two relations given their in index
 	Relation differenceTwoRelation( string relationAName, string relationBName );
 
 	int findAttribute( );
@@ -48,22 +46,17 @@ public:
 
 	int findTuple( );
 
-	Relation naturalJoin( string relationA, string& relationB );
+	Relation naturalJoin( string relationA, string relationB );
 
-	//returns a Relation of all entries in each of the attributes
 	Relation projection( string relationName, vector<string> attributeNames );
 
 	void removeTupleFromRelation( );
 
-	//renaming an attribute in a relation
 	Relation renameAttributes( vector<string> newNames, string relationName );
 
-	//print the tuples that satisfy an condition
-	Relation selection( vector<Condition>, string targetRelationName ); //i don't know how to pass an conidtion
+	Relation selection( vector<Condition>, string targetRelationName );
 
-	//union two Relation given their index in relations
 	Relation unionTwoRelations( string rA, string rB );
-
 
 };
 

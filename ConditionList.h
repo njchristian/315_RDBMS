@@ -8,9 +8,11 @@
 
 using namespace std;
 
-class ConditionList{
+class ConditionList {
 
+	// Data members
 	list<Condition> conditions;
+
 	Relation* targetRelation;
 	
 	int highestPriority;
@@ -19,8 +21,10 @@ class ConditionList{
 	
 public:
 
+	// Constructor
 	ConditionList(vector<Condition> givenConditions, Relation* r);
 
+	// Functions
 	bool evalOnTuple( int index );
 
 

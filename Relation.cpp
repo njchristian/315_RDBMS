@@ -1,6 +1,6 @@
 #include "Relation.h"
 
-
+// Copy constructor
 Relation::Relation( Relation* r ){
 
 	relationName = r->getName( );
@@ -20,10 +20,16 @@ Relation::Relation( Relation* r ){
 
 }
 
+
+// Functions
+
+// Adds a tuple/row to the relation.
 void Relation::addRow( vector<Entry*> rowToAdd ) {
 	table.push_back( rowToAdd );
 }
 
+
+// Empties all of the attributes, tuples and keys from the relation.
 void Relation::clear( ){
 
 	attributes.clear( );
@@ -32,6 +38,8 @@ void Relation::clear( ){
 
 }
 
+
+// Get the names of the relation's attributes.
 vector<string> Relation::getAttributeNames(){
 
 	vector<string> result;
@@ -43,6 +51,8 @@ vector<string> Relation::getAttributeNames(){
 	return result;
 }
 
+
+// Check to see if a relation has the specified tuple in it already.
 bool Relation::hasTuple( vector<Entry*> tuple ) {
 	for ( int i = 0; i < table.size( ); ++i ) {
 		
@@ -67,17 +77,29 @@ bool Relation::hasTuple( vector<Entry*> tuple ) {
 	return false;
 }
 
+
+// Set the relation's attributes to the newly given ones.
+void Relation::setAttributes( vector<Attribute> newAttributes ) { 
+	attributes = newAttributes; 
+}
+
+
+// Rename the attributes in the relation.
 void Relation::setAttributeNames( vector<string> newNames ) {
+	// Error check
 	if ( attributes.size( ) != newNames.size( ) ) {
 		cout << "Error, tried to setAttributeNames but did not"
 			 << " have the right number of names!\n";
 	}
 	
+	// Set the new names.
 	for ( unsigned i = 0; i < attributes.size( ); ++i ) {
 		attributes[ i ].name = newNames[ i ];
 	}
 }
 
+
+// Overloaded assignment operator.
 Relation& Relation::operator=(Relation& b){
 
 	relationName = b.getName();
@@ -90,6 +112,8 @@ Relation& Relation::operator=(Relation& b){
 
 }
 
+
+// Output operator
 ostream& operator<<(ostream& os, Relation& a){
 
 	os<<"Name: "<<a.getName()<<"\n\n";

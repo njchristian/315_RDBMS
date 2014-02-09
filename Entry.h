@@ -18,9 +18,11 @@ public:
 
 	// Constructors
 	Entry(){}
+
 	Entry(int givenInt) : intEntry(givenInt) {
 		t = INTEGER;
 	}
+
 	Entry(string givenVC) : vcEntry(givenVC) {
 		t = VARCHAR;
 	}
@@ -41,7 +43,6 @@ public:
 	string getEntryVC(){
 		return vcEntry;
 	}
-
 
 };
 

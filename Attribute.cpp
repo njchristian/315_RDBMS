@@ -7,6 +7,7 @@ bool operator==( const Attribute& attribute1, const Attribute& attribute2 ) {
 	return false;
 }
 
+
 bool operator!=( const Attribute& attribute1, const Attribute& attribute2 ) {
 	return !( attribute1 == attribute2 );
 }

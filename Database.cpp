@@ -15,7 +15,9 @@ Relation* Database::findRelation( string relationName ){
 			break; //i hope there are no duplicates. is there a possibility for duplicates?
 		}
 	}
-	return &result;}
+	return &result;
+}
+
 
 // ---------------------------------------------------------------------------------------
 // Public Functions
@@ -30,7 +32,7 @@ Entry Database::accessAttribute( ) {
 }
 
 
-//
+// Returns a pointer to the relation with the specified name.
 Relation* Database::accessRelation( string name ) {
 
 	return findRelation( name );
@@ -46,11 +48,14 @@ Entry Database::accessTuple( ) {
 }
 
 
-//the parser passes this function a list of attributes (name and type)
-void Database::addRelationToDatabase( string name, vector<Attribute> attributes, vector<int> keys ) {
+// The parser passes this function a list of attributes (name and type)
+void Database::addRelationToDatabase( string name, vector<Attribute> attributes, 
+	vector<int> keys ) {
 
+	// Create the new relation.
 	Relation* newRelation = new Relation(name, attributes, keys);
 
+	// Add the relation to the database.
 	relations.push_back( newRelation );
 
 }
@@ -61,25 +66,29 @@ void Database::addTupleToRelation( vector<Entry> tuple, string relationName ) {
 
 	Relation* targetRelation = findRelation( relationName );
 
+	// Create the new tuple
 	vector<Entry*> newRow;
 
-	for ( unsigned int i = 0; i < tuple.size( ); i++ ){
+	for ( unsigned int i = 0; i < tuple.size( ); i++ ) {
 		newRow.push_back( new Entry( tuple.at( i ) ) );
 	}
 
+	// Add the new tuple to the relation
 	targetRelation->addRow( newRow );
 
 }
 
 
-//cross product of two relations given their in index
-Relation Database::crossProduct( string relationAName, string relationBName ){
+// Find the cross product of two relations given their names.
+// The new relation is stored in the result data member.
+Relation Database::crossProduct( string relationAName, string relationBName ) {
 	Relation* relationA = findRelation( relationAName );
 	Relation* relationB = findRelation( relationBName );
 
 	result.clear( );
 
-	// Create a vector for the attributes of both A and B and add all of the attributes
+	// Create a vector for the attributes of both A and B and add all of the 
+	// attributes to it.
 	vector<Attribute> totalAttributes = relationA->getAttributes( );
 	vector<Attribute> attributesOfB = relationB->getAttributes( );
 	for ( unsigned i = 0; i < attributesOfB.size( ); ++i ) {
@@ -99,7 +108,8 @@ Relation Database::crossProduct( string relationAName, string relationBName ){
 	for ( unsigned i = 0; i < relationATuples.size( ); ++i ) {
 		for ( unsigned j = 0; j < relationBTuples.size( ); ++j ) {
 			row = relationATuples[ i ];
-			row.insert( row.end( ), relationBTuples[ j ].begin( ), relationBTuples[ j ].end( ) );
+			row.insert( row.end( ), relationBTuples[ j ].begin( ), 
+				relationBTuples[ j ].end( ) );
 			newRelationTuples.push_back( row );
 		}
 	}
@@ -111,9 +121,11 @@ Relation Database::crossProduct( string relationAName, string relationBName ){
 }
 
 
-//difference of two relations given their in index
-// produces the set of tuples from the first that are not in the second
-Relation Database::differenceTwoRelation( string relationAName, string relationBName ) {
+// Find the difference of two relations given their names.
+// Produces the set of tuples from the first that are not in the second
+Relation Database::differenceTwoRelation( string relationAName, 
+	string relationBName ) {
+
 	Relation* relationA = findRelation( relationAName );
 	Relation* relationB = findRelation( relationBName );
 
@@ -169,16 +181,19 @@ int Database::findTuple( ) {
 }
 
 
-//subset of attributes in a relation
-Relation Database::projection( string relationName, vector<string> attributeNames ) {
+// Creates a new relation that has a subset of the attributes in a relation
+Relation Database::projection( string relationName, 
+	vector<string> attributeNames ) {
 
-	// find relation returns a Relation pointer, does it need to change or this??
+	// Find relation returns a Relation pointer, does it need to change or this??
 	Relation* r = findRelation(relationName);
 	vector<Attribute> relationAttributes = r->getAttributes();
 	vector<Attribute> newSetAttributes;
-	vector<int> index; //use to find the index of the attribute in relationAttributes
+	
+	// Use to find the index of the attribute in relationAttributes
+	vector<int> index;
 
-	//finding the attributes specified
+	// Find the attributes specified
 	for( int i = 0; i < attributeNames.size(); ++i ) {
 		string attribute = attributeNames[i];
 		for( int j = 0; j < relationAttributes.size(); ++j ) {
@@ -214,7 +229,7 @@ void Database::removeTupleFromRelation(  ) {
 }
 
 
-//renames the attributes of a relation
+// Renames all of the attributes of a relation with the specified new names.
 Relation Database::renameAttributes( vector<string> newNames, string relationName ) {
 	Relation* targetRelation = findRelation( relationName );
 
@@ -230,26 +245,34 @@ Relation Database::renameAttributes( vector<string> newNames, string relationNam
 
 //COMPLETE
 
-//Return a relation of tuples that satisfy the conditions
-Relation Database::selection( vector<Condition> conditions, string targetRelationName ) {
+// Return a relation of tuples that satisfy the conditions. The new relation 
+// is stored in the result data member.
+Relation Database::selection( vector<Condition> conditions, 
+	string targetRelationName ) {
 
 	Relation* targetRelation = findRelation(targetRelationName);
 
 	result.clear();
 
+	// Set up the list of conditions.
 	ConditionList cl = ConditionList(conditions, targetRelation);
 
+	// Find the tuples in the relation that satisfy the conditions and add
+	// them to the new relation.
 	for(int i = 0; i < targetRelation->getNumTuples(); i++){
 		if( cl.evalOnTuple(i) ){
 
 			vector<Entry*> newRow;
 
+			// Find the columns that satify the conditions and create
+			// a tuple out of them
 			for(int j = 0; j < targetRelation->attributeSize(); j++){
 
 				newRow.push_back(new Entry(*targetRelation->getRow(i).at(j)));
 
 			}
 
+			// Add the newly created tuple to the new relation.
 			result.addRow( newRow );
 		}
 
@@ -261,7 +284,8 @@ Relation Database::selection( vector<Condition> conditions, string targetRelatio
 }
 
 
-//union two Relation given their name
+// Find the union two Relations given their names. The union of the two
+// is then returned and stored in the result data member.
 Relation Database::unionTwoRelations( string rA, string rB ) {
 
 	Relation* relationA = findRelation( rA );
@@ -280,14 +304,20 @@ Relation Database::unionTwoRelations( string rA, string rB ) {
 	for ( unsigned int i = 0; i < attA.size( ); i++ ){
 
 		//if any attribute different, return empty
-		if ( attA.at( i ).name != attB.at( i ).name || attA.at( i ).t != attB.at( i ).t ){
+		if ( attA.at( i ).name != attB.at( i ).name || 
+			 attA.at( i ).t != attB.at( i ).t ) {
 			return result;
 		}
 
 	}
 
+	// Set result to have relationA's tuples. This also sets up result's 
+	// attributes and keys.
+	// --------------------------------------------------------------Do we need to set a name for the new relation??
 	result = *relationA;
 
+	// Add the tuples from relationB to the new relation
+	// --------------------------------------------------------------Does it need to remove duplicates??
 	for(int i = 0; i < relationB->getNumTuples(); i++){
 		result.addRow( relationB->getRow( i ) );
 
@@ -296,7 +326,7 @@ Relation Database::unionTwoRelations( string rA, string rB ) {
 	return result;
 }
 
-Relation Database::naturalJoin( string rA, string& rB )
+Relation Database::naturalJoin( string rA, string rB )
 {
 	Relation* relationA = findRelation( rA );
 	Relation* relationB = findRelation( rB );
