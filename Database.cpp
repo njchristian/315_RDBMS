@@ -193,8 +193,10 @@ void Database::removeTupleFromRelation(  ) {
 
 
 //renames the attributes of a relation
-void Database::renameAttributes( vector<string> newNames, Relation& correctRelation ) {
+void Database::renameAttributes( vector<string> newNames, string relationName ) {
+	Relation* correctRelation = findRelation( relationName );
 
+	correctRelation->setAttributeNames( newNames );
 }
 
 
