@@ -134,16 +134,22 @@ Relation Database::differenceTwoRelation( string relationAName, string relationB
 		}
 	}
 
+	result.setAttributes( relationA->getAttributes());
+
 	// Find all of the tuples that are in A but not in B
 	for ( int i = 0; i < relationA->getNumTuples( ); ++i ) {
+
+		//if relationB does NOT have the tuple
 		if ( !relationB->hasTuple( relationA->getRow( i ) ) ) {
+
 			result.addRow( relationA->getRow( i ) );
+
 		}
+
 	}
 
-return result;
+	return result;
 }
-
 
 // 	
 int Database::findAttribute( ) {
