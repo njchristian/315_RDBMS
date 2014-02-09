@@ -171,22 +171,56 @@ int Database::findTuple( ) {
 //subset of attributes in a relation
 Relation Database::projection( string relationName, vector<string> attributeNames ) {
 
+	Relation* targetRelation = findRelation(relationName);
+
+	result.clear();
+
 	//get types of attributes
 
-	//create new relation with attribute names and types
-	Relation createdRelation;
+	vector<int> attributeIndeces;
 
+	for(int i = 0; i < targetRelation->attributeSize(); ++i){
 
-	// find relation returns a Relation pointer, does it need to change or this??
-	Relation* r = findRelation(relationName);
+		for(int j = 0; j <attributeNames.size(); ++j){
+
+			if( attributeNames.at(j) == targetRelation->getAttributeNameAt(i) ){
+				attributeIndeces.push_back(i);
+			}
+
+		}
+
+	}
+
+	//SET RESULT ATTRIBUTE VECTOR
+
+	vector<Attribute> resultAtts;
+
+	for(int i = 0; i < attributeIndeces.size(); ++i){
+
+		resultAtts.push_back(targetRelation->getAttributeAt(i));
+
+	}
+
+	result.setAttributes(resultAtts);
 
 	//go through row by row and add new tuples with target values
 
+	for(int i = 0; i < targetRelation->getNumTuples(); ++i){
+
+		vector<Entry*> newRow;
+
+		for(int j = 0; j < attributeIndeces.size(); ++j){
+
+			newRow.push_back(targetRelation->getEntry(i, attributeIndeces.at(j)) );
+
+		}
+
+		result.addRow(newRow);
+	}
 
 
 
-
-	return createdRelation;
+	return result;
 }
 
 
