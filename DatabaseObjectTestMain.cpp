@@ -114,7 +114,7 @@ int main(){
 	targetAtts.push_back("Name");
 	targetAtts.push_back("Age");
 
-	localRelations.push_back(new Relation(d.projection("Dogs", targetAtts) ));
+	localRelations.push_back(new Relation(d.projection( targetAtts, "Dogs") ));
 	localRelations.at(4)->setName("Project Without Owner");
 
 	cout<<*localRelations.at(4)<<'\n';
