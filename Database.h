@@ -25,7 +25,7 @@ public:
 
 	// Public Functions
 
-	Entry accessAttribute( );
+	Attribute* accessAttribute( string name, string relationName );
 
 	Relation* accessRelation( string name );
 

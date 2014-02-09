@@ -15,6 +15,8 @@ struct Attribute{
 	// Constructor
 	Attribute(string n, Type ty) : t(ty), name(n) { }
 
+	Attribute() : t(INTEGER), name("default") { }
+
 	// Functions
 	static bool compareAttribute(Attribute a,Attribute b) {
 		return ( a.name < b.name ); 

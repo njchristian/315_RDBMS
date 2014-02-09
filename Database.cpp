@@ -23,11 +23,23 @@ Relation* Database::findRelation( string relationName ){
 // Public Functions
 
 //
-Entry Database::accessAttribute( ) {
+Attribute* Database::accessAttribute( string name , string relationName ) {
 
-	Entry entry; //attribute
+	Relation* relation = findRelation(relationName);
+	vector<Attribute> attributes = relation->getAttributes();
 
-	return entry;
+	Attribute* attribute = NULL;
+
+	unsigned int i;
+	for( i=0; i<attributes.size(); ++i ){
+		if( attributes[ i ].name == name ){
+			attribute = &attributes[ i ];
+			return attribute; 
+			break;
+		}
+	}
+
+	return attribute;
 
 }
 
