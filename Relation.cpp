@@ -21,10 +21,24 @@ vector<string> Relation::getAttributeNames(){
 }
 
 bool Relation::hasTuple( vector<Entry*> tuple ) {
-	for ( unsigned i = 0; i < table.size( ); ++i ) {
-		if ( table[ i ] == tuple ) {
+	for ( int i = 0; i < table.size( ); ++i ) {
+		
+		bool currentTuple = true;
+
+		/****************
+		This checks through all the KEYS to see if the 
+		tuples are the same.
+		****************/
+		for(int j = 0; j <keys.size(); j++){
+			if(table.at(i).at(keys.at(j) ) != tuple.at(keys.at(j))){
+				currentTuple = false;
+			}
+		}
+
+		if(currentTuple){
 			return true;
 		}
+
 	}
 
 	return false;
