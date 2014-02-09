@@ -40,6 +40,8 @@ public:
 
 	vector<Attribute> getAttributes( ){ return attributes; }
 
+	vector<string> Relation::getAttributeNames( );
+	
 	string getAttributeNameAt( int i ){ return attributes.at( i ).name; }
 
 	vector<vector<Entry*>> getAllEntries() { return table; }	
@@ -57,6 +59,8 @@ public:
 	bool hasTuple( vector<Entry*> tuple );
 
 	void setAttributes( vector<Attribute> newAttributes ) { attributes = newAttributes; }
+
+	void setAttributeNames( vector<string> newNames );
 
 	void setName( string n ){ relationName = n; }
 

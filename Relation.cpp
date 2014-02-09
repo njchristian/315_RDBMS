@@ -53,6 +53,17 @@ bool Relation::hasTuple( vector<Entry*> tuple ) {
 	return false;
 }
 
+void Relation::setAttributeNames( vector<string> newNames ) {
+	if ( attributes.size( ) != newNames.size( ) ) {
+		cout << "Error, tried to setAttributeNames but did not"
+			 << " have the right number of names!\n";
+	}
+	
+	for ( unsigned i = 0; i < attributes.size( ); ++i ) {
+		attributes[ i ].name = newNames[ i ];
+	}
+}
+
 Relation& Relation::operator=(Relation& b){
 
 	relationName = b.getName();
