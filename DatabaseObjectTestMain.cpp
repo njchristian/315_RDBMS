@@ -107,7 +107,17 @@ int main(){
 
 	cout<<"This looks somewhat strange at first. This result represents something "<<
 		"like all possible dog walking pairs from the two sets.\n\n";
+
 	cout<<*localRelations.at(3)<<'\n';
+
+	vector<string> targetAtts;
+	targetAtts.push_back("Name");
+	targetAtts.push_back("Age");
+
+	localRelations.push_back(new Relation(d.projection("Dogs", targetAtts) ));
+	localRelations.at(4)->setName("Project Without Owner");
+
+	cout<<*localRelations.at(4)<<'\n';
 
 	return 1;
 }
