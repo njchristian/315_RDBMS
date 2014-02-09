@@ -63,11 +63,6 @@ int main(){
 	c.push_back(Condition("Owner", EQUALS, Entry("Melodie"), OR, 2));
 	c.push_back(Condition("Owner", EQUALS, Entry("Davin"), NONE, 2));
 
-	localRelations.push_back( new Relation( d.selection(c, "Dogs") ));
-	localRelations.at(0)->setName("Selection of Dogs");
-
-	cout<<*localRelations.at(0)<<"\n\n";
-
 	e2.push_back(vector<Entry>());
 	e2.push_back(vector<Entry>());
 	e2.push_back(vector<Entry>());
@@ -90,8 +85,15 @@ int main(){
 	d.addTupleToRelation(e2.at(1), "More Dogs");
 	d.addTupleToRelation(e2.at(2), "More Dogs");
 
+	cout<<*d.accessRelation("Dogs")<<'\n'<<*d.accessRelation("More Dogs")<<'\n';
+
+	localRelations.push_back( new Relation( d.selection(c, "Dogs") ));
+	localRelations.at(0)->setName("Selection of Dogs");
+
+	cout<<*localRelations.at(0)<<"\n\n";
+
 	localRelations.push_back(new Relation(d.unionTwoRelations("Dogs", "More Dogs") ));
-	localRelations.at(1)->setName("Lots of Dogs");
+	localRelations.at(1)->setName("Union of Dogs");
 
 	cout<<*localRelations.at(1)<<'\n';
 	
@@ -99,6 +101,13 @@ int main(){
 	localRelations.at(2)->setName("Difference");
 
 	cout<<*localRelations.at(2)<<'\n';
+
+	localRelations.push_back(new Relation(d.crossProduct("Dogs", "More Dogs") ));
+	localRelations.at(3)->setName("Cross Product");
+
+	cout<<"This looks somewhat strange at first. This result represents something "<<
+		"like all possible dog walking pairs from the two sets.\n\n";
+	cout<<*localRelations.at(3)<<'\n';
 
 	return 1;
 }
