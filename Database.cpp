@@ -252,8 +252,7 @@ Relation Database::renameAttributes( vector<string> newNames, Relation* targetRe
 
 // Return a relation of tuples that satisfy the conditions. The new relation 
 // is stored in the result data member.
-Relation Database::selection( vector<Condition> conditions, 
-	Relation* targetRelation ) {
+Relation Database::selection( vector<Condition> conditions, Relation* targetRelation ) {
 
 	result.clear();
 
@@ -290,9 +289,6 @@ Relation Database::selection( vector<Condition> conditions,
 // Find the union two Relations given their names. The union of the two
 // is then returned and stored in the result data member.
 Relation Database::unionTwoRelations( Relation* relationA, Relation* relationB ) {
-
-	Relation* relationA = findRelation( rA );
-	Relation* relationB = findRelation( rB );
 
 	result.clear( );
 
