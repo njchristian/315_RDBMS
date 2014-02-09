@@ -27,11 +27,10 @@ public:
 
 	Entry accessAttribute( );
 
-	Relation* accessRelation( string name );
+	Relation accessRelation( );
 
 	Entry accessTuple( );
 
-	//no idea what the arguments should be
 	void addRelationToDatabase( string name, vector<Attribute> attributes, vector<int> keys );
 
 	//void addAttributeToRelation(  );
@@ -57,7 +56,7 @@ public:
 	void removeTupleFromRelation( );
 
 	//renaming an attribute in a relation
-	Relation renameAttributes( vector<string> newNames, string relationName );
+	void renameAttributes( vector<string> newNames, string relationName );
 
 	//print the tuples that satisfy an condition
 	Relation selection( vector<Condition>, string targetRelationName ); //i don't know how to pass an conidtion

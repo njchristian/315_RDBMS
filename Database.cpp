@@ -30,9 +30,11 @@ Entry Database::accessAttribute( ) {
 
 
 //
-Relation* Database::accessRelation( string name ) {
+Relation Database::accessRelation( ) {
 
-	return findRelation(name);
+	Relation relation;
+
+	return relation;
 }
 
 
@@ -50,7 +52,7 @@ void Database::addRelationToDatabase( string name, vector<Attribute> attributes,
 
 	Relation* newRelation = new Relation(name, attributes, keys);
 
-	relations.push_back(newRelation);
+	relations.push_back( newRelation );
 
 }
 
@@ -171,56 +173,39 @@ int Database::findTuple( ) {
 //subset of attributes in a relation
 Relation Database::projection( string relationName, vector<string> attributeNames ) {
 
-	Relation* targetRelation = findRelation(relationName);
+	// find relation returns a Relation pointer, does it need to change or this??
+	Relation* r = findRelation(relationName);
+	vector<Attribute> relationAttributes = r->getAttributes();
+	vector<Attribute> newSetAttributes;
+	vector<int> index; //use to find the index of the attribute in relationAttributes
 
-	result.clear();
-
-	//get types of attributes
-
-	vector<int> attributeIndeces;
-
-	for(int i = 0; i < targetRelation->attributeSize(); ++i){
-
-		for(int j = 0; j <attributeNames.size(); ++j){
-
-			if( attributeNames.at(j) == targetRelation->getAttributeNameAt(i) ){
-				attributeIndeces.push_back(i);
+	//finding the attributes specified
+	for( int i = 0; i < attributeNames.size(); ++i ) {
+		string attribute = attributeNames[i];
+		for( int j = 0; j < relationAttributes.size(); ++j ) {
+			if( attribute == relationAttributes[j].name) {
+				newSetAttributes.push_back( relationAttributes[j] );
+				index.push_back ( j );
 			}
-
 		}
-
 	}
 
-	//SET RESULT ATTRIBUTE VECTOR
+	Relation createdRelation( newSetAttributes );
 
-	vector<Attribute> resultAtts;
-
-	for(int i = 0; i < attributeIndeces.size(); ++i){
-
-		resultAtts.push_back(targetRelation->getAttributeAt( attributeIndeces.at(i)));
-
-	}
-
-	result.setAttributes(resultAtts);
-
+	vector<vector<Entry*>> table = r->getAllEntries();
 	//go through row by row and add new tuples with target values
 
-	for(int i = 0; i < targetRelation->getNumTuples(); ++i){
-
-		vector<Entry*> newRow;
-
-		for(int j = 0; j < attributeIndeces.size(); ++j){
-
-			newRow.push_back(targetRelation->getEntry(i, attributeIndeces.at(j)) );
-
+	for( int i = 0; i < table.size(); ++i )	{
+		vector<Entry*> row;
+		//get all of the attributes
+		for( int j = 0; j < index.size(); ++j ){
+			row.push_back( r->getEntry( index[j] , i ) );
 		}
-
-		result.addRow(newRow);
+		createdRelation.addRow( row );
+		
 	}
 
-
-
-	return result;
+	return createdRelation;
 }
 
 
@@ -231,15 +216,10 @@ void Database::removeTupleFromRelation(  ) {
 
 
 //renames the attributes of a relation
-Relation Database::renameAttributes( vector<string> newNames, string relationName ) {
-	Relation* targetRelation = findRelation( relationName );
+void Database::renameAttributes( vector<string> newNames, string relationName ) {
+	Relation* correctRelation = findRelation( relationName );
 
-	//Deep copy
-	result = *targetRelation;
-
-	result.setAttributeNames( newNames );
-
-	return result;
+	correctRelation->setAttributeNames( newNames );
 }
 
 
