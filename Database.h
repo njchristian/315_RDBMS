@@ -38,7 +38,7 @@ public:
 	void addTupleToRelation( vector<Entry> tuple, string relationName );
 
 	//cross product of two relations given their in index
-	Relation crossProduct( Relation& relationA, Relation& relationB );
+	Relation crossProduct( string relationAName, string relationBName );
 
 	//difference of two relations given their in index
 	Relation differenceTwoRelation( string relationAName, string relationBName );
