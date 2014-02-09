@@ -30,11 +30,9 @@ Entry Database::accessAttribute( ) {
 
 
 //
-Relation Database::accessRelation( ) {
+Relation* Database::accessRelation( string name ) {
 
-	Relation relation;
-
-	return relation;
+	return findRelation( name );
 }
 
 
@@ -216,10 +214,16 @@ void Database::removeTupleFromRelation(  ) {
 
 
 //renames the attributes of a relation
-void Database::renameAttributes( vector<string> newNames, string relationName ) {
-	Relation* correctRelation = findRelation( relationName );
+Relation Database::renameAttributes( vector<string> newNames, string relationName ) {
+	Relation* targetRelation = findRelation( relationName );
 
-	correctRelation->setAttributeNames( newNames );
+	//Deep copy
+	result = *targetRelation;
+
+	result.setAttributeNames( newNames );
+
+	return result;
+
 }
 
 
