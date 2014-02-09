@@ -40,6 +40,8 @@ public:
 
 	vector<Attribute> getAttributes( ){ return attributes; }
 
+	Attribute getAttributeAt(int i) { return attributes.at(i); }
+
 	vector<string> Relation::getAttributeNames( );
 	
 	string getAttributeNameAt( int i ){ return attributes.at( i ).name; }
