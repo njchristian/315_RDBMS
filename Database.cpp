@@ -1,5 +1,6 @@
 #include "Database.h"
 #include <iostream>
+#include <algorithm>
 
 // Private Functions
 
@@ -293,4 +294,75 @@ Relation Database::unionTwoRelations( string rA, string rB ) {
 	}
 
 	return result;
+}
+
+Relation Database::naturalJoin( string rA, string& rB )
+{
+	Relation* relationA = findRelation( rA );
+	Relation* relationB = findRelation( rB );
+
+	result.clear( );
+
+	vector<Attribute> attA = relationA->getAttributes( );
+	vector<Attribute> attB = relationB->getAttributes( );
+	vector<Attribute> joinAttribute;
+	vector<int> indexInA;
+	vector<int> indexInB;
+
+	//find the different of attributes of relationB
+	//then project that new relation
+
+	sort(attA.begin(), attA.end(), Attribute::compareAttribute);
+	sort(attB.begin(), attB.end(), Attribute::compareAttribute);
+
+	//find the attributes in b and not in a
+	vector<Attribute>::iterator it1 = attA.begin();
+	vector<Attribute>::iterator it2 = attB.begin();
+
+	while( it1 != attA.end() && it2 != attB.end() )
+	{
+		if( it1->name == it2->name )
+		{
+			//joinAttribute.push_back( *it1 );
+			++it1;
+			++it2;
+		}
+		else 
+		{
+			if( it1->name < it2->name )
+			{
+				++it1;
+			}
+			else 
+			{
+				joinAttribute.push_back( *it2 );
+				++it2;
+			}
+			
+		}
+	}
+
+	//place the rest into the vectors
+	while( it1 != attA.end() )
+	{
+		++it1;
+	}
+
+	while( it2 != attB.end() )
+	{
+		joinAttribute.push_back( *it2 );
+		++it2;
+	}
+
+	result.setAttributes( joinAttribute );
+
+	result = projection( relationB->getName(), result.getAttributeNames() );
+
+	//i was thinking cross product but that's not right
+	//we need to map a row in relationA to a row in relationB
+	result = crossProduct( relationA->getName(), result.getName() );
+
+	return result;
+
+
 }

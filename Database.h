@@ -48,7 +48,7 @@ public:
 
 	int findTuple( );
 
-	Relation naturalJoin( Relation& relationA, Relation& relationB );
+	Relation naturalJoin( string relationA, string& relationB );
 
 	//returns a Relation of all entries in each of the attributes
 	Relation projection( string relationName, vector<string> attributeNames );
