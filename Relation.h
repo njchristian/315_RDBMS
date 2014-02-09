@@ -25,62 +25,42 @@ public:
 
 	Relation( vector<Attribute> givenAttributes ) : attributes( givenAttributes ) {}
 
-	Relation(Relation* r){
-
-		relationName = r->getName();
-		attributes = r->getAttributes();
-
-		for(int i = 0; i < r->getNumTuples(); i++){
-
-			table.push_back(vector<Entry*>());
-
-			for(int j = 0; j < r->attributeSize(); j++){
-
-				table.at(i).push_back(new Entry(*r->getEntry(i, j)));
-
-			}
-
-		}
-
-	}
+	Relation( Relation* r );
 
 	// Public Functions	
-	}
-	void setName(string n){ relationName = n; }	
+	void addRow( vector<Entry*> rowToAdd );
+
+	int attributeSize( ){ return attributes.size( ); }
 
 	void changeAttributeName( int index, string newName ){
 		attributes.at( index ).name = newName;
 	}
-	void setAttributes(vector<Attribute> a){
-		attributes = a;
-	}
-
-	vector<vector<Entry*>> getAllEntries() { return table; }	vector<Attribute> getAttributes(){ return attributes; }
-
-
-	string getName(){ return relationName; }
-	string getAttributeNameAt(int i){ return attributes.at(i).name;}
-	
-	int attributeSize(){ 
-		return attributes.size(); 
-	}
-	int getNumTuples(){ return table.size(); }
-	
-	vector<Entry*> getRow(int index){ return table.at(index); }
-	int attributeSize( ){ return attributes.size( ); }
-	int getNumTubles( ){ return attributes.size( ); }
-
-	vector<Entry*> getRow( int index ){ return table.at( index ); }
-
-	Entry* getEntry( int i, int j ){ return table.at( i ).at( j ); }
-
-	bool hasTuple( vector<Entry*> tuple );
 
 	void clear( );
 
-	void setAttributes( vector<Attribute> newAttributes ) { attributes = newAttributes; }
+	vector<Attribute> getAttributes( ){ return attributes; }
+
+	string getAttributeNameAt( int i ){ return attributes.at( i ).name; }
+
+	vector<vector<Entry*>> getAllEntries() { return table; }	
+	
+	Entry* getEntry( int i, int j ){ return table.at( i ).at( j ); }
+
+	vector<int> getKeys( ) { return keys; }
+
+	string getName(){ return relationName; }
+	
+	int getNumTuples(){ return table.size(); }
+
+	vector<Entry*> getRow( int index ){ return table.at( index ); }
 
 	bool hasTuple( vector<Entry*> tuple );
+
+	void setAttributes( vector<Attribute> newAttributes ) { attributes = newAttributes; }
+
+	void setName( string n ){ relationName = n; }
+
+	void setTable( vector<vector<Entry*> > newTable ) { table = newTable;  }
 
 	Relation& operator=(Relation& b);
 

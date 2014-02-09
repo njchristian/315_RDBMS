@@ -74,7 +74,40 @@ void Database::addTupleToRelation( vector<Entry> tuple, string relationName ) {
 
 
 //cross product of two relations given their in index
-Relation Database::crossProduct( Relation& relationA, Relation& relationB ){
+Relation Database::crossProduct( string relationAName, string relationBName ){
+	Relation* relationA = findRelation( relationAName );
+	Relation* relationB = findRelation( relationBName );
+
+	result.clear( );
+
+	// Create a vector for the attributes of both A and B and add all of the attributes
+	vector<Attribute> totalAttributes = relationA->getAttributes( );
+	vector<Attribute> attributesOfB = relationB->getAttributes( );
+	for ( unsigned i = 0; i < attributesOfB.size( ); ++i ) {
+		totalAttributes.push_back( attributesOfB[ i ] );
+	}
+
+	// set the new attributes
+	result.setAttributes( totalAttributes );
+
+	vector<vector<Entry*> > relationATuples = relationA->getAllEntries( );
+	vector<vector<Entry*> > relationBTuples = relationB->getAllEntries( );
+	vector<vector<Entry*> > newRelationTuples;
+
+	vector<Entry*> row;
+
+	// Create the new tuples using the definition of cross product
+	for ( unsigned i = 0; i < relationATuples.size( ); ++i ) {
+		for ( unsigned j = 0; j < relationBTuples.size( ); ++j ) {
+			row = relationATuples[ i ];
+			row.insert( row.end( ), relationBTuples[ j ].begin( ), relationBTuples[ j ].end( ) );
+			newRelationTuples.push_back( row );
+		}
+	}
+
+	// Add the new tuples to the relation
+	result.setTable( newRelationTuples );
+	
 	return result;
 }
 
@@ -102,7 +135,7 @@ Relation Database::differenceTwoRelation( string relationAName, string relationB
 	}
 
 	// Find all of the tuples that are in A but not in B
-	for ( int i = 0; i < relationA->getNumTubles( ); ++i ) {
+	for ( int i = 0; i < relationA->getNumTuples( ); ++i ) {
 		if ( !relationB->hasTuple( relationA->getRow( i ) ) ) {
 			result.addRow( relationA->getRow( i ) );
 		}
