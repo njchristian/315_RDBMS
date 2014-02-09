@@ -30,11 +30,9 @@ Entry Database::accessAttribute( ) {
 
 
 //
-Relation Database::accessRelation( ) {
+Relation* Database::accessRelation( string name ) {
 
-	Relation relation;
-
-	return relation;
+	return findRelation(name);
 }
 
 
