@@ -197,7 +197,7 @@ Relation Database::projection( string relationName, vector<string> attributeName
 
 	for(int i = 0; i < attributeIndeces.size(); ++i){
 
-		resultAtts.push_back(targetRelation->getAttributeAt(i));
+		resultAtts.push_back(targetRelation->getAttributeAt( attributeIndeces.at(i)));
 
 	}
 
@@ -231,10 +231,15 @@ void Database::removeTupleFromRelation(  ) {
 
 
 //renames the attributes of a relation
-void Database::renameAttributes( vector<string> newNames, string relationName ) {
-	Relation* correctRelation = findRelation( relationName );
+Relation Database::renameAttributes( vector<string> newNames, string relationName ) {
+	Relation* targetRelation = findRelation( relationName );
 
-	correctRelation->setAttributeNames( newNames );
+	//Deep copy
+	result = *targetRelation;
+
+	result.setAttributeNames( newNames );
+
+	return result;
 }
 
 

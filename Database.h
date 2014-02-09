@@ -57,7 +57,7 @@ public:
 	void removeTupleFromRelation( );
 
 	//renaming an attribute in a relation
-	void renameAttributes( vector<string> newNames, string relationName );
+	Relation renameAttributes( vector<string> newNames, string relationName );
 
 	//print the tuples that satisfy an condition
 	Relation selection( vector<Condition>, string targetRelationName ); //i don't know how to pass an conidtion

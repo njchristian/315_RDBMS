@@ -119,5 +119,17 @@ int main(){
 
 	cout<<*localRelations.at(4)<<'\n';
 
+	vector<string> newNames;
+	newNames.push_back("Abuser");
+	newNames.push_back("Abused");
+	newNames.push_back("Years in Servitude");
+
+	localRelations.push_back(new Relation(d.renameAttributes(newNames, "Dogs") ));
+	localRelations.at(5)->setName("Rename to PITA Standards");
+
+	cout<<*localRelations.at(5)<<'\n';
+
+	cout<<*d.accessRelation("Dogs")<<'\n'<<*d.accessRelation("More Dogs")<<'\n';
+
 	return 1;
 }

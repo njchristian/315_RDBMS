@@ -94,6 +94,14 @@ ostream& operator<<(ostream& os, Relation& a){
 
 	os<<"Name: "<<a.getName()<<"\n\n";
 
+	for(int i = 0; i < a.attributeSize(); ++i){
+
+		os<<a.getAttributeNameAt(i)<<": ";
+
+	}
+
+	os<<"\n\n";
+
 	for(int i = 0; i < a.getNumTuples(); i++){
 
 		stringstream ss;
