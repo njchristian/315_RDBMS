@@ -291,9 +291,6 @@ Relation Database::selection( vector<Condition> conditions,
 // is then returned and stored in the result data member.
 Relation Database::unionTwoRelations( Relation* relationA, Relation* relationB ) {
 
-	Relation* relationA = findRelation( rA );
-	Relation* relationB = findRelation( rB );
-
 	result.clear( );
 
 	vector<Attribute> attA = relationA->getAttributes( );
