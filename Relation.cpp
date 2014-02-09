@@ -9,6 +9,7 @@ void Relation::clear( ){
 
 }
 
+vector<string> Relation::getAttributeNames(){
 
 	vector<string> result;
 
