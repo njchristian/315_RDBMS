@@ -32,16 +32,16 @@ void Relation::clear( ){
 
 }
 
-// what is this stuff???
+vector<string> Relation::getAttributeNames(){
 
-//	vector<string> result;
+	vector<string> result;
 
-//	for (int i = 0; i < attributes.size(); i++){
-//		result.push_back(attributes.at(i).name);
-//	}
+	for (int i = 0; i < attributes.size(); i++){
+		result.push_back(attributes.at(i).name);
+	}
 
-//	return result;
-//}
+	return result;
+}
 
 bool Relation::hasTuple( vector<Entry*> tuple ) {
 	for ( unsigned i = 0; i < table.size( ); ++i ) {
