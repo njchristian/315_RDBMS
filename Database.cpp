@@ -355,54 +355,78 @@ Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 	sort(attA.begin(), attA.end(), Attribute::compareAttribute);
 	sort(attB.begin(), attB.end(), Attribute::compareAttribute);
 
-	//find the attributes in b and not in a
-	vector<Attribute>::iterator it1 = attA.begin();
-	vector<Attribute>::iterator it2 = attB.begin();
+	//find the union of the attributes
 
-	while( it1 != attA.end() && it2 != attB.end() )
+	int indexA = 0;
+	int indexB = 0;
+
+	while( ( indexA < attA.size() ) && ( indexB < attB.size() ) )
 	{
-		if( it1->name == it2->name )
+		if( attA[ indexA ].name == attB[ indexB ].name )
 		{
-			//joinAttribute.push_back( *it1 );
-			++it1;
-			++it2;
+			joinAttribute.push_back( attA[ indexA ] );
+			indexInA.push_back( indexA );
+			indexInB.push_back( indexB );
+			++indexA;
+			++indexB;
 		}
-		else 
+		else
 		{
-			if( it1->name < it2->name )
+			if( attA[ indexA ].name < attB[ indexB ].name )
 			{
-				++it1;
+				joinAttribute.push_back( attA[ indexA ] );
+				++indexA;
 			}
-			else 
+			else
 			{
-				joinAttribute.push_back( *it2 );
-				++it2;
+				joinAttribute.push_back( attB[ indexB ] );
+				++indexB;
 			}
-			
+
 		}
 	}
 
-	//place the rest into the vectors
-	while( it1 != attA.end() )
+	while( indexA < attA.size() )
 	{
-		++it1;
+		joinAttribute.push_back( attA[ indexA ] );
+		++indexA;
 	}
 
-	while( it2 != attB.end() )
+	while( indexB < attB.size() )
 	{
-		joinAttribute.push_back( *it2 );
-		++it2;
+		joinAttribute.push_back( attB[ indexB ] );
+		++indexA;
 	}
+	
 
 	result.setAttributes( joinAttribute );
 
-	result = projection( result.getAttributeNames(), relationB->getName() );
+	vector<vector<Entry*> > relationATuples = relationA->getAllEntries( );
+	vector<vector<Entry*> > relationBTuples = relationB->getAllEntries( );
+	vector<vector<Entry*> > newRelationTuples;
 
-	//i was thinking cross product but that's not right
-	//we need to map a row in relationA to a row in relationB
-	result = crossProduct( relationA->getName(), result.getName() );
+	int i;
+	vector<Entry*> newRow;
+	for( i = 0; i < relationATuples.size(); ++i )
+	{
+		newRow = relationATuples[ i ];
+		for( int j = 0; j < indexInA.size(); ++j )
+		{
+			for( int k = 0; k < relationBTuples.size(); ++k )
+			{
+				for( int l = 0; l < indexInB.size(); ++l ) 
+				{
+					if( newRow[ indexInA[ j ] ] == relationBTuples[ k ][ l ] )
+					{
+						newRow.push_back( relationBTuples[ k ][ l ] );
+					}
+				}
+
+			}
+		}
+		
+	}
 
 	return result;
-
 
 }

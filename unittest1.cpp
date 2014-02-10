@@ -67,24 +67,57 @@ namespace UnitTest1
 			//testing projection
 			//to really test projection we need to overload the == operator for relations
 			Assert::AreEqual( d.projection( dogs->getAttributeNames(), dogs->getName() ).getName(), dogs->getName() ); //testing projection
-
+			
 			vector<Attribute> dogAttributes = dogs->getAttributes();
 			string name = "Name";
 
 			Assert::AreEqual( d.accessAttribute( dogAttributes[0].name, "Dogs" )->name , name); //testing insert attributes
 
-			vector<string> newAttributeName;
+			e2.push_back(vector<Entry>());
+			e2.push_back(vector<Entry>());
+			e2.push_back(vector<Entry>());
 
+			e2.at(0).push_back(Entry("Tyler"));
+			e2.at(0).push_back(Entry("Garren"));
+			e2.at(0).push_back(Entry(5));
+
+			e2.at(1).push_back(Entry("Abby"));
+			e2.at(1).push_back(Entry("Amy"));
+			e2.at(1).push_back(Entry(3));
+
+			e2.at(2).push_back(Entry("Dusty"));
+			e2.at(2).push_back(Entry("Rodger"));
+			e2.at(2).push_back(Entry(11));
+
+			d.addRelationToDatabase("More Dogs", testAtts, keys);
+
+			d.addTupleToRelation(e2.at(0), "More Dogs");
+			d.addTupleToRelation(e2.at(1), "More Dogs");
+			d.addTupleToRelation(e2.at(2), "More Dogs");
+
+			//test set union
+			Assert::AreEqual( ( d.unionTwoRelations( "More Dogs" , "Dogs" ) ).getNumTuples(),
+				( d.unionTwoRelations( "Dogs" , "More Dogs" ) ).getNumTuples() );
+
+			//test set difference
+
+			//test cross product
+			Assert::AreEqual( ( d.crossProduct( "More Dogs" , "Dogs" ) ).getNumTuples(),
+				( d.crossProduct( "Dogs" , "More Dogs" ) ).getNumTuples() );
+
+			//test natural join
+
+
+			//testing renaming
+			vector<string> newAttributeName;
 			newAttributeName.push_back("Dog Name");
 			newAttributeName.push_back("Owner Name");
 			newAttributeName.push_back("Dog age");
 
-			//testing renaming
+			
 			Assert::AreEqual( d.renameAttributes( newAttributeName, dogs->getName() ).getAttributeNames()[0], newAttributeName[0]  );
 			Assert::AreEqual( d.renameAttributes( newAttributeName, dogs->getName() ).getAttributeNames()[1], newAttributeName[1]  );
 			Assert::AreEqual( d.renameAttributes( newAttributeName, dogs->getName() ).getAttributeNames()[2], newAttributeName[2]  );
-
-				//renameAttributes
 
 			Assert::AreEqual(1,1); //testing test
 		}
