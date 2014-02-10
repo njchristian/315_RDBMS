@@ -39,6 +39,27 @@ void Relation::clear( ){
 }
 
 
+bool Relation::removeTuple( vector<Entry> tuple ) {
+	bool isSame;
+	unsigned i = 0;
+	for ( auto it = table.begin( ); it != table.end( ); ++it ) {
+		isSame = false;
+		for ( unsigned j = 0; j < it->size( ); ++j ) {
+			if ( tuple[ j ] == *table[i][j] ) {
+				isSame = true;
+			}
+		}
+		if ( isSame == true ) {
+			table.erase( it );
+			return true;
+		}
+		++i;
+	}
+
+	return false;
+}
+
+
 // Get the names of the relation's attributes.
 vector<string> Relation::getAttributeNames(){
 

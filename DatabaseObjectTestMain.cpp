@@ -131,5 +131,7 @@ int main(){
 
 	cout<<*d.accessRelation("Dogs")<<'\n'<<*d.accessRelation("More Dogs")<<'\n';
 
+	system("pause");
+
 	return 1;
 }

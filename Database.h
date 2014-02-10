@@ -60,7 +60,7 @@ public:
 	Relation projection( vector<string> attributeNames, Relation* targetRelation );
 	Relation projection( vector<string> attributeNames, string relationName ){ return projection(attributeNames, findRelation(relationName)); }
 
-	void removeTupleFromRelation( );
+	void removeTupleFromRelation( vector<Entry> tuple, string relationName );
 
 	Relation renameAttributes( vector<string> newNames, Relation* targetRelation );
 	Relation renameAttributes( vector<string> newNames, string relationName ){ return renameAttributes( newNames, findRelation(relationName)); }
