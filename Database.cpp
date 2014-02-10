@@ -242,8 +242,17 @@ Relation Database::projection( vector<string> attributeNames, Relation* targetRe
 
 
 //
-void Database::removeTupleFromRelation(  ) {
+void Database::removeTupleFromRelation( vector<Entry> tuple, string relationName ) {
+	Relation* targetRelation = findRelation( relationName );
 
+	bool didRemove = targetRelation->removeTuple( tuple );
+
+	if ( didRemove == true ) {
+		cout << "Tuple removed successfully.\n";
+	}
+	else {
+		cout << "Tuple not found/removed from the relation.\n";
+	}
 }
 
 
@@ -328,11 +337,13 @@ Relation Database::unionTwoRelations( Relation* relationA, Relation* relationB )
 	// --------------------------------------------------------------Do we need to set a name for the new relation??
 	result = *relationA;
 
-	// Add the tuples from relationB to the new relation
+	// Add the tuples from relationB to the new relation that do not already
+	// exist in it.
 	// --------------------------------------------------------------Does it need to remove duplicates??
 	for(int i = 0; i < relationB->getNumTuples(); i++){
-		result.addRow( relationB->getRow( i ) );
-
+		if ( !result.hasTuple( relationB->getRow( i ) ) ) {
+			result.addRow( relationB->getRow( i ) );
+		}
 	}
 
 	return result;

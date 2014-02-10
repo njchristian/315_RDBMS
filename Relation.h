@@ -49,6 +49,8 @@ public:
 	string getAttributeNameAt( int i ){ return attributes.at( i ).name; }
 
 	vector<vector<Entry*>> getAllEntries() { return table; }	
+
+	bool removeTuple( vector<Entry> tuple );
 	
 	Entry* getEntry( int i, int j ){ return table.at( i ).at( j ); }
 
