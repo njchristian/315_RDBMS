@@ -61,9 +61,12 @@ public:
 
 	vector<int> getKeys( ) { return keys; }
 
+	string getName(){ return relationName; }
+	
+	int getNumTuples(){ return table.size(); }
 
+	vector<Entry*> getRow( int index ){ return table.at( index ); }
 
-	vector<Entry*> getRow( int index ){ return table.at( index ); 
 	bool hasTuple( vector<Entry*> tuple );
 
 	void setAttributes( vector<Attribute> newAttributes );
