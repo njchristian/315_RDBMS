@@ -241,6 +241,20 @@ Relation Database::projection( vector<string> attributeNames, Relation* targetRe
 }
 
 
+void Database::removeRelationFromDatabase( string relationName ) {
+	Relation* targetRelation = findRelation( relationName );
+
+	// Iterator through the vector of the relations until the correct one is
+	// found and then erase it.
+	for ( auto iterator = relations.begin( ); iterator != relations.end( ); ++iterator ) {
+		if ( *iterator == targetRelation ) {
+			relations.erase( iterator );
+			break;
+		}
+	}
+}
+
+
 //
 void Database::removeTupleFromRelation( vector<Entry> tuple, string relationName ) {
 	Relation* targetRelation = findRelation( relationName );
