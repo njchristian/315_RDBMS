@@ -74,7 +74,7 @@ vector<string> Relation::getAttributeNames(){
 
 
 // Check to see if a relation has the specified tuple in it already.
-bool Relation::hasTuple( vector<Entry*> tuple ) {
+bool Relation::hasTuple( vector<Entry*> tuple ) const {
 	for ( int i = 0; i < table.size( ); ++i ) {
 		
 		bool currentTuple = true;
@@ -171,7 +171,7 @@ void Relation::update( string attributeName, string testCondition, Operation op,
 }
 
 
-bool operator==( Relation& relationA, Relation& relationB ) {
+bool operator==( const Relation& relationA, const Relation& relationB ) {
 	// Check to see if name is the same
 	if ( relationA.getName( ) != relationB.getName( ) ) {
 		return false;
