@@ -134,6 +134,43 @@ Relation& Relation::operator=(Relation& b){
 }
 
 
+// Assume the condition object has the operand that is parsed as its operand2.
+void Relation::update( string attributeName, string testCondition, Operation op, Entry newValue ) {
+	int attributeIndex = -1;
+	
+	// Find the index of the attribute
+	for ( unsigned i = 0; i < attributes.size( ); ++i ) {
+		if ( attributes[ i ].name == attributeName ) {
+			attributeIndex = i;
+		}
+	}
+
+	// Error check
+	if ( attributeIndex == -1 ) {
+		cout << "Attribute not found.\n";
+		return;
+	}
+
+	// Loop through all the rows 
+	vector<Entry*> helperVector;
+	Entry* helperPointer;
+	for ( unsigned i = 0; i < table.size( ); ++i ) {
+		// get the pointer to the corresponding Entry in the current row
+		helperVector = table[ i ];
+		helperPointer = helperVector[ attributeIndex ];
+
+		// Create the condition and test to see if it meets the condition
+		Condition con( *helperPointer, op, testCondition, NONE, 0 );
+		con.eval( );
+
+		// If the condition is met then update the Entry
+		if ( con.getLiteral( ) ) {
+			*helperPointer = newValue;
+		}
+	}
+}
+
+
 bool operator==( Relation& relationA, Relation& relationB ) {
 	// Check to see if name is the same
 	if ( relationA.getName( ) != relationB.getName( ) ) {

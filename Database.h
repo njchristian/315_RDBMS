@@ -75,6 +75,8 @@ public:
 	Relation unionTwoRelations( string relationA, Relation* targetRelationB ){ return unionTwoRelations(findRelation(relationA), targetRelationB); }
 	Relation unionTwoRelations( string relationA, string relationB ){ return unionTwoRelations(findRelation(relationA) , findRelation(relationB)); }
 
+	void update( string relationName, string attributeName, string testCondition, Operation op, Entry newValue );
+
 };
 
 #endif

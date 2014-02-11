@@ -45,6 +45,7 @@ public:
 	Condition(string var1, Operation givenOp, string var2, Connector givenC, int p);
 	
 	// Functions
+
 	bool firstIsVar(){return isVar1;}
 	bool secondIsVar(){ return isVar2;}
 	
