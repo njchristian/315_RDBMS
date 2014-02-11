@@ -42,6 +42,8 @@ public:
 
 	vector<Attribute> getAttributes( ){ return attributes; }
 
+	vector<Attribute>* getAttributesPointer( ) { return &attributes; }
+
 	Attribute getAttributeAt(int i) { return attributes.at(i); }
 
 	vector<string> Relation::getAttributeNames( );

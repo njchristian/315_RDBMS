@@ -26,14 +26,14 @@ Relation* Database::findRelation( string relationName ){
 Attribute* Database::accessAttribute( string name , string relationName ) {
 
 	Relation* relation = findRelation(relationName);
-	vector<Attribute> attributes = relation->getAttributes();
+	vector<Attribute>* attributes = relation->getAttributesPointer();
 
 	Attribute* attrib = NULL;
 
 	unsigned int i;
-	for( i=0; i<attributes.size(); ++i ){
-		if( attributes[ i ].name == name ){
-			attrib = &attributes[ i ];
+	for( i = 0; i < attributes->size(); ++i ){
+		if( attributes->at(i).name == name ){
+			attrib = &attributes->at(i);
 			break;
 		}
 	}
