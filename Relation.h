@@ -3,6 +3,7 @@
 
 #include "Entry.h"
 #include "Attribute.h"
+#include "Condition.h"
 #include <sstream>
 #include <vector>
 
@@ -73,6 +74,8 @@ public:
 	void setName( string n ){ relationName = n; }
 
 	void setTable( vector<vector<Entry*> > newTable ) { table = newTable;  }
+
+	void update( string attributeName, string testCondition, Operation op, Entry newValue );
 
 	Relation& operator=(Relation& b);
 

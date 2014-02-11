@@ -13,5 +13,5 @@ bool operator==( Entry& entry1, Entry& entry2 ) {
 }
 
 bool operator!=( Entry& entry1, Entry& entry2 ) {
-	return entry1 == entry2;
+	return !(entry1 == entry2);
 }

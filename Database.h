@@ -36,6 +36,8 @@ public:
 
 	void addTupleToRelation( vector<Entry> tuple, string relationName );
 
+	void removeRelationFromDatabase( string relationName );
+
 	Relation crossProduct( Relation* targetRelationA, Relation* targetRelationB );
 	Relation crossProduct( Relation* targetRelationA, string relationB ){ return crossProduct(targetRelationA, findRelation(relationB)); }
 	Relation crossProduct( string relationA, Relation* targetRelationB ){ return crossProduct(findRelation(relationA), targetRelationB); }
@@ -47,6 +49,8 @@ public:
 	Relation differenceTwoRelation( string relationA, string relationB ){ return differenceTwoRelation(findRelation(relationA) , findRelation(relationB)); }
 
 	int findAttribute( );
+
+	int findCorrespondingRow( vector<Entry*> rowA, vector<int> indexA, Relation* b, vector<int> indexB );
 
 	int findRelationinDatabase( );
 
@@ -60,8 +64,6 @@ public:
 	Relation projection( vector<string> attributeNames, Relation* targetRelation );
 	Relation projection( vector<string> attributeNames, string relationName ){ return projection(attributeNames, findRelation(relationName)); }
 
-	void removeRelationFromDatabase( string relationName );
-	
 	void removeTupleFromRelation( vector<Entry> tuple, string relationName );
 
 	Relation renameAttributes( vector<string> newNames, Relation* targetRelation );
@@ -74,6 +76,8 @@ public:
 	Relation unionTwoRelations( Relation* targetRelationA, string relationB ){ return unionTwoRelations(targetRelationA, findRelation(relationB)); }
 	Relation unionTwoRelations( string relationA, Relation* targetRelationB ){ return unionTwoRelations(findRelation(relationA), targetRelationB); }
 	Relation unionTwoRelations( string relationA, string relationB ){ return unionTwoRelations(findRelation(relationA) , findRelation(relationB)); }
+
+	void update( string relationName, string attributeName, string testCondition, Operation op, Entry newValue );
 
 };
 

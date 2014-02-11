@@ -27,7 +27,7 @@ namespace UnitTest1
 
 		
 		
-		TEST_METHOD(projection)
+		TEST_METHOD(create)
 		{
 			
 			testAtts.push_back(Attribute("Name", VARCHAR));
@@ -70,7 +70,92 @@ namespace UnitTest1
 			Assert::AreEqual( d.projection( dogs->getAttributeNames(), dogs->getName() ).getAttributeAt(0).name, dogs->getAttributeAt(0).name ); //testing projection
 		}
 
+		TEST_METHOD(dropTable)
+		{
+			testAtts.push_back(Attribute("Name", VARCHAR));
+			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Age", INTEGER));
+
+	
+			keys.push_back(0);
+			keys.push_back(2);
+
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+
+			entries.at(0).push_back(Entry("Abby"));
+			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry(3));
+
+			d.addTupleToRelation(entries.at(0), "Dogs");
+			d.addTupleToRelation(entries.at(1), "Dogs");
+			d.addTupleToRelation(entries.at(2), "Dogs");
+
+			d.addRelationToDatabase("Dogs", testAtts, keys);
+
+			d.removeRelationFromDatabase( "Dogs" );
+
+			string emptyString = "";
+
+			Assert::AreEqual( d.accessRelation( "Dogs")->getName(), emptyString );
+
+		}
+
 		TEST_METHOD(insert)
+		{
+			testAtts.push_back(Attribute("Name", VARCHAR));
+			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Age", INTEGER));
+
+	
+			keys.push_back(0);
+			keys.push_back(2);
+
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+
+			entries.at(0).push_back(Entry("Abby"));
+			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry(3));
+
+			d.addTupleToRelation(entries.at(0), "Dogs");
+			d.addTupleToRelation(entries.at(1), "Dogs");
+			d.addTupleToRelation(entries.at(2), "Dogs");
+
+			d.addRelationToDatabase("Dogs", testAtts, keys);
+
+
+			vector<Entry> newTuple1;
+
+			newTuple1.push_back(Entry("Rockie"));
+			newTuple1.push_back(Entry("Brain"));
+			newTuple1.push_back(Entry(7));
+
+			d.addTupleToRelation( newTuple1 , "Dogs");
+
+			//Assert::IsTrue( d.accessRelation( "Dogs" )->hasTuple( &newTuple1 ) );
+
+		}
+
+
+		TEST_METHOD(deleteFromTable)
+		{
+
+		}
+
+		TEST_METHOD(select)
+		{
+
+		}
+
+		TEST_METHOD(difference)
+		{
+
+		}
+
+		TEST_METHOD(accessAttribute)
 		{
 			testAtts.push_back(Attribute("Name", VARCHAR));
 			testAtts.push_back(Attribute("Owner", VARCHAR));
@@ -106,8 +191,6 @@ namespace UnitTest1
 			Relation* dogs = d.accessRelation("Dogs");
 			vector<Attribute> dogAttributes = dogs->getAttributes();
 			string name = "Name";
-
-			dogAttributes[0].name;
 
 			Assert::AreEqual( (d.accessAttribute( dogAttributes[0].name, "Dogs" ))->name , name);
 		}
@@ -174,7 +257,7 @@ namespace UnitTest1
 
 		}
 			//test set difference
-		TEST_METHOD(test)
+		TEST_METHOD(crossproduct)
 		{
 
 			//test cross product
@@ -185,7 +268,7 @@ namespace UnitTest1
 
 		}
 
-		TEST_METHOD(renaming)
+		TEST_METHOD(update)
 		{
 
 			testAtts.push_back(Attribute("Name", VARCHAR));
@@ -232,6 +315,11 @@ namespace UnitTest1
 			Assert::AreEqual( d.renameAttributes( newAttributeName, dogs->getName() ).getAttributeNames()[2], newAttributeName[2]  );
 
 			Assert::AreEqual(1,1); //testing test
+		}
+
+		TEST_METHOD(naturalJoin)
+		{
+
 		}
 
 	};

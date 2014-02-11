@@ -177,6 +177,38 @@ int Database::findAttribute( ) {
 }
 
 
+int findCorrespondingRow( vector<Entry*> rowA, vector<int> indexA, Relation* b, vector<int> indexB ){
+
+	vector<vector<Entry*>> tableB = b->getAllEntries( );
+
+	for ( int i = 0; i < tableB.size( ); i++ ){
+
+		bool flag = true;
+
+		for ( int j = 0; j < indexB.size( ); j++ ){
+
+
+
+			for ( int k = 0; k < indexA.size( ); k++ ){
+
+
+				if ( *( rowA.at( indexA.at( k ) ) ) != *( tableB.at( i ).at( indexB.at( j ) ) ) ){
+					flag = false;
+				}
+
+			}
+
+		}
+
+		if ( flag ){
+			return i;
+		}
+
+	}
+
+}
+
+
 //
 int Database::findTuple( ) {
 
@@ -524,4 +556,15 @@ Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 	result = myResult;
 
 	return result;
+}
+
+
+
+// Updates all of the entries in a relation that meet the specified condition
+void Database::update( string relationName, string attributeName, 
+	string testCondition, Operation op, Entry newValue ) {
+
+	Relation* targetRelation = findRelation( relationName );
+
+	targetRelation->update( attributeName, testCondition, op, newValue );
 }
