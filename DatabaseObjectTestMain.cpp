@@ -167,5 +167,20 @@ int main(){
 
 	cout<<*localRelations.at(6)<<'\n';
 
+	vector<Condition> c2;
+	
+	c2.push_back(Condition("Owner", EQUALS, Entry("Melodie"), NONE, 1));
+
+	vector<string> aa;
+	aa.push_back("Age");
+
+	vector<Entry> age;
+	age.push_back(Entry(40));
+
+	localRelations.push_back(new Relation(d.update("Dogs", aa, age, c2)));
+	localRelations.at(7)->setName("Update");
+
+	cout<<*localRelations.at(7)<<'\n';
+
 	return 1;
 }
