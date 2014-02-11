@@ -79,6 +79,8 @@ public:
 	
 };
 
+bool operator==( Relation& relationA, Relation& relationB );
+
 ostream& operator<<(ostream& os, Relation& a);
 
 #endif

@@ -134,6 +134,38 @@ Relation& Relation::operator=(Relation& b){
 }
 
 
+bool operator==( Relation& relationA, Relation& relationB ) {
+	// Check to see if name is the same
+	if ( relationA.getName( ) != relationB.getName( ) ) {
+		return false;
+	}
+
+	// Check for the same attributes
+	if ( relationA.getAttributes( ) != relationB.getAttributes( ) ) {
+		return false;
+	}
+
+	// Check for the same keys
+	if ( relationA.getKeys( ) != relationB.getKeys( ) ) {
+		return false;
+	}
+
+	// Check for number of rows
+	if ( relationA.getNumTuples( ) != relationB.getNumTuples( ) ) {
+		return false;
+	}
+
+	// Make sure each row exists in both relations
+	for ( unsigned i = 0; i < relationB.getNumTuples( ); ++i ) {
+		if ( !relationA.hasTuple( relationB.getRow( i ) ) ) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+
 // Output operator
 ostream& operator<<(ostream& os, Relation& a){
 
