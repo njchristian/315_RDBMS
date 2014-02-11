@@ -203,7 +203,8 @@ int Database::findAttribute( ) {
 }
 
 
-int Database::findCorrespondingRow( vector<Entry*> rowA, vector<int> indexA, Relation* b, vector<int> indexB ){
+int Database::findCorrespondingRow( vector<Entry*> rowA, 
+	vector<int> indexA, Relation* b, vector<int> indexB ){
 
 	vector<vector<Entry*>> tableB = b->getAllEntries( );
 
@@ -218,7 +219,9 @@ int Database::findCorrespondingRow( vector<Entry*> rowA, vector<int> indexA, Rel
 			for ( int k = 0; k < indexA.size( ); k++ ){
 
 
-				if ( *( rowA.at( indexA.at( k ) ) ) != *( tableB.at( i ).at( indexB.at( j ) ) ) ){
+				if ( *( rowA.at( indexA.at( k ) ) ) != *( 
+					tableB.at( i ).at( indexB.at( j ) ) ) ){
+					
 					flag = false;
 				}
 
@@ -246,7 +249,8 @@ int Database::findTuple( ) {
 
 
 //subset of attributes in a relation
-Relation Database::projection( vector<string> attributeNames, Relation* targetRelation  ) {
+Relation Database::projection( vector<string> attributeNames, 
+	Relation* targetRelation  ) {
 
 	result.clear();
 
@@ -258,7 +262,7 @@ Relation Database::projection( vector<string> attributeNames, Relation* targetRe
 
 		for(int j = 0; j <attributeNames.size(); ++j){
 
-			if( attributeNames.at(j) == targetRelation->getAttributeNameAt(i) ){
+			if( attributeNames.at(j) == targetRelation->getAttributeNameAt(i) ) {
 				attributeIndeces.push_back(i);
 			}
 
@@ -556,8 +560,8 @@ Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 
 
 // Updates all of the entries in a relation that meet the specified condition
-Relation* Database::update( string relationName, vector<string> attributeNames, vector<Entry> newVals,
-	vector<Condition> conditions ) {
+Relation* Database::update( string relationName, vector<string> attributeNames, 
+	vector<Entry> newVals, vector<Condition> conditions ) {
 
 	Relation* targetRelation = findRelation( relationName );
 
