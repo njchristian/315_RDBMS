@@ -73,6 +73,13 @@ void Database::addRelationToDatabase( string name, vector<Attribute> attributes,
 
 }
 
+void Database::addRelationToDatabase( Relation r ){
+
+	Relation* newRelation = new Relation(r);
+	
+	relations.push_back(newRelation);
+
+}
 
 // Add the row (which is a tuple) into the specified relation.
 void Database::addTupleToRelation( vector<Entry> tuple, string relationName ) {

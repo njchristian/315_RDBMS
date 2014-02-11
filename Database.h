@@ -33,6 +33,8 @@ public:
 
 	void addRelationToDatabase( string name, vector<Attribute> attributes, 
 		vector<int> keys );
+		
+	void addRelationToDatabase( Relation r );
 
 	void addTupleToRelation( vector<Entry> tuple, string relationName );
 
