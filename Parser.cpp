@@ -125,6 +125,13 @@ int Parser::parseCommand(stringstream& command){
 
 }
 
+//TODO
+Relation Parser::projection(stringstream& command){
+
+
+}
+
+//DONE - NOT DEBUGGED
 int Parser::parseQuery(stringstream& command){
 
 	string relationName = readAlphaNumWord(command);
@@ -133,9 +140,9 @@ int Parser::parseQuery(stringstream& command){
 		return INVALID;
 	}
 
-	Relation* targetRelation = parseExpr(command);
+	Relation targetRelation = parseExpr(command);
 
-	if( targetRelation == NULL ){
+	if( targetRelation.isEmpty() ){
 		return INVALID;
 	}
 
@@ -145,7 +152,7 @@ int Parser::parseQuery(stringstream& command){
 
 }
 
-//TODO
+//DONE - NOT DEBUGGED
 Relation Parser::parseExpr(stringstream& command){
 
 	//Find command it matches to.
@@ -191,9 +198,6 @@ Relation Parser::parseExpr(stringstream& command){
 
 			string relationB = readAlphaNumWord(command);
 
-			if( readSemi(command) < 0 ){
-				return Relation();
-			}
 
 			targetRelation = database.unionTwoRelations(relationA, relationB);
 
@@ -203,9 +207,6 @@ Relation Parser::parseExpr(stringstream& command){
 
 			string relationB = readAlphaNumWord(command);
 
-			if( readSemi(command) < 0 ){
-				return Relation();
-			}
 
 			targetRelation = database.differenceTwoRelation(relationA, relationB);
 
@@ -215,9 +216,6 @@ Relation Parser::parseExpr(stringstream& command){
 
 			string relationB = readAlphaNumWord(command);
 
-			if( readSemi(command) < 0 ){
-				return Relation();
-			}
 
 			targetRelation = database.crossProduct(relationA, relationB);
 
@@ -233,9 +231,6 @@ Relation Parser::parseExpr(stringstream& command){
 
 			string relationB = readAlphaNumWord(command);
 		
-			if( readSemi(command) < 0 ){
-				return Relation();
-			}
 
 			targetRelation = database.naturalJoin(relationA, relationB);
 
