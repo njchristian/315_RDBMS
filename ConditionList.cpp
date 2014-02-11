@@ -18,16 +18,16 @@ ConditionList::ConditionList( vector<Condition> givenConditions, Relation* r ) :
 	}
 
 	//replace any variable names with the proper index
-	for ( list<Condition>::iterator i = conditions.begin( ); 
+	for ( list<Condition>::iterator i = conditions.begin( );
 		i != conditions.end( ); i++ ){
 
 		if ( i->firstIsVar( ) ){
-			i->setVar1Index( findVarNameIndex( targetRelation, 
+			i->setVar1Index( findVarNameIndex( targetRelation,
 				i->firstVarName( ) ) );
 		}
 
 		if ( i->secondIsVar( ) ){
-			i->setVar2Index( findVarNameIndex( targetRelation, 
+			i->setVar2Index( findVarNameIndex( targetRelation,
 				i->secondVarName( ) ) );
 		}
 	}
@@ -41,16 +41,17 @@ bool ConditionList::evalOnTuple( int tupleIndex ) {
 	list<Condition> localConditions = conditions;
 	int localHP = highestPriority;
 
-	for ( list<Condition>::iterator i = localConditions.begin( ); 
+	// Loop through the conditions and evaluate
+	for ( list<Condition>::iterator i = localConditions.begin( );
 		i != localConditions.end( ); i++ ) {
 
 		if ( i->firstIsVar( ) ) {
-			i->setOperand1Entry( *targetRelation->getEntry( tupleIndex, 
+			i->setOperand1Entry( *targetRelation->getEntry( tupleIndex,
 				i->getVar1Index( ) ) );
 		}
 
 		if ( i->secondIsVar( ) ) {
-			i->setOperand2Entry( *targetRelation->getEntry( tupleIndex, 
+			i->setOperand2Entry( *targetRelation->getEntry( tupleIndex,
 				i->getVar2Index( ) ) );
 		}
 
@@ -60,20 +61,19 @@ bool ConditionList::evalOnTuple( int tupleIndex ) {
 
 	while ( localHP > 0 ) {
 
-		for ( list<Condition>::iterator i = localConditions.begin( ); 
+		for ( list<Condition>::iterator i = localConditions.begin( );
 			i != localConditions.end( ); i++ ){
 
 			if ( i->getPriority( ) == highestPriority ){
 
-				/*************
-				I don't know how else to get i.next..
-				*************/
+				
+				// Get i.next
 				i++;
 				list<Condition>::iterator next = i;
 				i--;
 
 
-				//update current value
+				// Update current value
 				switch ( i->getConnector( ) ){
 				case ( AND ) :
 					i->setLiteral( i->getLiteral( ) && next->getLiteral( ) );
@@ -107,6 +107,7 @@ bool ConditionList::evalOnTuple( int tupleIndex ) {
 // Returns the index of the given variable name in the specified relation.
 int ConditionList::findVarNameIndex( Relation* r, string target ) {
 
+	// find the index of the variable name
 	for ( int i = 0; i < r->attributeSize( ); i++ ){
 		if ( target == r->getAttributeNameAt( i ) ){
 			return i;

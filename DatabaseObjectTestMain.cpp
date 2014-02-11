@@ -9,7 +9,7 @@
 
 using namespace std;
 
-int main(){
+int main( ){
 
 	Database d;
 
@@ -22,35 +22,35 @@ int main(){
 	vector<vector<Entry>> entries;
 	vector<vector<Entry>> e2;
 
-	testAtts.push_back(Attribute("Name", VARCHAR));
-	testAtts.push_back(Attribute("Owner", VARCHAR));
-	testAtts.push_back(Attribute("Age", INTEGER));
+	testAtts.push_back( Attribute( "Name", VARCHAR ) );
+	testAtts.push_back( Attribute( "Owner", VARCHAR ) );
+	testAtts.push_back( Attribute( "Age", INTEGER ) );
 
-	
-	keys.push_back(0);
-	keys.push_back(2);
 
-	entries.push_back(vector<Entry>());
-	entries.push_back(vector<Entry>());
-	entries.push_back(vector<Entry>());
+	keys.push_back( 0 );
+	keys.push_back( 2 );
 
-	entries.at(0).push_back(Entry("Abby"));
-	entries.at(0).push_back(Entry("Amy"));
-	entries.at(0).push_back(Entry(3));
+	entries.push_back( vector<Entry>( ) );
+	entries.push_back( vector<Entry>( ) );
+	entries.push_back( vector<Entry>( ) );
 
-	entries.at(1).push_back(Entry("Zipper"));
-	entries.at(1).push_back(Entry("Melodie"));
-	entries.at(1).push_back(Entry(14));
+	entries.at( 0 ).push_back( Entry( "Abby" ) );
+	entries.at( 0 ).push_back( Entry( "Amy" ) );
+	entries.at( 0 ).push_back( Entry( 3 ) );
 
-	entries.at(2).push_back(Entry("Bailey"));
-	entries.at(2).push_back(Entry("Davin"));
-	entries.at(2).push_back(Entry(6));
-	
-	d.addRelationToDatabase("Dogs", testAtts, keys);
+	entries.at( 1 ).push_back( Entry( "Zipper" ) );
+	entries.at( 1 ).push_back( Entry( "Melodie" ) );
+	entries.at( 1 ).push_back( Entry( 14 ) );
 
-	d.addTupleToRelation(entries.at(0), "Dogs");
-	d.addTupleToRelation(entries.at(1), "Dogs");
-	d.addTupleToRelation(entries.at(2), "Dogs");
+	entries.at( 2 ).push_back( Entry( "Bailey" ) );
+	entries.at( 2 ).push_back( Entry( "Davin" ) );
+	entries.at( 2 ).push_back( Entry( 6 ) );
+
+	d.addRelationToDatabase( "Dogs", testAtts, keys );
+
+	d.addTupleToRelation( entries.at( 0 ), "Dogs" );
+	d.addTupleToRelation( entries.at( 1 ), "Dogs" );
+	d.addTupleToRelation( entries.at( 2 ), "Dogs" );
 
 	vector<Condition> c;
 
@@ -59,128 +59,128 @@ int main(){
 	***************/
 	//*Sidenote: This is how the parser will add these. This is a pretty simple and intuitive
 	//implementation in that respect
-	c.push_back(Condition("Age", GR, 4, AND, 1));
-	c.push_back(Condition("Owner", EQUALS, Entry("Melodie"), OR, 2));
-	c.push_back(Condition("Owner", EQUALS, Entry("Davin"), NONE, 2));
+	c.push_back( Condition( "Age", GR, 4, AND, 1 ) );
+	c.push_back( Condition( "Owner", EQUALS, Entry( "Melodie" ), OR, 2 ) );
+	c.push_back( Condition( "Owner", EQUALS, Entry( "Davin" ), NONE, 2 ) );
 
-	e2.push_back(vector<Entry>());
-	e2.push_back(vector<Entry>());
-	e2.push_back(vector<Entry>());
+	e2.push_back( vector<Entry>( ) );
+	e2.push_back( vector<Entry>( ) );
+	e2.push_back( vector<Entry>( ) );
 
-	e2.at(0).push_back(Entry("Tyler"));
-	e2.at(0).push_back(Entry("Garren"));
-	e2.at(0).push_back(Entry(5));
+	e2.at( 0 ).push_back( Entry( "Tyler" ) );
+	e2.at( 0 ).push_back( Entry( "Garren" ) );
+	e2.at( 0 ).push_back( Entry( 5 ) );
 
-	e2.at(1).push_back(Entry("Abby"));
-	e2.at(1).push_back(Entry("Amy"));
-	e2.at(1).push_back(Entry(3));
+	e2.at( 1 ).push_back( Entry( "Abby" ) );
+	e2.at( 1 ).push_back( Entry( "Amy" ) );
+	e2.at( 1 ).push_back( Entry( 3 ) );
 
-	e2.at(2).push_back(Entry("Dusty"));
-	e2.at(2).push_back(Entry("Rodger"));
-	e2.at(2).push_back(Entry(11));
+	e2.at( 2 ).push_back( Entry( "Dusty" ) );
+	e2.at( 2 ).push_back( Entry( "Rodger" ) );
+	e2.at( 2 ).push_back( Entry( 11 ) );
 
-	d.addRelationToDatabase("More Dogs", testAtts, keys);
+	d.addRelationToDatabase( "More Dogs", testAtts, keys );
 
-	d.addTupleToRelation(e2.at(0), "More Dogs");
-	d.addTupleToRelation(e2.at(1), "More Dogs");
-	d.addTupleToRelation(e2.at(2), "More Dogs");
+	d.addTupleToRelation( e2.at( 0 ), "More Dogs" );
+	d.addTupleToRelation( e2.at( 1 ), "More Dogs" );
+	d.addTupleToRelation( e2.at( 2 ), "More Dogs" );
 
-	cout<<*d.accessRelation("Dogs")<<'\n'<<*d.accessRelation("More Dogs")<<'\n';
+	cout << *d.accessRelation( "Dogs" ) << '\n' << *d.accessRelation( "More Dogs" ) << '\n';
 
-	localRelations.push_back( new Relation( d.selection(c, "Dogs") ));
-	localRelations.at(0)->setName("Selection of Dogs");
+	localRelations.push_back( new Relation( d.selection( c, "Dogs" ) ) );
+	localRelations.at( 0 )->setName( "Selection of Dogs" );
 
-	cout<<*localRelations.at(0)<<"\n\n";
+	cout << *localRelations.at( 0 ) << "\n\n";
 
-	localRelations.push_back(new Relation(d.unionTwoRelations("Dogs", "More Dogs") ));
-	localRelations.at(1)->setName("Union of Dogs");
+	localRelations.push_back( new Relation( d.unionTwoRelations( "Dogs", "More Dogs" ) ) );
+	localRelations.at( 1 )->setName( "Union of Dogs" );
 
-	cout<<*localRelations.at(1)<<'\n';
-	
-	localRelations.push_back(new Relation(d.differenceTwoRelation("Dogs", "More Dogs") ));
-	localRelations.at(2)->setName("Difference");
+	cout << *localRelations.at( 1 ) << '\n';
 
-	cout<<*localRelations.at(2)<<'\n';
+	localRelations.push_back( new Relation( d.differenceTwoRelation( "Dogs", "More Dogs" ) ) );
+	localRelations.at( 2 )->setName( "Difference" );
 
-	localRelations.push_back(new Relation(d.crossProduct("Dogs", "More Dogs") ));
-	localRelations.at(3)->setName("Cross Product");
+	cout << *localRelations.at( 2 ) << '\n';
 
-	cout<<"This looks somewhat strange at first. This result represents something "<<
+	localRelations.push_back( new Relation( d.crossProduct( "Dogs", "More Dogs" ) ) );
+	localRelations.at( 3 )->setName( "Cross Product" );
+
+	cout << "This looks somewhat strange at first. This result represents something " <<
 		"like all possible dog walking pairs from the two sets.\n\n";
 
-	cout<<*localRelations.at(3)<<'\n';
+	cout << *localRelations.at( 3 ) << '\n';
 
 	vector<string> targetAtts;
-	targetAtts.push_back("Name");
-	targetAtts.push_back("Age");
+	targetAtts.push_back( "Name" );
+	targetAtts.push_back( "Age" );
 
-	localRelations.push_back(new Relation(d.projection( targetAtts, "Dogs") ));
-	localRelations.at(4)->setName("Project Without Owner");
+	localRelations.push_back( new Relation( d.projection( targetAtts, "Dogs" ) ) );
+	localRelations.at( 4 )->setName( "Project Without Owner" );
 
-	cout<<*localRelations.at(4)<<'\n';
+	cout << *localRelations.at( 4 ) << '\n';
 
 	vector<string> newNames;
-	newNames.push_back("Abuser");
-	newNames.push_back("Abused");
-	newNames.push_back("Years in Servitude");
+	newNames.push_back( "Abuser" );
+	newNames.push_back( "Abused" );
+	newNames.push_back( "Years in Servitude" );
 
-	localRelations.push_back(new Relation(d.renameAttributes(newNames, "Dogs") ));
-	localRelations.at(5)->setName("Rename to PITA Standards");
+	localRelations.push_back( new Relation( d.renameAttributes( newNames, "Dogs" ) ) );
+	localRelations.at( 5 )->setName( "Rename to PITA Standards" );
 
-	cout<<*localRelations.at(5)<<'\n';
+	cout << *localRelations.at( 5 ) << '\n';
 
-	cout<<*d.accessRelation("Dogs")<<'\n'<<*d.accessRelation("More Dogs")<<'\n';
+	cout << *d.accessRelation( "Dogs" ) << '\n' << *d.accessRelation( "More Dogs" ) << '\n';
 
 	vector<Attribute> ta;
 	vector<int> k;
 	vector<vector<Entry>> e3;
 
-	ta.push_back(Attribute("Owner", VARCHAR));
-	ta.push_back(Attribute("MyAge", INTEGER));
-	
-	k.push_back(0);
-	k.push_back(1);
+	ta.push_back( Attribute( "Owner", VARCHAR ) );
+	ta.push_back( Attribute( "MyAge", INTEGER ) );
 
-	e3.push_back(vector<Entry>());
-	e3.push_back(vector<Entry>());
-	e3.push_back(vector<Entry>());
+	k.push_back( 0 );
+	k.push_back( 1 );
 
-	e3.at(0).push_back(Entry("Amy"));
-	e3.at(0).push_back(Entry(38));
+	e3.push_back( vector<Entry>( ) );
+	e3.push_back( vector<Entry>( ) );
+	e3.push_back( vector<Entry>( ) );
 
-	e3.at(1).push_back(Entry("Melodie"));
-	e3.at(1).push_back(Entry(20));
+	e3.at( 0 ).push_back( Entry( "Amy" ) );
+	e3.at( 0 ).push_back( Entry( 38 ) );
 
-	e3.at(2).push_back(Entry("Davin"));
-	e3.at(2).push_back(Entry(41));
+	e3.at( 1 ).push_back( Entry( "Melodie" ) );
+	e3.at( 1 ).push_back( Entry( 20 ) );
 
-	d.addRelationToDatabase("Owners", ta, k);
+	e3.at( 2 ).push_back( Entry( "Davin" ) );
+	e3.at( 2 ).push_back( Entry( 41 ) );
 
-	d.addTupleToRelation(e3.at(0), "Owners");
-	d.addTupleToRelation(e3.at(1), "Owners");
-	d.addTupleToRelation(e3.at(2), "Owners");
+	d.addRelationToDatabase( "Owners", ta, k );
 
-	cout<<*d.accessRelation("Owners")<<'\n';
+	d.addTupleToRelation( e3.at( 0 ), "Owners" );
+	d.addTupleToRelation( e3.at( 1 ), "Owners" );
+	d.addTupleToRelation( e3.at( 2 ), "Owners" );
 
-	localRelations.push_back(new Relation(d.naturalJoin("Owners", "Dogs") ));
-	localRelations.at(6)->setName("Natural Join");
+	cout << *d.accessRelation( "Owners" ) << '\n';
 
-	cout<<*localRelations.at(6)<<'\n';
+	localRelations.push_back( new Relation( d.naturalJoin( "Owners", "Dogs" ) ) );
+	localRelations.at( 6 )->setName( "Natural Join" );
+
+	cout << *localRelations.at( 6 ) << '\n';
 
 	vector<Condition> c2;
-	
-	c2.push_back(Condition("Owner", EQUALS, Entry("Melodie"), NONE, 1));
+
+	c2.push_back( Condition( "Owner", EQUALS, Entry( "Melodie" ), NONE, 1 ) );
 
 	vector<string> aa;
-	aa.push_back("Age");
+	aa.push_back( "Age" );
 
 	vector<Entry> age;
-	age.push_back(Entry(40));
+	age.push_back( Entry( 40 ) );
 
-	localRelations.push_back(new Relation(d.update("Dogs", aa, age, c2)));
-	localRelations.at(7)->setName("Update");
+	localRelations.push_back( new Relation( d.update( "Dogs", aa, age, c2 ) ) );
+	localRelations.at( 7 )->setName( "Update" );
 
-	cout<<*localRelations.at(7)<<'\n';
+	cout << *localRelations.at( 7 ) << '\n';
 
 	localRelations.push_back(new Relation(d.deleteFromRelation("Dogs", c2)));
 	localRelations.at(8)->setName("Deletion");

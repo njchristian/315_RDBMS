@@ -54,16 +54,20 @@ void Relation::clear( ){
 }
 
 
+// Removes the specified tuple from the relation. Returns whether
+// it removed it or not.
 bool Relation::removeTuple( vector<Entry> tuple ) {
 	bool isSame;
 	unsigned i = 0;
+	// find the tuple 
 	for ( auto it = table.begin( ); it != table.end( ); ++it ) {
 		isSame = false;
 		for ( unsigned j = 0; j < it->size( ); ++j ) {
-			if ( tuple[ j ] == *table[i][j] ) {
+			if ( tuple[ j ] == *table[ i ][ j ] ) {
 				isSame = true;
 			}
 		}
+		// if tuple is found, delete it and return
 		if ( isSame == true ) {
 			table.erase( it );
 			return true;
@@ -91,20 +95,21 @@ vector<string> Relation::getAttributeNames(){
 // Check to see if a relation has the specified tuple in it already.
 bool Relation::hasTuple( vector<Entry*> tuple )  {
 	for ( int i = 0; i < table.size( ); ++i ) {
-		
+
 		bool currentTuple = true;
 
 		/****************
-		This checks through all the KEYS to see if the 
+		This checks through all the KEYS to see if the
 		tuples are the same.
 		****************/
-		for(int j = 0; j <keys.size(); j++){
-			if( * table.at(i).at(keys.at(j) ) != *tuple.at(keys.at(j))){
+
+		for ( int j = 0; j < keys.size( ); j++ ){
+			if ( table.at( i ).at( keys.at( j ) ) != tuple.at( keys.at( j ) ) ){
 				currentTuple = false;
 			}
 		}
 
-		if(currentTuple){
+		if ( currentTuple ){
 			return true;
 		}
 
@@ -136,13 +141,13 @@ void Relation::setAttributeNames( vector<string> newNames ) {
 
 
 // Overloaded assignment operator.
-Relation& Relation::operator=(Relation& b){
+Relation& Relation::operator=( Relation& b ){
 
-	relationName = b.getName();
-	attributes = b.getAttributes();
-	table = b.getAllEntries();
+	relationName = b.getName( );
+	attributes = b.getAttributes( );
+	table = b.getAllEntries( );
 
-	keys = b.getKeys();
+	keys = b.getKeys( );
 
 	return *this;
 
@@ -150,7 +155,6 @@ Relation& Relation::operator=(Relation& b){
 
 
 bool operator==(Relation& relationA, Relation& relationB){
-
 	// Check to see if name is the same
 	if ( relationA.getName( ) != relationB.getName( ) ) {
 		return false;
@@ -183,37 +187,38 @@ bool operator==(Relation& relationA, Relation& relationB){
 
 
 // Output operator
-ostream& operator<<(ostream& os, Relation& a){
+ostream& operator<<( ostream& os, Relation& a ){
 
-	os<<"Name: "<<a.getName()<<"\n\n";
+	os << "Name: " << a.getName( ) << "\n\n";
 
-	for(int i = 0; i < a.attributeSize(); ++i){
+	for ( int i = 0; i < a.attributeSize( ); ++i ){
 
-		os<<a.getAttributeNameAt(i)<<": ";
+		os << a.getAttributeNameAt( i ) << ": ";
 
 	}
 
-	os<<"\n\n";
+	os << "\n\n";
 
-	for(int i = 0; i < a.getNumTuples(); i++){
+	for ( int i = 0; i < a.getNumTuples( ); i++ ){
 
 		stringstream ss;
 		string tempS;
-		for(int j = 0; j < a.attributeSize(); j++){
+		for ( int j = 0; j < a.attributeSize( ); j++ ){
 
-			Entry* t = a.getEntry(i, j);
-			if(t->isInt()){
-				ss<<t->getEntryI();
-			}else{
-				ss<<t->getEntryVC();
+			Entry* t = a.getEntry( i, j );
+			if ( t->isInt( ) ){
+				ss << t->getEntryI( );
+			}
+			else{
+				ss << t->getEntryVC( );
 			}
 
-			ss>>tempS;
-			os<<tempS<<' ';
+			ss >> tempS;
+			os << tempS << ' ';
 
-			ss.clear();
+			ss.clear( );
 		}
-		os<<'\n';
+		os << '\n';
 	}
 
 	return os;
