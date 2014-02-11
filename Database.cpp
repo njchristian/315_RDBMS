@@ -177,7 +177,7 @@ int Database::findAttribute( ) {
 }
 
 
-int findCorrespondingRow( vector<Entry*> rowA, vector<int> indexA, Relation* b, vector<int> indexB ){
+int Database::findCorrespondingRow( vector<Entry*> rowA, vector<int> indexA, Relation* b, vector<int> indexB ){
 
 	vector<vector<Entry*>> tableB = b->getAllEntries( );
 
@@ -395,37 +395,6 @@ Relation Database::unionTwoRelations( Relation* relationA, Relation* relationB )
 	return result;
 }
 
-int findCorrespondingRow(vector<Entry*> rowA, vector<int> indexA, Relation* b, vector<int> indexB){
-	
-	vector<vector<Entry*>> tableB = b->getAllEntries();
-
-	for(int i = 0; i < tableB.size(); i++){
-
-		bool flag = true;
-
-		for(int j = 0; j < indexB.size(); j++){
-
-			
-
-			for(int k = 0; k < indexA.size(); k++){
-
-
-				if(*(rowA.at(indexA.at(k))) != *(tableB.at(i).at(indexB.at(j)))){
-					flag = false;
-				}
-
-			}
-
-		}
-
-		if(flag){
-			return i;
-		}
-
-	}
-
-}
-
 Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 {
 
@@ -561,10 +530,47 @@ Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 
 
 // Updates all of the entries in a relation that meet the specified condition
-void Database::update( string relationName, string attributeName, 
-	string testCondition, Operation op, Entry newValue ) {
+Relation* Database::update( string relationName, vector<string> attributeNames, vector<Entry> newVals,
+	vector<Condition> conditions ) {
 
 	Relation* targetRelation = findRelation( relationName );
 
-	targetRelation->update( attributeName, testCondition, op, newValue );
+	vector<string> targetAttNames = targetRelation->getAttributeNames();
+
+	vector<int> targetIndeces;
+
+	for(int i = 0; i < attributeNames.size(); i++){
+
+		for(int j = 0; j < targetAttNames.size(); j++){
+
+			if(attributeNames.at(i) == targetAttNames.at(j)){
+				targetIndeces.push_back(j);
+			}
+
+		}
+
+	}
+
+	ConditionList cl = ConditionList(conditions, targetRelation);
+
+	for(int i = 0; i < targetRelation->getNumTuples(); i++){
+
+		if(cl.evalOnTuple(i)){
+
+			vector<Entry*> targetRow = targetRelation->getRow(i);
+
+			for(int j = 0; j < targetIndeces.size(); j++){
+
+				delete targetRow.at(targetIndeces.at(j));
+				targetRow.at(targetIndeces.at(j)) = new Entry(newVals.at(j));
+
+			}
+
+			targetRelation->updateRow(targetRow, i);
+
+		}
+
+	}
+
+	return targetRelation;
 }
