@@ -1,6 +1,5 @@
 #include "Entry.h"
 
-// Overloaded == operator
 bool operator==( Entry& entry1, Entry& entry2 ) {
 	if ( entry1.getEntryType( ) != entry2.getEntryType( ) ) {
 		return false;
@@ -13,8 +12,6 @@ bool operator==( Entry& entry1, Entry& entry2 ) {
 	}
 }
 
-
-// Overloaded != operator
 bool operator!=( Entry& entry1, Entry& entry2 ) {
 	return !(entry1 == entry2);
 }

@@ -36,6 +36,8 @@ public:
 
 	void addTupleToRelation( vector<Entry> tuple, string relationName );
 
+	Relation* insertIntoFromRelation( string relationA, Relation* relationB);
+
 	void removeRelationFromDatabase( string relationName );
 
 	Relation crossProduct( Relation* targetRelationA, Relation* targetRelationB );

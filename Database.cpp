@@ -247,6 +247,24 @@ int Database::findTuple( ) {
 
 }
 
+Relation* Database::insertIntoFromRelation( string relationA, Relation* relationB){
+
+	Relation* targetRelation = findRelation(relationA);
+
+	if(targetRelation->attributeSize() != relationB->attributeSize()){
+		return targetRelation;
+	}
+
+	for(int i = 0; i < relationB->getNumTuples(); i++){
+
+		vector<Entry*> newRow = relationB->getRow(i);
+
+		targetRelation->addRow(newRow);
+
+	}
+
+	return targetRelation;
+}
 
 //subset of attributes in a relation
 Relation Database::projection( vector<string> attributeNames, 
