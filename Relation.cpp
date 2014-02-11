@@ -84,7 +84,7 @@ bool Relation::hasTuple( vector<Entry*> tuple ) const {
 		tuples are the same.
 		****************/
 		for(int j = 0; j <keys.size(); j++){
-			if(table.at(i).at(keys.at(j) ) != tuple.at(keys.at(j))){
+			if( * table.at(i).at(keys.at(j) ) != *tuple.at(keys.at(j))){
 				currentTuple = false;
 			}
 		}

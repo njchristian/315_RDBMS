@@ -59,13 +59,13 @@ public:
 
 	vector<int> getKeys( ) const { return keys; }
 
-	string getName() const { return relationName; }
+	string getName() const{ return relationName; }
 	
-	int getNumTuples() const { return table.size(); }
+	int getNumTuples() const{ return table.size(); }
 
 	vector<Entry*> getRow( int index ) const { return table.at( index ); }
 
-	bool hasTuple( vector<Entry*> tuple ) const;
+	bool hasTuple const( vector<Entry*> tuple );
 
 	void setAttributes( vector<Attribute> newAttributes );
 
