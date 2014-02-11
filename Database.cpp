@@ -378,14 +378,9 @@ Relation Database::unionTwoRelations( Relation* relationA, Relation* relationB )
 
 	}
 
-	// Set result to have relationA's tuples. This also sets up result's 
-	// attributes and keys.
-	// --------------------------------------------------------------Do we need to set a name for the new relation??
 	result = *relationA;
 
-	// Add the tuples from relationB to the new relation that do not already
-	// exist in it.
-	// --------------------------------------------------------------Does it need to remove duplicates??
+	// Add the rows from B that are not already in A.
 	for(int i = 0; i < relationB->getNumTuples(); i++){
 		if ( !result.hasTuple( relationB->getRow( i ) ) ) {
 			result.addRow( relationB->getRow( i ) );
@@ -395,8 +390,9 @@ Relation Database::unionTwoRelations( Relation* relationA, Relation* relationB )
 	return result;
 }
 
-Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
-{
+
+// Perform the natural join operation on two relations and return the result.
+Relation Database::naturalJoin( Relation* relationA, Relation* relationB ) {
 
 	Relation myResult;
 
