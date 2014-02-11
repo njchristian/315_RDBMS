@@ -135,24 +135,157 @@ namespace UnitTest1
 
 			d.addTupleToRelation( newTuple1 , "Dogs");
 
-			//Assert::IsTrue( d.accessRelation( "Dogs" )->hasTuple( &newTuple1 ) );
+			vector<Entry*> entryPointers;
+
+			entryPointers.push_back( &newTuple1[0] );
+			entryPointers.push_back( &newTuple1[1] );
+			entryPointers.push_back( &newTuple1[2] );
+
+			Assert::IsTrue( d.accessRelation( "Dogs" )->hasTuple( entryPointers ) );
 
 		}
 
 
 		TEST_METHOD(deleteFromTable)
 		{
+			
+			testAtts.push_back(Attribute("Name", VARCHAR));
+			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Age", INTEGER));
 
+	
+			keys.push_back(0);
+			keys.push_back(2);
+
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+
+			entries.at(0).push_back(Entry("Abby"));
+			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry(3));
+
+			d.addTupleToRelation(entries.at(0), "Dogs");
+			d.addTupleToRelation(entries.at(1), "Dogs");
+			d.addTupleToRelation(entries.at(2), "Dogs");
+
+			d.addRelationToDatabase("Dogs", testAtts, keys);
+
+
+			vector<Entry> newTuple1;
+
+			newTuple1.push_back(Entry("Rockie"));
+			newTuple1.push_back(Entry("Brain"));
+			newTuple1.push_back(Entry(7));
+
+			d.addTupleToRelation( newTuple1 , "Dogs");
+
+			vector<Entry*> entryPointers;
+
+			entryPointers.push_back( &newTuple1[0] );
+			entryPointers.push_back( &newTuple1[1] );
+			entryPointers.push_back( &newTuple1[2] );
+
+			d.removeTupleFromRelation( newTuple1 , "Dogs" );
+
+			Assert::IsFalse( d.accessRelation( "Dogs" )->hasTuple( entryPointers ) );
 		}
 
 		TEST_METHOD(select)
 		{
+			vector<Condition> c;
+			
+			c.push_back(Condition("Age", GR, 4, AND, 1));
 
+			testAtts.push_back(Attribute("Name", VARCHAR));
+			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Age", INTEGER));
+
+	
+			keys.push_back(0);
+			keys.push_back(2);
+
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+
+			entries.at(0).push_back(Entry("Abby"));
+			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry(3));
+
+			d.addTupleToRelation(entries.at(0), "Dogs");
+			d.addTupleToRelation(entries.at(1), "Dogs");
+			d.addTupleToRelation(entries.at(2), "Dogs");
+
+			d.addRelationToDatabase("Dogs", testAtts, keys);
+
+			Relation relation = d.selection( c, "Dogs");
+
+			Assert::AreEqual( relation.getNumTuples(), 0 );
+			
 		}
 
 		TEST_METHOD(difference)
 		{
 
+			testAtts.push_back(Attribute("Name", VARCHAR));
+			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Age", INTEGER));
+
+	
+			keys.push_back(0);
+			keys.push_back(2);
+
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+
+			entries.at(0).push_back(Entry("Abby"));
+			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry(3));
+
+
+			entries.at(1).push_back(Entry("Zipper"));
+			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry(14));
+
+			entries.at(2).push_back(Entry("Bailey"));
+			entries.at(2).push_back(Entry("Davin"));
+			entries.at(2).push_back(Entry(6));
+	
+			d.addRelationToDatabase("Dogs", testAtts, keys);
+
+			d.addTupleToRelation(entries.at(0), "Dogs");
+			d.addTupleToRelation(entries.at(1), "Dogs");
+			d.addTupleToRelation(entries.at(2), "Dogs");
+
+			//relation more dogs
+			e2.push_back(vector<Entry>());
+			e2.push_back(vector<Entry>());
+			e2.push_back(vector<Entry>());
+
+			e2.at(0).push_back(Entry("Tyler"));
+			e2.at(0).push_back(Entry("Garren"));
+			e2.at(0).push_back(Entry(5));
+
+			e2.at(1).push_back(Entry("Abby"));
+			e2.at(1).push_back(Entry("Amy"));
+			e2.at(1).push_back(Entry(3));
+
+			e2.at(2).push_back(Entry("Dusty"));
+			e2.at(2).push_back(Entry("Rodger"));
+			e2.at(2).push_back(Entry(11));
+
+			d.addRelationToDatabase("More Dogs", testAtts, keys);
+
+			d.addTupleToRelation(e2.at(0), "More Dogs");
+			d.addTupleToRelation(e2.at(1), "More Dogs");
+			d.addTupleToRelation(e2.at(2), "More Dogs");
+
+			Relation relationA = d.differenceTwoRelation( "More Dogs", "Dogs" );
+			Relation relationB = d.differenceTwoRelation( "Dogs", "More Dogs" );
+
+			Assert::AreEqual( relationA.getNumTuples(), relationB.getNumTuples() );
 		}
 
 		TEST_METHOD(accessAttribute)
@@ -260,6 +393,61 @@ namespace UnitTest1
 		TEST_METHOD(crossproduct)
 		{
 
+			testAtts.push_back(Attribute("Name", VARCHAR));
+			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Age", INTEGER));
+
+	
+			keys.push_back(0);
+			keys.push_back(2);
+
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+
+			entries.at(0).push_back(Entry("Abby"));
+			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry(3));
+
+
+			entries.at(1).push_back(Entry("Zipper"));
+			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry(14));
+
+			entries.at(2).push_back(Entry("Bailey"));
+			entries.at(2).push_back(Entry("Davin"));
+			entries.at(2).push_back(Entry(6));
+	
+			d.addRelationToDatabase("Dogs", testAtts, keys);
+
+			d.addTupleToRelation(entries.at(0), "Dogs");
+			d.addTupleToRelation(entries.at(1), "Dogs");
+			d.addTupleToRelation(entries.at(2), "Dogs");
+
+			//relation more dogs
+			e2.push_back(vector<Entry>());
+			e2.push_back(vector<Entry>());
+			e2.push_back(vector<Entry>());
+
+			e2.at(0).push_back(Entry("Tyler"));
+			e2.at(0).push_back(Entry("Garren"));
+			e2.at(0).push_back(Entry(5));
+
+			e2.at(1).push_back(Entry("Abby"));
+			e2.at(1).push_back(Entry("Amy"));
+			e2.at(1).push_back(Entry(3));
+
+			e2.at(2).push_back(Entry("Dusty"));
+			e2.at(2).push_back(Entry("Rodger"));
+			e2.at(2).push_back(Entry(11));
+
+			d.addRelationToDatabase("More Dogs", testAtts, keys);
+
+			d.addTupleToRelation(e2.at(0), "More Dogs");
+			d.addTupleToRelation(e2.at(1), "More Dogs");
+			d.addTupleToRelation(e2.at(2), "More Dogs");
+
+
 			//test cross product
 			Assert::AreEqual( ( d.crossProduct( "More Dogs" , "Dogs" ) ).getNumTuples(),
 				( d.crossProduct( "Dogs" , "More Dogs" ) ).getNumTuples() );
@@ -268,7 +456,7 @@ namespace UnitTest1
 
 		}
 
-		TEST_METHOD(update)
+		TEST_METHOD(rename)
 		{
 
 			testAtts.push_back(Attribute("Name", VARCHAR));
@@ -309,12 +497,16 @@ namespace UnitTest1
 			newAttributeName.push_back("Owner Name");
 			newAttributeName.push_back("Dog age");
 
-			
 			Assert::AreEqual( d.renameAttributes( newAttributeName, dogs->getName() ).getAttributeNames()[0], newAttributeName[0]  );
 			Assert::AreEqual( d.renameAttributes( newAttributeName, dogs->getName() ).getAttributeNames()[1], newAttributeName[1]  );
 			Assert::AreEqual( d.renameAttributes( newAttributeName, dogs->getName() ).getAttributeNames()[2], newAttributeName[2]  );
 
 			Assert::AreEqual(1,1); //testing test
+		}
+
+		TEST_METHOD(update)
+		{
+
 		}
 
 		TEST_METHOD(naturalJoin)
