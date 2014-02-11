@@ -455,3 +455,13 @@ Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 	return result;
 
 }
+
+
+// Updates all of the entries in a relation that meet the specified condition
+void Database::update( string relationName, string attributeName, 
+	string testCondition, Operation op, Entry newValue ) {
+
+	Relation* targetRelation = findRelation( relationName );
+
+	targetRelation->update( attributeName, testCondition, op, newValue );
+}
