@@ -75,7 +75,7 @@ public:
 
 	void setTable( vector<vector<Entry*> > newTable ) { table = newTable;  }
 
-	void update( string attributeName, string testCondition, Operation op, Entry newValue );
+	void updateRow(vector<Entry*> row, int i){ table.at(i) = row; }
 
 	Relation& operator=(Relation& b);
 
