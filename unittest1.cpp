@@ -506,12 +506,127 @@ namespace UnitTest1
 
 		TEST_METHOD(update)
 		{
+			testAtts.push_back(Attribute("Name", VARCHAR));
+			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Age", INTEGER));
 
+	
+			keys.push_back(0);
+			keys.push_back(2);
+
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+
+			entries.at(0).push_back(Entry("Abby"));
+			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry(3));
+
+
+			entries.at(1).push_back(Entry("Zipper"));
+			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry(14));
+
+			entries.at(2).push_back(Entry("Bailey"));
+			entries.at(2).push_back(Entry("Davin"));
+			entries.at(2).push_back(Entry(6));
+
+	
+			d.addRelationToDatabase("Dogs", testAtts, keys);
+
+			d.addTupleToRelation(entries.at(0), "Dogs");
+			d.addTupleToRelation(entries.at(1), "Dogs");
+			d.addTupleToRelation(entries.at(2), "Dogs");
+
+			Relation dogs = d.accessRelation( "Dogs");
+
+			vector<string> aa;
+			aa.push_back("Age");
+
+			vector<Entry> age;
+			age.push_back(Entry(40));
+
+			vector<Condition> c2;
+	
+			c2.push_back(Condition("Owner", EQUALS, Entry("Melodie"), NONE, 1));
+
+			d.update( dogs.getName(), aa, age, c2 );
+
+			vector<Entry> test;
+
+			test.push_back(Entry("Zipper"));
+			test.push_back(Entry("Melodie"));
+			test.push_back(Entry(40));
+
+			vector<Entry*> entryPointers;
+
+			entryPointers.push_back( &test[0] );
+			entryPointers.push_back( &test[1] );
+			entryPointers.push_back( &test[2] );
+
+			Assert::IsTrue( d.accessRelation( "Dogs" )->hasTuple( entryPointers ) );
 		}
 
 		TEST_METHOD(naturalJoin)
 		{
+			testAtts.push_back(Attribute("Name", VARCHAR));
+			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Age", INTEGER));
 
+	
+			keys.push_back(0);
+			keys.push_back(2);
+
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+
+			entries.at(0).push_back(Entry("Abby"));
+			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry(3));
+
+
+			entries.at(1).push_back(Entry("Zipper"));
+			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry(14));
+
+			entries.at(2).push_back(Entry("Bailey"));
+			entries.at(2).push_back(Entry("Davin"));
+			entries.at(2).push_back(Entry(6));
+	
+			d.addRelationToDatabase("Dogs", testAtts, keys);
+
+			d.addTupleToRelation(entries.at(0), "Dogs");
+			d.addTupleToRelation(entries.at(1), "Dogs");
+			d.addTupleToRelation(entries.at(2), "Dogs");
+
+			//relation more dogs
+			e2.push_back(vector<Entry>());
+			e2.push_back(vector<Entry>());
+			e2.push_back(vector<Entry>());
+
+			e2.at(0).push_back(Entry("Tyler"));
+			e2.at(0).push_back(Entry("Garren"));
+			e2.at(0).push_back(Entry(5));
+
+			e2.at(1).push_back(Entry("Abby"));
+			e2.at(1).push_back(Entry("Amy"));
+			e2.at(1).push_back(Entry(3));
+
+			e2.at(2).push_back(Entry("Dusty"));
+			e2.at(2).push_back(Entry("Rodger"));
+			e2.at(2).push_back(Entry(11));
+
+			d.addRelationToDatabase("More Dogs", testAtts, keys);
+
+			d.addTupleToRelation(e2.at(0), "More Dogs");
+			d.addTupleToRelation(e2.at(1), "More Dogs");
+			d.addTupleToRelation(e2.at(2), "More Dogs");
+
+			 Relation rel = d.naturalJoin( "More Dogs", "Dog" );
+
+			 Assert::AreEqual(rel.getNumTuples(), max( d.accessRelation("More Dogs")->getNumTuples(), d.accessRelation("Dogs")->getNumTuples() ) );
+			 
 		}
 
 	};
