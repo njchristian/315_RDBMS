@@ -4,22 +4,23 @@
 
 // Private Functions
 
-Relation* Database::findRelation( string relationName ){
+// Returns a pointer to the relation that has the specified name. 
+Relation* Database::findRelation( string relationName ) {
 
 	Relation* foundRelation;
 	unsigned int i;
-	for( i=0; i<relations.size(); ++i ){
-		if( relations[ i ]->getName() == relationName ){
+	for( i = 0; i < relations.size( ); ++i ) {
+		if( relations[ i ]->getName( ) == relationName ) {
 			foundRelation = relations[ i ];
-			return foundRelation; // added this so it would compile -Taylor
-			break; //i hope there are no duplicates. is there a possibility for duplicates?
+			return foundRelation; 
+			break; 
 		}
 	}
 	return &result;
 }
 
 
-// ---------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // Public Functions
 
 //
