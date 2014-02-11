@@ -16,7 +16,7 @@ Relation* Database::findRelation( string relationName ) {
 			break; 
 		}
 	}
-	return &result;
+	return NULL;
 }
 
 

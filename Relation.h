@@ -69,6 +69,8 @@ public:
 
 	bool hasTuple( vector<Entry*> tuple );
 
+	bool isEmpty();
+
 	void setAttributes( vector<Attribute> newAttributes );
 
 	void setAttributeNames( vector<string> newNames );

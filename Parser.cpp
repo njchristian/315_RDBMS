@@ -1,16 +1,17 @@
 #include "Parser.h"
+#include <iostream>
 #include <sstream>
 
 #define SUCCESS 1
-#define INVALID 0
-#define EXIT -1
+#define INVALID -1
+#define EXIT -2
 
 //TODO
 string readAlphaNumWord(stringstream& command);
 
 
 //UNDER CONSTRUCTION
-int Parse::parseCommand(stringstream& command){
+int Parser::parseCommand(stringstream& command){
 
 	string word = readAlphaNumWord(command);
 	
@@ -27,7 +28,19 @@ int Parse::parseCommand(stringstream& command){
 		
 		return SUCCESS;
 	
-	}else if( word == "SHOW ){
+	}else if( word == "CLOSE" ){
+	
+		string relationName = readAlphaNumWord(command);
+
+		if( closeFile(relationName) < 0 ){
+			return INVALID;
+		}
+
+		if( readSemi(command) < 0){
+			return INVALID;
+		}
+
+	}else if( word == "SHOW" ){
 	
 		string relationName = readAlphaNumWord(command);
 		
@@ -40,15 +53,199 @@ int Parse::parseCommand(stringstream& command){
 	
 		return SUCCESS;
 	
-	}else if( word == "
+	}else if( word == "WRITE" ){
+
+		string relationName = readAlphaNumWord(command);
+		
+		//Catch problem before execution
+		if( readSemi(command) < 0){
+			return INVALID;
+		}
+
+		if( writeFile(relationName) < 0){
+			return INVALID;
+		}
+
+		return SUCCESS;
+
+	}else if( word == "INSERT" ){
+
+		string into = readAlphaNumWord(command);
+
+		if( into != "INTO" ){
+			return INVALID;
+		}
+
+		if( insertInto(command) < 0){
+			return INVALID;
+		}
+
+		return SUCCESS;
+
+	}else if( word == "DELETE" ){
+
+		string from = readAlphaNumWord(command);
+
+		if( from != "FROM" ){
+			return INVALID;
+		}
+
+		if( deleteFrom(command) < 0){
+			return INVALID;
+		}
+
+		return SUCCESS;
+
+	}else if( word == "CREATE" ){
+		string table = readAlphaNumWord(command);
+
+		if( table != "TABLE" ){
+			return INVALID;
+		}
+
+		if( createTable(command) < 0){
+			return INVALID;
+		}
+
+		return SUCCESS;
+
+	}else if( word == "UPDATE" ){
+
+		if( update(command) < 0){
+			return INVALID;
+		}
+
+		return SUCCESS;
+
+	}else{
+
+		return INVALID;
+
+	}
 
 }
 
-Relation* Parser::parseExpr(stringstream& command){
+int Parser::parseQuery(stringstream& command){
+
+	string relationName = readAlphaNumWord(command);
+
+	if( readArrow(command) < 0){
+		return INVALID;
+	}
+
+	Relation* targetRelation = parseExpr(command);
+
+	if( targetRelation == NULL ){
+		return INVALID;
+	}
+
+	database.addRelationToDatabase(targetRelation);
+
+	return SUCCESS;
+
+}
+
+//TODO
+Relation Parser::parseExpr(stringstream& command){
 
 	//Find command it matches to.
-	
-	//If none is it a new assignment?
+
+	//Could be word, or relation name, or relation name followed by +/-
+
+	string word = readAlphaNumWord(command);
+
+	Relation targetRelation;
+
+	if( word == "project" ){
+
+		targetRelation = projection(command);
+
+		return targetRelation;
+
+	}else if( word == "select" ){
+
+		targetRelation = selection(command);
+
+		return targetRelation;
+
+	}else if( word == "rename" ){
+
+		targetRelation = rename(command);
+
+		return targetRelation;
+
+	}else{
+
+		//At this point we assume what we have is the name of a relation
+
+		string relationA = word;
+
+
+		if( readSemi(command) > 0 ){
+
+			targetRelation = *database.accessRelation(relationA);
+
+			return targetRelation;
+
+		}else if( peekAddition(command) > 0 ){
+
+			string relationB = readAlphaNumWord(command);
+
+			if( readSemi(command) < 0 ){
+				return Relation();
+			}
+
+			targetRelation = database.unionTwoRelations(relationA, relationB);
+
+			return targetRelation;
+			
+		}else if( peekSubtraction(command) > 0){
+
+			string relationB = readAlphaNumWord(command);
+
+			if( readSemi(command) < 0 ){
+				return Relation();
+			}
+
+			targetRelation = database.differenceTwoRelation(relationA, relationB);
+
+			return targetRelation;
+
+		}else if( peekMultiplication(command) > 0){
+
+			string relationB = readAlphaNumWord(command);
+
+			if( readSemi(command) < 0 ){
+				return Relation();
+			}
+
+			targetRelation = database.crossProduct(relationA, relationB);
+
+			return targetRelation;
+
+		}else{
+
+			string join = readAlphaNumWord(command);
+
+			if( join != "JOIN" ){
+				return Relation();
+			}
+
+			string relationB = readAlphaNumWord(command);
+		
+			if( readSemi(command) < 0 ){
+				return Relation();
+			}
+
+			targetRelation = database.naturalJoin(relationA, relationB);
+
+			return targetRelation;
+
+		}
+
+
+	}
+
 
 }
 
@@ -72,16 +269,11 @@ int Parser::parse(string s){
 	command.clear();
 	command>>s;
 
-	Relation* r = parseQuery(command);
-
-	if( r == NULL ){
-	
-		return INVALID;
-	
+	if( parseQuery(command) > 0 ){
+		return SUCCESS;
 	}
 
-	database.addRelationToDatabase(
-	
+	return INVALID;
 }
 
 

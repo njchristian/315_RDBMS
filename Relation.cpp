@@ -113,6 +113,23 @@ bool Relation::hasTuple( vector<Entry*> tuple )  {
 	return false;
 }
 
+bool Relation::isEmpty(){
+
+	if( table.size() > 0 ){
+		return false;
+	}
+
+	if( attributes.size() != 0 ){
+		return false;
+	}
+
+	if( relationName != "" ){
+		return false;
+	}
+
+	return true;
+
+}
 
 // Set the relation's attributes to the newly given ones.
 void Relation::setAttributes( vector<Attribute> newAttributes ) { 

@@ -18,13 +18,15 @@ class Parser{
 		//These are functions which deal with files and commands have already been parsed for the most part
 	
 	//TODO
-	void writeFile(string relationName);
+	int writeFile(string relationName);
 	
 	//TODO 
 	//Opens a file by relation name, and parses all commands in file.
-	void openFile(string relationName);
+	int openFile(string relationName);
 	
-	
+	//TODO
+	//Close a file when done
+	int closeFile(string relationName);
 	
 	//PARSER/STRINGSTREAM FUNCTIONS
 	
@@ -58,36 +60,55 @@ class Parser{
 		
 	
 	//TODO
-	Relation* selection(stringstream& command);
+	Relation selection(stringstream& command);
 	
 	//TODO
-	Relation* projection(stringstream& command);
+	Relation projection(stringstream& command);
 	
 	//TODO
-	Relation* relationUnion(stringstream& command);
+	Relation relationUnion(stringstream& command);
 	
 	//TODO
-	Relation* difference(stringstream& command);
+	Relation difference(stringstream& command);
 	
 	//TODO
-	Relation* crossProduct(stringstream& command);
+	Relation crossProduct(stringstream& command);
 	
 	//TODO
-	Relation* naturalJoin(stringstream& command);
+	Relation naturalJoin(stringstream& command);
 	
 	//TODO
-	Relation* rename(stringstream& command);
+	Relation rename(stringstream& command);
 	
 	
 	
 		//GENERAL PARSER FUNCTIONS
 		
-		
+
+	//TODO
+	//Peeks to see if next character is a plus sign;
+	int peekAddition(stringstream& command);
+
+	//TODO
+	//Peeks to see if next character is a minus sign;
+	int peekSubtraction(stringstream& command);
+
+	//TODO
+	//Peeks to see if next character is a * sign;
+	int peekMultiplication(stringstream& command);
+
+	//TODO
+	//Reads in an arrow, "<-". Returns 1 for success, -1 for failure.
+	int readArrow(stringstream& command);
 	
 	//TODO
 	//reads a semicolon. Returns -1 if failed.
 	int readSemi(stringstream& command);
 	
+	//TODO
+	//Reads whitespace
+	void readWhite(stringstream& command);
+
 	//TODO
 	//reads and returns an alphanumeric word from the stream. (a-z, A-Z, 0-9, _)
 	//This function first reads through any whitespace and then stores the word
@@ -100,7 +121,12 @@ class Parser{
 	//TODO
 	//takes in a stream which has been identified as a query and returns a relation
 	//Return NULL if error.
-	Relation* parseExpr(stringstream& command);
+	//OFTEN CALLED RECURSIVELY
+	Relation parseExpr(stringstream& command);
+
+	//TODO
+	//Reads in a query - ie. "relationName" <- expr
+	int parseQuery(stringstream& command);
 
 	//UNDER CONSTRUCTION
 	//takes in a stream which may be a command and updates information - returns -1 for error
