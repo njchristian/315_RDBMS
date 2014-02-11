@@ -50,6 +50,8 @@ public:
 
 	int findAttribute( );
 
+	int findCorrespondingRow( vector<Entry*> rowA, vector<int> indexA, Relation* b, vector<int> indexB );
+
 	int findRelationinDatabase( );
 
 	int findTuple( );
