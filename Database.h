@@ -36,6 +36,8 @@ public:
 
 	void addTupleToRelation( vector<Entry> tuple, string relationName );
 
+	void removeRelationFromDatabase( string relationName );
+
 	Relation crossProduct( Relation* targetRelationA, Relation* targetRelationB );
 	Relation crossProduct( Relation* targetRelationA, string relationB ){ return crossProduct(targetRelationA, findRelation(relationB)); }
 	Relation crossProduct( string relationA, Relation* targetRelationB ){ return crossProduct(findRelation(relationA), targetRelationB); }
@@ -60,8 +62,6 @@ public:
 	Relation projection( vector<string> attributeNames, Relation* targetRelation );
 	Relation projection( vector<string> attributeNames, string relationName ){ return projection(attributeNames, findRelation(relationName)); }
 
-	void removeRelationFromDatabase( string relationName );
-	
 	void removeTupleFromRelation( vector<Entry> tuple, string relationName );
 
 	Relation renameAttributes( vector<string> newNames, Relation* targetRelation );
