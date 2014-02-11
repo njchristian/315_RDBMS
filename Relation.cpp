@@ -20,7 +20,6 @@ Relation::Relation( Relation* r ){
 
 }
 
-
 // Functions
 
 // Adds a tuple/row to the relation.
@@ -28,7 +27,23 @@ void Relation::addRow( vector<Entry*> rowToAdd ) {
 	table.push_back( rowToAdd );
 }
 
+void Relation::deleteRow(int index){
 
+	int count = 0;
+
+	for(vector<vector<Entry*>>::iterator i = table.begin(); i != table.end(); i++){
+
+		if(count == index){
+			table.erase(i);
+			return;
+		}
+
+		++count;
+	}
+
+	cout<<"Error in delete row";
+
+}
 // Empties all of the attributes, tuples and keys from the relation.
 void Relation::clear( ){
 
@@ -78,7 +93,7 @@ vector<string> Relation::getAttributeNames(){
 
 
 // Check to see if a relation has the specified tuple in it already.
-bool Relation::hasTuple( vector<Entry*> tuple ) const {
+bool Relation::hasTuple( vector<Entry*> tuple )  {
 	for ( int i = 0; i < table.size( ); ++i ) {
 
 		bool currentTuple = true;
@@ -139,8 +154,7 @@ Relation& Relation::operator=( Relation& b ){
 }
 
 
-bool operator==( Relation& relationA, Relation& relationB ) {
-
+bool operator==(Relation& relationA, Relation& relationB){
 	// Check to see if name is the same
 	if ( relationA.getName( ) != relationB.getName( ) ) {
 		return false;

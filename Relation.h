@@ -41,7 +41,9 @@ public:
 
 	void clear( );
 
-	vector<Attribute> getAttributes( ) const { return attributes; }
+	void deleteRow(int i);
+
+	vector<Attribute> getAttributes( ){ return attributes; }
 
 	vector<Attribute>* getAttributesPointer( ) { return &attributes; }
 
@@ -55,16 +57,11 @@ public:
 
 	Entry* getEntry( int i, int j ){ return table.at( i ).at( j ); }
 
-	vector<int> getKeys( ) const { return keys; }
+	vector<int> getKeys( ) { return keys; }
 
-	string getName( ) const { return relationName; }
+	int getNumTuples() const{ return table.size(); }
 
-	int getNumTuples( ) const { return table.size( ); }
-
-	vector<Entry*> getRow( int index ) const { return table.at( index ); }
-
-	bool hasTuple ( vector<Entry*> tuple ) const;
-
+	bool hasTuple const( vector<Entry*> tuple );
 	bool removeTuple( vector<Entry> tuple );
 
 	void setAttributes( vector<Attribute> newAttributes );
@@ -78,7 +75,6 @@ public:
 	void updateRow(vector<Entry*> row, int i){ table.at(i) = row; }
 
 	Relation& operator=( Relation& b );
-
 
 };
 

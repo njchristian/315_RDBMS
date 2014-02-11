@@ -131,6 +131,32 @@ Relation Database::crossProduct( Relation* relationA, Relation* relationB ) {
 	return result;
 }
 
+Relation Database::deleteFromRelation( string relationA, vector<Condition> conditions){
+
+	Relation* targetRelation = findRelation(relationA);
+
+	ConditionList cl = ConditionList(conditions, targetRelation);
+
+	//WE CANT DELETE THESE RIGHT AWAY OR ELSE WE MESS UP OUR DATA STRUCTURES
+	vector<int> toBeDeleted;
+
+	for(int i = 0; i < targetRelation->getNumTuples(); ++i){
+
+		if(cl.evalOnTuple(i)){
+			toBeDeleted.push_back(i);
+		}
+
+	}
+
+	for(int i = 0; i < toBeDeleted.size(); i++){
+
+		//the index decreases as we delete rows
+		targetRelation->deleteRow(toBeDeleted.at(i) - i);
+
+	}
+
+	return targetRelation;
+}
 
 // Find the difference of two relations given their names.
 // Produces the set of tuples from the first that are not in the second
@@ -209,7 +235,7 @@ int Database::findCorrespondingRow( vector<Entry*> rowA,
 		}
 
 	}
-
+	return 0;
 }
 
 
@@ -383,9 +409,14 @@ Relation Database::unionTwoRelations( Relation* relationA, Relation* relationB )
 
 	}
 
+	// Set result to have relationA's tuples. This also sets up result's 
+	// attributes and keys.
+	// --------------------------------------------------------------Do we need to set a name for the new relation??
 	result = *relationA;
 
-	// Add the rows from B that are not already in A.
+	// Add the tuples from relationB to the new relation that do not already
+	// exist in it.
+	// --------------------------------------------------------------Does it need to remove duplicates??
 	for(int i = 0; i < relationB->getNumTuples(); i++){
 		if ( !result.hasTuple( relationB->getRow( i ) ) ) {
 			result.addRow( relationB->getRow( i ) );
@@ -395,9 +426,8 @@ Relation Database::unionTwoRelations( Relation* relationA, Relation* relationB )
 	return result;
 }
 
-
-// Perform the natural join operation on two relations and return the result.
-Relation Database::naturalJoin( Relation* relationA, Relation* relationB ) {
+Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
+{
 
 	Relation myResult;
 
