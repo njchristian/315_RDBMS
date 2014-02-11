@@ -177,7 +177,7 @@ int Database::findAttribute( ) {
 }
 
 
-int findCorrespondingRow( vector<Entry*> rowA, vector<int> indexA, Relation* b, vector<int> indexB ){
+int Database::findCorrespondingRow( vector<Entry*> rowA, vector<int> indexA, Relation* b, vector<int> indexB ){
 
 	vector<vector<Entry*>> tableB = b->getAllEntries( );
 
@@ -407,129 +407,166 @@ Relation Database::naturalJoin( Relation* relationA, Relation* relationB ) {
 	//find the different of attributes of relationB
 	//then project that new relation
 
-	for ( int i = 0; i < attA.size( ); i++ ){
+	for(int i = 0; i < attA.size(); i++){
 
 		bool found = false;
 
-		for ( int j = 0; j < attB.size( ); j++ ){
+		for(int j = 0; j < attB.size(); j++){
 
-			if ( attA.at( i ) == attB.at( j ) ){
+			if(attA.at(i) == attB.at(j)){
 				found = true;
-				jointAttributes.push_back( attA.at( i ) );
-				indexInA.push_back( i );
-				indexInB.push_back( j );
+				jointAttributes.push_back(attA.at(i));
+				indexInA.push_back(i);
+				indexInB.push_back(j);
 			}
 		}
 
-		if ( !found ){
-			indexAOnly.push_back( i );
+		if(!found){
+			indexAOnly.push_back(i);
 		}
 
 	}
 
 
 
-	for ( int i = 0; i < attB.size( ); i++ ){
+	for(int i = 0; i < attB.size(); i++){
 
 		bool found = false;
 
-		for ( int j = 0; j < attA.size( ); j++ ){
-			if ( attB.at( i ) == attA.at( j ) ){
+		for(int j = 0; j < attA.size(); j++){
+			if(attB.at(i) == attA.at(j)){
 				found = true;
 			}
 		}
 
-		if ( !found ){
-			indexBOnly.push_back( i );
+		if(!found){
+			indexBOnly.push_back(i);
 		}
 
 	}
 
 	vector<Attribute> rA;
-	for ( int i = 0; i < indexAOnly.size( ); i++ ){
-		rA.push_back( attA.at( indexAOnly.at( i ) ) );
+	for(int i = 0; i < indexAOnly.size(); i++){
+		rA.push_back(attA.at(indexAOnly.at(i)));
 	}
 
-	for ( int i = 0; i < jointAttributes.size( ); i++ ){
-		rA.push_back( jointAttributes.at( i ) );
+	for(int i = 0; i < jointAttributes.size(); i++){
+		rA.push_back(jointAttributes.at(i));
 	}
 
-	for ( int i = 0; i < indexBOnly.size( ); i++ ){
-		rA.push_back( attB.at( indexBOnly.at( i ) ) );
+	for(int i = 0; i < indexBOnly.size(); i++){
+		rA.push_back(attB.at(indexBOnly.at(i)));
 	}
 
-	myResult.setAttributes( rA );
+	myResult.setAttributes(rA);
 
 	vector<Relation> aOnly;
 	vector<Relation> bOnly;
 	vector<Relation> shared;
 
-	for ( int i = 0; i < indexAOnly.size( ); i++ ){
+	for(int i = 0; i < indexAOnly.size(); i++){
 		vector<string> att;
-		att.push_back( relationA->getAttributeAt( indexAOnly.at( i ) ).name );
-
-		aOnly.push_back( projection( att, relationA ) );
+		att.push_back(relationA->getAttributeAt(indexAOnly.at(i)).name);
+		
+		aOnly.push_back(projection(att, relationA));
 
 	}
 
-	for ( int i = 0; i < indexInA.size( ); i++ ){
+	for(int i = 0; i < indexInA.size(); i++){
 		vector<string> att;
-		att.push_back( relationA->getAttributeAt( indexInA.at( i ) ).name );
-
-		shared.push_back( projection( att, relationA ) );
+		att.push_back(relationA->getAttributeAt(indexInA.at(i)).name);
+		
+		shared.push_back(projection(att, relationA));
 
 	}
 
-	for ( int i = 0; i < indexBOnly.size( ); i++ ){
+	for(int i = 0; i < indexBOnly.size(); i++){
 		vector<string> att;
-		att.push_back( relationB->getAttributeAt( indexBOnly.at( i ) ).name );
-
-		bOnly.push_back( projection( att, relationB ) );
+		att.push_back(relationB->getAttributeAt(indexBOnly.at(i)).name);
+		
+		bOnly.push_back(projection(att, relationB));
 
 	}
 
-	int numRows = relationA->getNumTuples( );
+	int numRows = relationA->getNumTuples();
 
-	for ( int i = 0; i < numRows; i++ ){
+	for(int i = 0; i < numRows; i++){
 
 		vector<Entry*> newRow;
 
-		for ( int j = 0; j < aOnly.size( ); j++ ){
+		for(int j = 0; j < aOnly.size(); j++){
 
-			newRow.push_back( aOnly.at( j ).getEntry( i, 0 ) );
-
-		}
-
-		for ( int j = 0; j < shared.size( ); j++ ){
-
-			newRow.push_back( shared.at( j ).getEntry( i, 0 ) );
+			newRow.push_back(aOnly.at(j).getEntry(i, 0));
 
 		}
 
-		int row = findCorrespondingRow( relationA->getRow( i ), indexInA, relationB, indexInB );
+		for(int j = 0; j < shared.size(); j++){
 
-		for ( int j = 0; j < bOnly.size( ); j++ ){
-
-			newRow.push_back( bOnly.at( j ).getEntry( row, 0 ) );
+			newRow.push_back(shared.at(j).getEntry(i, 0));
 
 		}
 
-		myResult.addRow( newRow );
+		int row = findCorrespondingRow(relationA->getRow(i), indexInA, relationB, indexInB);
+
+		for(int j = 0; j < bOnly.size(); j++){
+
+			newRow.push_back(bOnly.at(j).getEntry(row, 0));
+
+		}
+
+		myResult.addRow(newRow);
 
 	}
 
 	result = myResult;
 
 	return result;
-
 }
 
 
+
 // Updates all of the entries in a relation that meet the specified condition
-void Database::update( string relationName, string attributeName, 
-	string testCondition, Operation op, Entry newValue ) {
+Relation* Database::update( string relationName, vector<string> attributeNames, vector<Entry> newVals,
+	vector<Condition> conditions ) {
 
 	Relation* targetRelation = findRelation( relationName );
 
-	targetRelation->update( attributeName, testCondition, op, newValue );
+	vector<string> targetAttNames = targetRelation->getAttributeNames();
+
+	vector<int> targetIndeces;
+
+	for(int i = 0; i < attributeNames.size(); i++){
+
+		for(int j = 0; j < targetAttNames.size(); j++){
+
+			if(attributeNames.at(i) == targetAttNames.at(j)){
+				targetIndeces.push_back(j);
+			}
+
+		}
+
+	}
+
+	ConditionList cl = ConditionList(conditions, targetRelation);
+
+	for(int i = 0; i < targetRelation->getNumTuples(); i++){
+
+		if(cl.evalOnTuple(i)){
+
+			vector<Entry*> targetRow = targetRelation->getRow(i);
+
+			for(int j = 0; j < targetIndeces.size(); j++){
+
+				delete targetRow.at(targetIndeces.at(j));
+				targetRow.at(targetIndeces.at(j)) = new Entry(newVals.at(j));
+
+			}
+
+			targetRelation->updateRow(targetRow, i);
+
+		}
+
+	}
+
+	return targetRelation;
 }

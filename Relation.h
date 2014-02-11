@@ -63,7 +63,7 @@ public:
 
 	vector<Entry*> getRow( int index ) const { return table.at( index ); }
 
-	bool hasTuple( vector<Entry*> tuple ) const;
+	bool hasTuple ( vector<Entry*> tuple ) const;
 
 	bool removeTuple( vector<Entry> tuple );
 
@@ -75,7 +75,7 @@ public:
 
 	void setTable( vector<vector<Entry*> > newTable ) { table = newTable; }
 
-	void update( string attributeName, string testCondition, Operation op, Entry newValue );
+	void updateRow(vector<Entry*> row, int i){ table.at(i) = row; }
 
 	Relation& operator=( Relation& b );
 

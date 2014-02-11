@@ -131,7 +131,56 @@ int main(){
 
 	cout<<*d.accessRelation("Dogs")<<'\n'<<*d.accessRelation("More Dogs")<<'\n';
 
-	system("pause");
+	vector<Attribute> ta;
+	vector<int> k;
+	vector<vector<Entry>> e3;
+
+	ta.push_back(Attribute("Owner", VARCHAR));
+	ta.push_back(Attribute("MyAge", INTEGER));
+	
+	k.push_back(0);
+	k.push_back(1);
+
+	e3.push_back(vector<Entry>());
+	e3.push_back(vector<Entry>());
+	e3.push_back(vector<Entry>());
+
+	e3.at(0).push_back(Entry("Amy"));
+	e3.at(0).push_back(Entry(38));
+
+	e3.at(1).push_back(Entry("Melodie"));
+	e3.at(1).push_back(Entry(20));
+
+	e3.at(2).push_back(Entry("Davin"));
+	e3.at(2).push_back(Entry(41));
+
+	d.addRelationToDatabase("Owners", ta, k);
+
+	d.addTupleToRelation(e3.at(0), "Owners");
+	d.addTupleToRelation(e3.at(1), "Owners");
+	d.addTupleToRelation(e3.at(2), "Owners");
+
+	cout<<*d.accessRelation("Owners")<<'\n';
+
+	localRelations.push_back(new Relation(d.naturalJoin("Owners", "Dogs") ));
+	localRelations.at(6)->setName("Natural Join");
+
+	cout<<*localRelations.at(6)<<'\n';
+
+	vector<Condition> c2;
+	
+	c2.push_back(Condition("Owner", EQUALS, Entry("Melodie"), NONE, 1));
+
+	vector<string> aa;
+	aa.push_back("Age");
+
+	vector<Entry> age;
+	age.push_back(Entry(40));
+
+	localRelations.push_back(new Relation(d.update("Dogs", aa, age, c2)));
+	localRelations.at(7)->setName("Update");
+
+	cout<<*localRelations.at(7)<<'\n';
 
 	return 1;
 }

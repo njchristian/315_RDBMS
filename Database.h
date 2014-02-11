@@ -111,10 +111,10 @@ public:
 
 	Relation unionTwoRelations( Relation* targetRelationA, Relation* targetRelationB );
 
+
 	Relation unionTwoRelations( Relation* targetRelationA, string relationB ) { 
 		return unionTwoRelations( targetRelationA, findRelation( relationB ) ); 
 	}
-
 	Relation unionTwoRelations( string relationA, Relation* targetRelationB ) { 
 		return unionTwoRelations( findRelation( relationA ), targetRelationB ); 
 	}
@@ -123,8 +123,8 @@ public:
 		return unionTwoRelations( findRelation( relationA ), findRelation( relationB ) ); 
 	}
 
-	void update( string relationName, string attributeName, string testCondition, 
-		Operation op, Entry newValue );
+	Relation* update( string relationName, vector<string> attributeNames, vector<Entry> newVals,
+		vector<Condition> conditions );
 
 };
 
