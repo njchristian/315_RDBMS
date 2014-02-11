@@ -182,5 +182,10 @@ int main(){
 
 	cout<<*localRelations.at(7)<<'\n';
 
+	localRelations.push_back(new Relation(d.deleteFromRelation("Dogs", c2)));
+	localRelations.at(8)->setName("Deletion");
+
+	cout<<*localRelations.at(8)<<'\n';
+
 	return 1;
 }
