@@ -6,11 +6,165 @@
 #define INVALID -1
 #define EXIT -2
 
-//TODO
-string readAlphaNumWord(stringstream& command);
 
+//Gets a relation from views or from database
+Relation Parser::getRelation(string r){
 
-//UNDER CONSTRUCTION
+	for(int i = 0; i < views.size(); i++){
+		if(views.at(i).getName() == r){
+			return views.at(i);
+		}
+	}
+
+	return database.accessRelation(r);
+
+}
+
+//DONE
+//We pass the integer values of the characters so our check is quick
+bool Parser::isAlphaNum(int c){
+
+	int ZERO = 48;
+	int NINE = 57;
+
+	int A = 65;
+	int Z = 90;
+	
+	int a = 97;
+	int z = 122;
+
+	int UNDERSCORE = 95;
+
+	return ( (c >= ZERO && c <= NINE) || (c >= A && c <= Z) || (c >= a && c <= z) || UNDERSCORE);
+
+}
+
+//DONE - NOT TESTED
+string Parser::readAlphaNumWord(stringstream& command){
+
+	string result = "";
+	char next;
+
+	while(isAlphaNum( command.peek()) ){
+
+		command.get(next);
+		result.push_back(next);
+
+	}
+
+	return result;
+}
+
+//DONE
+void Parser::readWhite(stringstream& command){
+
+	while(command.peek() == ' '){
+		command.get();
+	}
+
+}
+
+//DONE
+int Parser::readSemi(stringstream& command){
+
+	readWhite(command);
+
+	char semi;
+	command.get(semi);
+
+	if( semi == ';' ){
+		return SUCCESS;
+	}
+
+	command.putback(semi);
+
+	return INVALID;
+
+}
+
+//DONE
+int Parser::readArrow(stringstream& command){
+
+	readWhite(command);
+
+	char dash;
+	char less;
+
+	command.get(less);
+
+	if( less != '<' || command.peek() != '-' ){
+
+		command.putback(less);
+		return INVALID;
+
+	}
+
+	command.get(dash);
+
+	return SUCCESS;
+
+}
+
+//DONE
+int Parser::parseAttributeList(stringstream& command, vector<string>& attributeNames){
+
+	readWhite(command);
+
+	char open;
+	command.get(open);
+
+	if( open != '(' ){
+		return INVALID;
+	}
+
+	
+
+	char commaOrClose;
+	string name;
+
+	
+
+	do{
+
+		readWhite(command);
+
+		name = readAlphaNumWord(command);
+		attributeNames.push_back(name);
+
+		readWhite(command);
+
+		command.get(commaOrClose);
+
+	}while(commaOrClose == ',');
+
+	if(commaOrClose != ')'){
+		return INVALID;
+	}
+
+	return SUCCESS;
+
+}
+
+//DONE
+Relation Parser::projection(stringstream& command){
+
+	vector<string> attributeNames;
+
+	if( parseAttributeList(command, attributeNames) < 0 ){
+		return Relation();
+	}
+
+	Relation r = parseExpr(command);
+
+	if( r.isEmpty() ){
+		return r;
+	}
+
+	return database.projection(attributeNames, &r);
+
+}
+
+//DONE - NOT TESTED
 int Parser::parseCommand(stringstream& command){
 
 	string word = readAlphaNumWord(command);
@@ -125,12 +279,6 @@ int Parser::parseCommand(stringstream& command){
 
 }
 
-//TODO
-Relation Parser::projection(stringstream& command){
-
-
-}
-
 //DONE - NOT DEBUGGED
 int Parser::parseQuery(stringstream& command){
 
@@ -146,7 +294,9 @@ int Parser::parseQuery(stringstream& command){
 		return INVALID;
 	}
 
-	database.addRelationToDatabase(targetRelation);
+	targetRelation.setName(relationName);
+
+	addView(targetRelation);
 
 	return SUCCESS;
 
@@ -194,7 +344,7 @@ Relation Parser::parseExpr(stringstream& command){
 
 			return targetRelation;
 
-		}else if( peekAddition(command) > 0 ){
+		}else if( peekAndReadAddition(command) > 0 ){
 
 			string relationB = readAlphaNumWord(command);
 
@@ -203,7 +353,7 @@ Relation Parser::parseExpr(stringstream& command){
 
 			return targetRelation;
 			
-		}else if( peekSubtraction(command) > 0){
+		}else if( peekAndReadSubtraction(command) > 0){
 
 			string relationB = readAlphaNumWord(command);
 
@@ -212,7 +362,7 @@ Relation Parser::parseExpr(stringstream& command){
 
 			return targetRelation;
 
-		}else if( peekMultiplication(command) > 0){
+		}else if( peekAndReadMultiplication(command) > 0){
 
 			string relationB = readAlphaNumWord(command);
 

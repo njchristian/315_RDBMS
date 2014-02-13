@@ -12,7 +12,15 @@ class Parser{
 
 	Database& database;
 
-	
+	//"views" are the temporary relations created by a program. I just found this in the
+	//assignment online today...
+	vector<Relation> views;
+
+	void addView(Relation r){
+		views.push_back(r);
+	}
+
+	bool isAlphaNum(int c);
 	
 		//IO FUNCTIONS
 		//These are functions which deal with files and commands have already been parsed for the most part
@@ -86,30 +94,34 @@ class Parser{
 		
 
 	//TODO
+	//Reads an attribute list (comma seperated strings, surrounded by parentheses)
+	int parseAttributeList(stringstream& command,vector<string>& attributeNames);
+
+	//TODO
 	//Peeks to see if next character is a plus sign;
-	int peekAddition(stringstream& command);
+	int peekAndReadAddition(stringstream& command);
 
 	//TODO
 	//Peeks to see if next character is a minus sign;
-	int peekSubtraction(stringstream& command);
+	int peekAndReadSubtraction(stringstream& command);
 
 	//TODO
 	//Peeks to see if next character is a * sign;
-	int peekMultiplication(stringstream& command);
+	int peekAndReadMultiplication(stringstream& command);
 
-	//TODO
+	//DONE
 	//Reads in an arrow, "<-". Returns 1 for success, -1 for failure.
 	int readArrow(stringstream& command);
 	
-	//TODO
+	//DONE
 	//reads a semicolon. Returns -1 if failed.
 	int readSemi(stringstream& command);
 	
-	//TODO
+	//DONE
 	//Reads whitespace
 	void readWhite(stringstream& command);
 
-	//TODO
+	//DONE
 	//reads and returns an alphanumeric word from the stream. (a-z, A-Z, 0-9, _)
 	//This function first reads through any whitespace and then stores the word
 	string readAlphaNumWord(stringstream& command);
