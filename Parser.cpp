@@ -42,6 +42,8 @@ bool Parser::isAlphaNum(int c){
 //DONE - NOT TESTED
 string Parser::readAlphaNumWord(stringstream& command){
 
+	readWhite(command);
+
 	string result = "";
 	char next;
 
@@ -51,6 +53,8 @@ string Parser::readAlphaNumWord(stringstream& command){
 		result.push_back(next);
 
 	}
+
+	readWhite(command);
 
 	return result;
 }
@@ -161,6 +165,27 @@ Relation Parser::projection(stringstream& command){
 	}
 
 	return database.projection(attributeNames, &r);
+
+}
+
+//UNDER CONSTRUCTION
+Relation Parser::rename(stringstream& command){
+
+	readWhite(command);
+
+	vector<string> attributeNames;
+
+	if( parseAttributeList(command, attributeNames) < 0){
+		return Relation();
+	}
+
+	Relation r = parseExpr(command);
+
+	if( r.isEmpty() ){
+		return r;
+	}
+
+	return database.renameAttributes(attributeNames, &r);
 
 }
 
@@ -305,6 +330,16 @@ int Parser::parseQuery(stringstream& command){
 //DONE - NOT DEBUGGED
 Relation Parser::parseExpr(stringstream& command){
 
+	readWhite(command);
+
+	//Parentheses are optional. We ask here, did they put them in?
+	bool openParen;
+
+	if(command.peek() == '('){
+		openParen = true;
+		command.get();
+	}
+
 	//Find command it matches to.
 
 	//Could be word, or relation name, or relation name followed by +/-
@@ -317,17 +352,41 @@ Relation Parser::parseExpr(stringstream& command){
 
 		targetRelation = projection(command);
 
+		readWhite(command);
+
+		if( openParen && command.peek() != ')' ){
+			return Relation();
+		}
+
+		command.get();
+
 		return targetRelation;
 
 	}else if( word == "select" ){
 
 		targetRelation = selection(command);
 
+		readWhite(command);
+
+		if( openParen && command.peek() != ')' ){
+			return Relation();
+		}
+
+		command.get();
+
 		return targetRelation;
 
 	}else if( word == "rename" ){
 
 		targetRelation = rename(command);
+
+		readWhite(command);
+
+		if( openParen && command.peek() != ')' ){
+			return Relation();
+		}
+
+		command.get();
 
 		return targetRelation;
 
@@ -340,7 +399,15 @@ Relation Parser::parseExpr(stringstream& command){
 
 		if( readSemi(command) > 0 ){
 
-			targetRelation = *database.accessRelation(relationA);
+			targetRelation = getRelation(relationA);
+
+			readWhite(command);
+
+			if( openParen && command.peek() != ')' ){
+				return Relation();
+			}
+
+			command.get();
 
 			return targetRelation;
 
@@ -351,6 +418,14 @@ Relation Parser::parseExpr(stringstream& command){
 
 			targetRelation = database.unionTwoRelations(relationA, relationB);
 
+			readWhite(command);
+
+			if( openParen && command.peek() != ')' ){
+				return Relation();
+			}
+
+			command.get();
+
 			return targetRelation;
 			
 		}else if( peekAndReadSubtraction(command) > 0){
@@ -360,18 +435,35 @@ Relation Parser::parseExpr(stringstream& command){
 
 			targetRelation = database.differenceTwoRelation(relationA, relationB);
 
+			readWhite(command);
+
+			if( openParen && command.peek() != ')' ){
+				return Relation();
+			}
+
+			command.get();
+
 			return targetRelation;
 
 		}else if( peekAndReadMultiplication(command) > 0){
 
 			string relationB = readAlphaNumWord(command);
 
-
 			targetRelation = database.crossProduct(relationA, relationB);
+
+			readWhite(command);
+
+			if( openParen && command.peek() != ')' ){
+				return Relation();
+			}
+
+			command.get();
 
 			return targetRelation;
 
 		}else{
+
+			//Only valid operation left is JOIN
 
 			string join = readAlphaNumWord(command);
 
@@ -383,6 +475,14 @@ Relation Parser::parseExpr(stringstream& command){
 		
 
 			targetRelation = database.naturalJoin(relationA, relationB);
+
+			readWhite(command);
+
+			if( openParen && command.peek() != ')' ){
+				return Relation();
+			}
+
+			command.get();
 
 			return targetRelation;
 

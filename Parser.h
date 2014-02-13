@@ -20,6 +20,8 @@ class Parser{
 		views.push_back(r);
 	}
 
+	Relation getRelation(string r);
+
 	bool isAlphaNum(int c);
 	
 		//IO FUNCTIONS
@@ -81,9 +83,6 @@ class Parser{
 	
 	//TODO
 	Relation crossProduct(stringstream& command);
-	
-	//TODO
-	Relation naturalJoin(stringstream& command);
 	
 	//TODO
 	Relation rename(stringstream& command);
