@@ -11,7 +11,7 @@
 class DBCell{
 
 	// Data Members
-	Parser parser;
+	Parser* parser;
 	Database database;
 	
 	//user defined relations
@@ -19,9 +19,16 @@ class DBCell{
 
 public:
 
+	DBCell(){
+		parser = new Parser(database);
+	}
+
 	// Public Functions
-	//...for example. This can be edited later
-	void execute(string dmlCommand);
+	int execute(string dmlCommand){
+	
+		return parser -> parse(dmlCommand);
+	
+	}
 
 };
 

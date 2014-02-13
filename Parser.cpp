@@ -1,11 +1,12 @@
 #include "Parser.h"
-#include <iostream>
-#include <sstream>
+
 
 #define SUCCESS 1
 #define INVALID -1
 #define EXIT -2
 
+
+//luin.uial@gmail.com
 
 //Gets a relation from views or from database
 Relation Parser::getRelation(string r){
@@ -164,11 +165,11 @@ Relation Parser::projection(stringstream& command){
 		return r;
 	}
 
-	return database.projection(attributeNames, &r);
+	return database.projection(attributeNames, r);
 
 }
 
-//UNDER CONSTRUCTION
+//TODO
 Relation Parser::rename(stringstream& command){
 
 	readWhite(command);
@@ -185,7 +186,7 @@ Relation Parser::rename(stringstream& command){
 		return r;
 	}
 
-	return database.renameAttributes(attributeNames, &r);
+	return database.renameAttributes(attributeNames, r);
 
 }
 
@@ -325,6 +326,308 @@ int Parser::parseQuery(stringstream& command){
 
 	return SUCCESS;
 
+}
+
+
+//DONE
+int peekAndReadAddition(stringstream& command){
+	
+	readWhite(command);
+	
+	char plus;
+	plus = command.peek();
+	
+	if( plus != '+' ){
+		return INVALID;
+	}
+	
+	command.get();
+	
+	return SUCCESS;
+	
+}
+
+//DONE
+int peekAndReadSubtraction(stringstream& command){
+	
+	readWhite(command);
+	
+	char sub;
+	sub = command.peek();
+	
+	if( plus != '-' ){
+		return INVALID;
+	}
+	
+	command.get();
+	
+	return SUCCESS;
+	
+}
+
+//DONE
+int peekAndReadMultiplication(stringstream& command){
+	
+	readWhite(command);
+	
+	char mult;
+	mult = command.peek();
+	
+	if( plus != '*' ){
+		return INVALID;
+	}
+	
+	command.get();
+	
+	return SUCCESS;
+	
+}
+
+int Parser::readOperator( stringstream& command, Operator& o ){
+
+	char c;
+	command.get(c);
+	
+	switch (c){
+	
+	case ('='):
+	
+	command.get(c);
+	if( c != '=' ){
+		return INVALID;
+	}else{
+		o = EQUALS;
+		return SUCCESS;
+	}
+	break;
+	
+	case ('!'):
+	
+	command.get(c);
+	if( c != '=' ){
+		return INVALID;
+	}else{
+		o = NEQ;
+		return SUCCESS;
+	}
+	break;
+	
+	case ('<'):
+	
+	c = command.peek();
+	
+	if(c != '='){
+		o = LE;
+	}else{
+		o = LEQ;
+	}
+	break;
+	
+	case ('>'):
+	
+	c = command.peek();
+	
+	if(c != '='){
+		o = GE;
+	}else{
+		o = GEQ;
+	}
+	break;
+	
+	default:
+	return INVALID;
+	
+	
+	}
+	
+	return INVALID;
+
+}
+
+//TODO
+//Put an integer from command into 'i'. Return invalid if method fails
+//IF THE METHOD FAILS THIS FUNCTION MUST RETURN COMMAND TO ITS INITIAL STATE
+int parseInteger(stringstream& command, int& i){
+
+
+
+}
+
+
+//UNDER CONSTRUCTION
+Condition Parser::parseCondition(stringstream& command){
+
+	readWhite(command);
+	
+	bool firstIsLit = false;
+	bool secondIsLit = false;
+	
+	bool firstEntryIsVC = false;
+	bool secondEntryIsVC = false;
+	
+	string first;
+	int firstI;
+	string second;
+	int secondI;
+	
+	char next;
+	
+	//Read first word/literal
+	next = command.peek();
+	
+	if( next == '"' ){
+		firstIsLit = true;
+		command.get();
+		first = readAlphaNumWord(command);
+	}else{
+	
+		if( parseInteger(command, firstI) < 0){
+			first = readAlphaNumWord(command);
+			firstEntryIsVC = true;
+		}
+	
+	}
+	
+	if( firstIsLit ){
+	
+		command.get(next);
+		
+		if( next != '"' ){
+			return Condition();
+		}
+	
+	}
+	
+	readWhite(command);
+	
+	//Read operator
+	Operator o;
+	
+	if( readOperator(command, o) < 0 ){
+		return Condition();
+	}
+	
+	readWhite(command);
+	
+	next = command.peek();
+	
+	if( next == '"' ){
+		secondIsLit = true;
+		command.get();
+		second = readAlphaNumWord(command);
+	}else{
+	
+		if( parseInteger(command, secondI) < 0){
+			second = readAlphaNumWord(command);
+			secondEntryIsVC = true;
+		}
+	
+	}
+	
+	if( secondIsLit ){
+	
+		command.get(next);
+		
+		if( next != '"' ){
+			return Condition();
+		}
+	
+	}
+	
+	if( firstIsLit ){
+	
+		if( secondIsLit ){
+			//TWO LITERALS
+		
+		}
+	
+	//FIRST ONLY IS LITERAL
+	
+		if( secondEntryIsVC ){
+		
+		}else{
+		
+		}
+	
+	}else if( secondIsLit ){
+	
+	//SECOND ONLY IS LITERAL
+	
+		if( firstEntryIsVC ){
+		
+		}else{
+		
+		}
+	
+	}else{
+	
+	//NONE IS LITERAL
+	
+		if( firstEntryIsVC ){
+			
+			if( secondEntryIsVC ){
+			
+			
+			}else{
+			
+			}
+		
+		}else{
+		
+			if( secondEntryIsVC ){
+			
+			}else{
+			
+			}
+		
+		}
+	
+	}
+
+}
+
+vector<Condition> parseConditions(stringstream& command){
+
+	vector<Condition> conditions;
+
+	readWhite(command);
+
+	int paren = 0;
+
+	//Read in parentheses and increment paren
+	
+	char next;
+	command.get(next);
+	
+	if( next != '(' ){
+		return conditions;
+	}else{
+		++paren;
+	}
+	
+	while( paren > 0 ){
+	
+		readWhite(command);
+		
+		command.get(next);
+		
+		if( next == '(' ){
+			++paren;
+		}else{
+		
+		
+		
+		}
+	
+	}
+	
+	//Read in a (Open Parentheses) OR (name OR string) Operator (name OR string)
+	
+	//Read in a (Close Parentheses) OR (connector)
+
+	//if paren == 0, we're done
+	
+	
 }
 
 //DONE - NOT DEBUGGED

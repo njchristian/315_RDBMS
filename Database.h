@@ -42,10 +42,12 @@ public:
 
 	void removeRelationFromDatabase( string relationName );
 
+	
 	Relation crossProduct( Relation* targetRelationA, Relation* targetRelationB );
 	Relation crossProduct( Relation* targetRelationA, string relationB ){ return crossProduct(targetRelationA, findRelation(relationB)); }
 	Relation crossProduct( string relationA, Relation* targetRelationB ){ return crossProduct(findRelation(relationA), targetRelationB); }
 	Relation crossProduct( string relationA, string relationB ){ return crossProduct(findRelation(relationA) , findRelation(relationB)); }
+	Relation crossProduct( Relation targetRelationA, Relation targetRelationB ){ return crossProduct( &targetRelationA, &targetRelationB ); }
 
 	Relation deleteFromRelation( string relationA, vector<Condition> conditions);
 

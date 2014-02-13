@@ -4,7 +4,11 @@
 #include "Database.h"
 #include "ConditionList.h"
 #include "Condition.h"
+#include "Operation.h"
+#include "Entry.h"
 
+#include <iostream>
+#include <sstream>
 #include <vector>
 
 
@@ -12,16 +16,17 @@ class Parser{
 
 	Database& database;
 
-	//"views" are the temporary relations created by a program. I just found this in the
-	//assignment online today...
+	//"views" are the temporary relations created by a program
 	vector<Relation> views;
 
 	void addView(Relation r){
 		views.push_back(r);
 	}
 
+	//Get a relation from views or database
 	Relation getRelation(string r);
 
+	//Is c alpha numeric or '_'?
 	bool isAlphaNum(int c);
 	
 		//IO FUNCTIONS
@@ -72,7 +77,7 @@ class Parser{
 	//TODO
 	Relation selection(stringstream& command);
 	
-	//TODO
+	//DONE
 	Relation projection(stringstream& command);
 	
 	//TODO
@@ -84,7 +89,7 @@ class Parser{
 	//TODO
 	Relation crossProduct(stringstream& command);
 	
-	//TODO
+	//DONE
 	Relation rename(stringstream& command);
 	
 	
@@ -92,19 +97,19 @@ class Parser{
 		//GENERAL PARSER FUNCTIONS
 		
 
-	//TODO
+	//DONE
 	//Reads an attribute list (comma seperated strings, surrounded by parentheses)
 	int parseAttributeList(stringstream& command,vector<string>& attributeNames);
 
-	//TODO
+	//DONE
 	//Peeks to see if next character is a plus sign;
 	int peekAndReadAddition(stringstream& command);
 
-	//TODO
+	//DONE
 	//Peeks to see if next character is a minus sign;
 	int peekAndReadSubtraction(stringstream& command);
 
-	//TODO
+	//DONE
 	//Peeks to see if next character is a * sign;
 	int peekAndReadMultiplication(stringstream& command);
 
@@ -125,21 +130,30 @@ class Parser{
 	//This function first reads through any whitespace and then stores the word
 	string readAlphaNumWord(stringstream& command);
 	
-	//TODO
+	int parseInteger(stringstream& command, int& i);
+	
+	//DONE
+	int readOperator(stringstream& command, Operator& o);
+	
+	//UNDER CONSTRUCTION
+	//Read a single condition
+	Condition parseCondition(stringstream& command);
+	
+	//UNDER CONSTRUCTION
 	//takes in a stream which has been identified as a condition and returns the resulting condition list
 	vector<Condition> parseConditions(stringstream& command);
 	
-	//TODO
+	//DONE
 	//takes in a stream which has been identified as a query and returns a relation
 	//Return NULL if error.
 	//OFTEN CALLED RECURSIVELY
 	Relation parseExpr(stringstream& command);
 
-	//TODO
+	//DONE
 	//Reads in a query - ie. "relationName" <- expr
 	int parseQuery(stringstream& command);
 
-	//UNDER CONSTRUCTION
+	//DONE
 	//takes in a stream which may be a command and updates information - returns -1 for error
 	int parseCommand(stringstream& command);
 	
