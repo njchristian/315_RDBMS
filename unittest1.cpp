@@ -11,6 +11,9 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
+
+//PLEASE RUN ON VS 2012
+
 namespace UnitTest1
 {		
 	TEST_CLASS(UnitTest1)
@@ -60,6 +63,7 @@ namespace UnitTest1
 			d.addTupleToRelation(entries.at(0), "Dogs");
 			d.addTupleToRelation(entries.at(1), "Dogs");
 			d.addTupleToRelation(entries.at(2), "Dogs");
+			
 			
 
 			//In the final project, this is stored in the database cell. This is for the relations the
@@ -165,6 +169,10 @@ namespace UnitTest1
 			entries.at(0).push_back(Entry("Amy"));
 			entries.at(0).push_back(Entry(3));
 
+			entries.at(1).push_back(Entry("Zipper"));
+			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry(14));
+
 			d.addTupleToRelation(entries.at(0), "Dogs");
 			d.addTupleToRelation(entries.at(1), "Dogs");
 			d.addTupleToRelation(entries.at(2), "Dogs");
@@ -172,23 +180,26 @@ namespace UnitTest1
 			d.addRelationToDatabase("Dogs", testAtts, keys);
 
 
-			vector<Entry> newTuple1;
+			vector<Condition> c3;
+	
+			c3.push_back(Condition("Owner", EQUALS, Entry("Melodie"), NONE, 1));
 
-			newTuple1.push_back(Entry("Rockie"));
-			newTuple1.push_back(Entry("Brain"));
-			newTuple1.push_back(Entry(7));
+			Relation dogs = d.deleteFromRelation("Dogs", c3);
 
-			d.addTupleToRelation( newTuple1 , "Dogs");
+			vector<Entry> test;
+
+			test.push_back(Entry("Zipper"));
+			test.push_back(Entry("Melodie"));
+			test.push_back(Entry(14));
 
 			vector<Entry*> entryPointers;
 
-			entryPointers.push_back( &newTuple1[0] );
-			entryPointers.push_back( &newTuple1[1] );
-			entryPointers.push_back( &newTuple1[2] );
-
-			d.removeTupleFromRelation( newTuple1 , "Dogs" );
+			entryPointers.push_back( &test[0] );
+			entryPointers.push_back( &test[1] );
+			entryPointers.push_back( &test[2] );
 
 			Assert::IsFalse( d.accessRelation( "Dogs" )->hasTuple( entryPointers ) );
+
 		}
 
 		TEST_METHOD(select)
