@@ -52,7 +52,7 @@ class Parser{
 
 
 
-	//TODO
+	//TODO - I'm planning on working on this today - Taylor
 	//Parse the rest of a create table command
 	int createTable( stringstream& command );
 
@@ -64,7 +64,7 @@ class Parser{
 	//Parse the rest of insert into command
 	int insertInto( stringstream& command );
 
-	//TODO
+	//TODO - I'm planning on working on this today - Taylor
 	//Parse the rest of update command
 	int update( stringstream& command );
 
