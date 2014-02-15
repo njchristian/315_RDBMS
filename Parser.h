@@ -83,7 +83,7 @@ class Parser{
 	//DONE
 	Relation relationUnion( stringstream& command );
 
-	//TODO
+	//DONE
 	Relation difference( stringstream& command );
 
 	//TODO

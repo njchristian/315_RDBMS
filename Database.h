@@ -52,6 +52,7 @@ public:
 	Relation deleteFromRelation( string relationA, vector<Condition> conditions);
 
 	Relation differenceTwoRelation( Relation* targetRelationA, Relation* targetRelationB );
+	Relation differenceTwoRelation( Relation targetRelationA, Relation targetRelationB ) { return differenceTwoRelation( &targetRelationA, &targetRelationB ); }
 	Relation differenceTwoRelation( Relation* targetRelationA, string relationB ){ return differenceTwoRelation(targetRelationA, findRelation(relationB)); }
 	Relation differenceTwoRelation( string relationA, Relation* targetRelationB ){ return differenceTwoRelation(findRelation(relationA), targetRelationB); }
 	Relation differenceTwoRelation( string relationA, string relationB ){ return differenceTwoRelation(findRelation(relationA) , findRelation(relationB)); }
