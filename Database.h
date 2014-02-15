@@ -84,6 +84,7 @@ public:
 	Relation selection( vector<Condition> conditions, string targetRelationName ){ return selection( conditions, findRelation( targetRelationName)); }
 
 	Relation unionTwoRelations( Relation* targetRelationA, Relation* targetRelationB );
+	Relation unionTwoRelations( Relation targetRelationA, Relation targetRelationB ) { return unionTwoRelations( &targetRelationA, &targetRelationB ); }
 	Relation unionTwoRelations( Relation* targetRelationA, string relationB ){ return unionTwoRelations(targetRelationA, findRelation(relationB)); }
 	Relation unionTwoRelations( string relationA, Relation* targetRelationB ){ return unionTwoRelations(findRelation(relationA), targetRelationB); }
 	Relation unionTwoRelations( string relationA, string relationB ){ return unionTwoRelations(findRelation(relationA) , findRelation(relationB)); }

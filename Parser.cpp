@@ -882,7 +882,28 @@ Relation Parser::selection( stringstream& command ) {
 
 
 
+Relation Parser::relationUnion( stringstream& command ) {
 
+	// Get the first relation
+	Relation relationA = parseExpr( command );
+
+	// Make sure it is not empty
+	if ( relationA.isEmpty( ) ) {
+		return relationA;
+	}
+
+	// Get the second relation
+	Relation relationB = parseExpr( command );
+
+	// Make sure it is not empty
+	if ( relationB.isEmpty( ) ) {
+		return relationB;
+	}
+
+	// Return the result
+	return database.unionTwoRelations( relationA, relationB );
+
+}
 
 
 
