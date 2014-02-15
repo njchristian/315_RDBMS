@@ -92,7 +92,7 @@ void Condition::eval( ) {
 		case LE:
 			lit = ( a < b );
 			break;
-		case LEEQ:
+		case LEQ:
 			lit = ( a <= b );
 			break;
 		case NEQ:

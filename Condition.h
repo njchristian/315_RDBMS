@@ -3,6 +3,7 @@
 
 #include "Entry.h"
 #include "Connector.h"
+#include "Operation.h"
 
 class Condition{
 

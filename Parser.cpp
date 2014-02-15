@@ -628,10 +628,10 @@ int Parser::readOperator( stringstream& command, Operation& o ){
 		c = command.peek( );
 
 		if ( c != '=' ){
-			o = GE;
+			o = GR;
 		}
 		else{
-			o = GEQ;
+			o = GREQ;
 		}
 		break;
 
@@ -737,9 +737,9 @@ int Parser::findConnector( stringstream& copy, Connector c, int paren){
 }
 
 //UNDER CONSTRUCTION
-int Parser::parseCondition( stringstream& command, int paren, Condition& condition ){
+int Parser::parseCondition( stringstream& localCommand, int paren, Condition& condition ){
 
-	readWhite( command );
+	readWhite( localCommand );
 
 	bool firstIsLit = false;
 	bool firstIsStr = false;
@@ -757,24 +757,24 @@ int Parser::parseCondition( stringstream& command, int paren, Condition& conditi
 	char next;
 
 	//Read first word/literal
-	next = command.peek( );
+	next = localCommand.peek( );
 
 	//Check if the string starts with a quote. If it does it is a literal string
 	if ( next == '"' ){
 		firstIsLit = true;
 		firstIsStr = true;
-		command.get( );
-		first = readAlphaNumWord( command );
+		localCommand.get( );
+		first = readAlphaNumWord( localCommand );
 		a.setVC(first);
 	}
 	else{
 
 		//If not, it could either be a literal integer, or it is an attribute
 
-		if ( parseInteger( command, firstI ) < 0 ){
+		if ( parseInteger( localCommand, firstI ) < 0 ){
 			//parseInteger FAILED - it is attribute
 
-			first = readAlphaNumWord( command );
+			first = readAlphaNumWord( localCommand );
 		}else{
 			//parseInteger SUCCESS - it is int
 
@@ -786,7 +786,7 @@ int Parser::parseCondition( stringstream& command, int paren, Condition& conditi
 
 	if ( firstIsStr ){
 
-		command.get( next );
+		localCommand.get( next );
 
 		if ( next != '"' ){
 			return INVALID;
@@ -794,35 +794,35 @@ int Parser::parseCondition( stringstream& command, int paren, Condition& conditi
 
 	}
 
-	readWhite( command );
+	readWhite( localCommand );
 
 	//Read operator
 	Operation o;
 
-	if ( readOperator( command, o ) < 0 ){
+	if ( readOperator( localCommand, o ) < 0 ){
 		INVALID;
 	}
 
-	readWhite( command );
+	readWhite( localCommand );
 
-	next = command.peek( );
+	next = localCommand.peek( );
 
 		//Check if the string starts with a quote. If it does it is a literal string
 	if ( next == '"' ){
 		secondIsLit = true;
 		secondIsStr = true;
-		command.get( );
-		first = readAlphaNumWord( command );
+		localCommand.get( );
+		first = readAlphaNumWord( localCommand );
 		a.setVC(second);
 	}
 	else{
 
 		//If not, it could either be a literal integer, or it is an attribute
 
-		if ( parseInteger( command, secondI ) < 0 ){
+		if ( parseInteger( localCommand, secondI ) < 0 ){
 			//parseInteger FAILED - it is attribute
 
-			second = readAlphaNumWord( command );
+			second = readAlphaNumWord( localCommand );
 		}else{
 			//parseInteger SUCCESS - it is int
 
@@ -834,7 +834,7 @@ int Parser::parseCondition( stringstream& command, int paren, Condition& conditi
 
 	if ( secondIsStr ){
 
-		command.get( next );
+		localCommand.get( next );
 
 		if ( next != '"' ){
 			return INVALID;
@@ -842,9 +842,12 @@ int Parser::parseCondition( stringstream& command, int paren, Condition& conditi
 
 	}
 
-	Connector conn;
+	Connector conn = NONE;
 
-	stringstream copy(command);
+	//stringstream copy construtor is private
+	//this should work
+	stringstream copy;
+	copy <<localCommand.rdbuf();
 
 	if( findConnector(copy, conn, paren) < 0 ){
 		return INVALID;
@@ -874,7 +877,8 @@ int Parser::parseCondition( stringstream& command, int paren, Condition& conditi
 
 int Parser::parseConditions( stringstream& command, vector<Condition>& conditions ){
 
-	vector<Condition> conditions;
+	//Redefinition of conditions
+	//vector<Condition> conditions;
 
 	readWhite( command );
 
