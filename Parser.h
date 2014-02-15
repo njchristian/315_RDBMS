@@ -80,7 +80,7 @@ class Parser{
 	//DONE
 	Relation projection( stringstream& command );
 
-	//TODO
+	//DONE
 	Relation relationUnion( stringstream& command );
 
 	//TODO
