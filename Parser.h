@@ -56,7 +56,7 @@ class Parser{
 	//Parse the rest of a create table command
 	int createTable( stringstream& command );
 
-	//TODO
+	//DONE - not tested
 	//Parse the rest of delete from command
 	int deleteFrom( stringstream& command );
 
@@ -80,13 +80,13 @@ class Parser{
 	//DONE
 	Relation projection( stringstream& command );
 
-	//DONE
+	//DONE - not tested
 	Relation relationUnion( stringstream& command );
 
-	//DONE
+	//DONE - not tested
 	Relation difference( stringstream& command );
 
-	//DONE
+	//DONE - not tested
 	Relation crossProduct( stringstream& command );
 
 	//DONE

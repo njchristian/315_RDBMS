@@ -151,6 +151,30 @@ int Parser::parseAttributeList( stringstream& command, vector<string>& attribute
 }
 
 
+// DONE - not tested
+int Parser::deleteFrom( stringstream& command ) {
+
+	// Get the relation's name
+	string relationName = readAlphaNumWord( command );
+
+	// Make sure the WHERE keyword is there
+	string whereKeyWord = readAlphaNumWord( command );
+
+	if ( whereKeyWord != "WHERE" ) {
+		return INVALID;
+	}
+
+	// Get the conditions that will be used by the delete function
+	vector<Condition> deleteConditions = parseConditions( command );
+
+	// Call the delete function on the relation
+	database.deleteFromRelation( relationName, deleteConditions );
+
+	return SUCCESS;
+}
+
+
+// DONE - not tested
 Relation Parser::crossProduct( stringstream& command ) {
 	
 	// Get the first relation
@@ -174,6 +198,7 @@ Relation Parser::crossProduct( stringstream& command ) {
 }
 
 
+// DONE - not tested
 Relation Parser::difference( stringstream& command ) {
 	
 	// Get the first relation
@@ -902,7 +927,7 @@ int Parser::parse( string s ){
 }
 
 
-
+// DONE - not tested
 Relation Parser::selection( stringstream& command ) {
 
 	// Parse and get the conditions
@@ -928,7 +953,7 @@ Relation Parser::selection( stringstream& command ) {
 }
 
 
-
+// DONE - not tested
 Relation Parser::relationUnion( stringstream& command ) {
 
 	// Get the first relation
@@ -951,22 +976,3 @@ Relation Parser::relationUnion( stringstream& command ) {
 	return database.unionTwoRelations( relationA, relationB );
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
