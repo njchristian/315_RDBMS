@@ -60,7 +60,7 @@ class Parser{
 	//Parse the rest of delete from command
 	int deleteFrom( stringstream& command );
 
-	//Under Construction
+	//DONE - needs testing
 	//Parse the rest of insert into command
 	int insertInto( stringstream& command );
 
@@ -130,10 +130,16 @@ class Parser{
 	//This function first reads through any whitespace and then stores the word
 	string readAlphaNumWord( stringstream& command );
 
+	//DONE - needs testing
+	// reads and returns an entry for the insert into function, opening parenthesis
+	// will already be consumed and this should not consume the closing parenthesis
+	Entry readLiteral( stringstream& command );
+
+	//TODO
 	int parseInteger( stringstream& command, int& i );
 
 	//DONE
-	int readOperator( stringstream& command, Operation& o ); // changes operator& to operation&
+	int readOperator( stringstream& command, Operation& o ); // changed operator& to operation&
 
 	//UNDER CONSTRUCTION
 	//Read a single condition

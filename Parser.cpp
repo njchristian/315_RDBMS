@@ -174,7 +174,44 @@ int Parser::deleteFrom( stringstream& command ) {
 }
 
 
-// UNDER CONSTRUCTION 
+//DONE - needs testing
+Entry readLiteral( stringstream& command ) {
+	Entry nextEntry;
+	
+	char nextChar = command.peek( );
+
+	// If the literal is a string
+	if ( nextChar == '\"' ) {
+		string stringLiteral = "";
+
+		// keep reading characters into the string until the closing quotes
+		while ( command.peek( ) != '\"' ) {
+			stringLiteral += command.get( );
+		}
+
+		nextEntry = Entry( stringLiteral );
+	}
+
+	// if the literal is an integer
+	else if ( isdigit( nextChar ) ) {
+		string intLiteral = "";
+
+		// read all of the digits into a string
+		while ( isdigit( command.peek( ) ) ) {
+			intLiteral += command.get( );
+		}
+
+		// convert the string into an int
+		int actualIntLiteral = stoi( intLiteral );
+
+		nextEntry = Entry( actualIntLiteral );
+	}
+
+	return nextEntry;
+}
+
+
+// Done, for sure needs testing -------------------------------------should this check that the tuple has the right attributes for the relation or should database check?
 int Parser::insertInto( stringstream& command ) {
 
 	// Get the target Relation
@@ -198,7 +235,26 @@ int Parser::insertInto( stringstream& command ) {
 
 	if ( parenthesis == '(' ) {
 		command.get( );
+
+		vector<Entry> tuple;
+		Entry helperEntry;
 		// ... needs to read a tuple
+		// keep reading literals until there is a ')'
+		while ( command.peek( ) != ')' ) {
+			helperEntry = readLiteral( command );
+			//------------------------------------------should this check to see if the entry was formatted bad?
+			tuple.push_back( helperEntry );
+			
+			// consume the comma if there is one
+			if ( command.peek( ) == ',' ) {
+				command.get( );
+			}
+		}
+
+		// Consume the closing parenthesis
+		command.get( );
+
+		database.addTupleToRelation( tuple, targetRelation );
 	}
 	else {
 

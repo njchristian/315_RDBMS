@@ -82,9 +82,9 @@ void Database::addRelationToDatabase( Relation r ){
 }
 
 // Add the row (which is a tuple) into the specified relation.
-void Database::addTupleToRelation( vector<Entry> tuple, string relationName ) {
+void Database::addTupleToRelation( vector<Entry> tuple, Relation* targetRelation ) {
 
-	Relation* targetRelation = findRelation( relationName );
+	//Relation* targetRelation = findRelation( relationName );
 
 	// Create the new tuple
 	vector<Entry*> newRow;

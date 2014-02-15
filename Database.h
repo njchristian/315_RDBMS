@@ -36,7 +36,9 @@ public:
 		
 	void addRelationToDatabase( Relation r );
 
-	void addTupleToRelation( vector<Entry> tuple, string relationName );
+	void addTupleToRelation( vector<Entry> tuple, Relation* targetRelation );
+	void addTupleToRelation( vector<Entry> tuple, Relation relationA ) { return addTupleToRelation( tuple, &relationA ); }
+	void addTupleToRelation( vector<Entry> tuple, string relationName ) { return addTupleToRelation( tuple, findRelation( relationName ) ); }
 
 	// do these need to return Relation* or void???
 	Relation* insertIntoFromRelation( Relation* relationA, Relation* relationB );
