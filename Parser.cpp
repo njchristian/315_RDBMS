@@ -174,6 +174,55 @@ int Parser::deleteFrom( stringstream& command ) {
 }
 
 
+// UNDER CONSTRUCTION 
+int Parser::insertInto( stringstream& command ) {
+
+	// Get the target Relation
+	Relation targetRelation = parseExpr( command ); // not sure about this
+
+	// Read and verify the values key word.
+	string valuesKeyWord = readAlphaNumWord( command );
+	if ( valuesKeyWord != "VALUES" ) {
+		return INVALID;
+	}
+
+	// Read and verify the from key word.
+	string fromKeyWord = readAlphaNumWord( command );
+	if ( fromKeyWord != "FROM" ) {
+		return INVALID;
+	}
+
+	readWhite( command );
+
+	char parenthesis = command.peek( );
+
+	if ( parenthesis == '(' ) {
+		command.get( );
+		// ... needs to read a tuple
+	}
+	else {
+
+		// Read and verify the relation key word
+		string relationKeyWord = readAlphaNumWord( command );
+		if ( relationKeyWord != "RELATION" ) {
+			return INVALID;
+		}
+
+		// Get the target relation
+		Relation whatToReadFrom = parseExpr( command );
+
+		Relation* newRelation = database.insertIntoFromRelation( targetRelation, whatToReadFrom );
+
+		// check to make sure inserting actually happened
+		if ( *newRelation == targetRelation ) {
+			return INVALID;
+		}
+	}
+
+	return SUCCESS;
+}
+
+
 // DONE - not tested
 Relation Parser::crossProduct( stringstream& command ) {
 	

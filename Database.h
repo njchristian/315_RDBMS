@@ -38,7 +38,10 @@ public:
 
 	void addTupleToRelation( vector<Entry> tuple, string relationName );
 
-	Relation* insertIntoFromRelation( string relationA, Relation* relationB);
+	// do these need to return Relation* or void???
+	Relation* insertIntoFromRelation( Relation* relationA, Relation* relationB );
+	Relation* insertIntoFromRelation( string relationA, Relation* relationB ) { return insertIntoFromRelation( findRelation( relationA ), relationB ); }
+	Relation* insertIntoFromRelation( Relation relationA, Relation relationB ) { return insertIntoFromRelation( &relationA, &relationB ); }
 
 	void removeRelationFromDatabase( string relationName );
 

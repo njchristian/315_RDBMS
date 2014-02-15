@@ -255,23 +255,23 @@ int Database::findTuple( ) {
 
 }
 
-Relation* Database::insertIntoFromRelation( string relationA, Relation* relationB ){
+Relation* Database::insertIntoFromRelation( Relation* relationA, Relation* relationB ){
 
-	Relation* targetRelation = findRelation( relationA );
+	//Relation* targetRelation = findRelation( relationA );
 
-	if ( targetRelation->attributeSize( ) != relationB->attributeSize( ) ){
-		return targetRelation;
+	if ( relationA->attributeSize( ) != relationB->attributeSize( ) ){
+		return relationA;
 	}
 
 	for ( int i = 0; i < relationB->getNumTuples( ); i++ ){
 
 		vector<Entry*> newRow = relationB->getRow( i );
 
-		targetRelation->addRow( newRow );
+		relationA->addRow( newRow );
 
 	}
 
-	return targetRelation;
+	return relationA;
 }
 
 //subset of attributes in a relation
