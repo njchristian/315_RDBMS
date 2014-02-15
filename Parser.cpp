@@ -410,6 +410,8 @@ int Parser::parseCommand( stringstream& command ){
 			return INVALID;
 		}
 
+		return SUCCESS;
+
 	}
 	else if ( word == "SHOW" ){
 
