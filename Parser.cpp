@@ -9,140 +9,140 @@
 //luin.uial@gmail.com
 
 //Gets a relation from views or from database
-Relation Parser::getRelation(string r){
+Relation Parser::getRelation( string r ){
 
-	for(int i = 0; i < views.size(); i++){
-		if(views.at(i).getName() == r){
-			return views.at(i);
+	for ( int i = 0; i < views.size( ); i++ ){
+		if ( views.at( i ).getName( ) == r ){
+			return views.at( i );
 		}
 	}
 
-	return database.accessRelation(r);
+	return database.accessRelation( r );
 
 }
 
 //DONE
 //We pass the integer values of the characters so our check is quick
-bool Parser::isAlphaNum(int c){
+bool Parser::isAlphaNum( int c ){
 
 	int ZERO = 48;
 	int NINE = 57;
 
 	int A = 65;
 	int Z = 90;
-	
+
 	int a = 97;
 	int z = 122;
 
 	int UNDERSCORE = 95;
 
-	return ( (c >= ZERO && c <= NINE) || (c >= A && c <= Z) || (c >= a && c <= z) || UNDERSCORE);
+	return ( ( c >= ZERO && c <= NINE ) || ( c >= A && c <= Z ) || ( c >= a && c <= z ) || UNDERSCORE );
 
 }
 
 //DONE - NOT TESTED
-string Parser::readAlphaNumWord(stringstream& command){
+string Parser::readAlphaNumWord( stringstream& command ){
 
-	readWhite(command);
+	readWhite( command );
 
 	string result = "";
 	char next;
 
-	while(isAlphaNum( command.peek()) ){
+	while ( isAlphaNum( command.peek( ) ) ){
 
-		command.get(next);
-		result.push_back(next);
+		command.get( next );
+		result.push_back( next );
 
 	}
 
-	readWhite(command);
+	readWhite( command );
 
 	return result;
 }
 
 //DONE
-void Parser::readWhite(stringstream& command){
+void Parser::readWhite( stringstream& command ){
 
-	while(command.peek() == ' '){
-		command.get();
+	while ( command.peek( ) == ' ' ){
+		command.get( );
 	}
 
 }
 
 //DONE
-int Parser::readSemi(stringstream& command){
+int Parser::readSemi( stringstream& command ){
 
-	readWhite(command);
+	readWhite( command );
 
 	char semi;
-	command.get(semi);
+	command.get( semi );
 
-	if( semi == ';' ){
+	if ( semi == ';' ){
 		return SUCCESS;
 	}
 
-	command.putback(semi);
+	command.putback( semi );
 
 	return INVALID;
 
 }
 
 //DONE
-int Parser::readArrow(stringstream& command){
+int Parser::readArrow( stringstream& command ){
 
-	readWhite(command);
+	readWhite( command );
 
 	char dash;
 	char less;
 
-	command.get(less);
+	command.get( less );
 
-	if( less != '<' || command.peek() != '-' ){
+	if ( less != '<' || command.peek( ) != '-' ){
 
-		command.putback(less);
+		command.putback( less );
 		return INVALID;
 
 	}
 
-	command.get(dash);
+	command.get( dash );
 
 	return SUCCESS;
 
 }
 
 //DONE
-int Parser::parseAttributeList(stringstream& command, vector<string>& attributeNames){
+int Parser::parseAttributeList( stringstream& command, vector<string>& attributeNames ){
 
-	readWhite(command);
+	readWhite( command );
 
 	char open;
-	command.get(open);
+	command.get( open );
 
-	if( open != '(' ){
+	if ( open != '(' ){
 		return INVALID;
 	}
 
-	
+
 
 	char commaOrClose;
 	string name;
 
-	
+
 
 	do{
 
-		readWhite(command);
+		readWhite( command );
 
-		name = readAlphaNumWord(command);
-		attributeNames.push_back(name);
+		name = readAlphaNumWord( command );
+		attributeNames.push_back( name );
 
-		readWhite(command);
+		readWhite( command );
 
-		command.get(commaOrClose);
+		command.get( commaOrClose );
 
-	}while(commaOrClose == ',');
+	} while ( commaOrClose == ',' );
 
-	if(commaOrClose != ')'){
+	if ( commaOrClose != ')' ){
 		return INVALID;
 	}
 
@@ -151,153 +151,161 @@ int Parser::parseAttributeList(stringstream& command, vector<string>& attributeN
 }
 
 //DONE
-Relation Parser::projection(stringstream& command){
+Relation Parser::projection( stringstream& command ){
 
 	vector<string> attributeNames;
 
-	if( parseAttributeList(command, attributeNames) < 0 ){
-		return Relation();
+	if ( parseAttributeList( command, attributeNames ) < 0 ){
+		return Relation( );
 	}
 
-	Relation r = parseExpr(command);
+	Relation r = parseExpr( command );
 
-	if( r.isEmpty() ){
+	if ( r.isEmpty( ) ){
 		return r;
 	}
 
-	return database.projection(attributeNames, r);
+	return database.projection( attributeNames, r );
 
 }
 
 //TODO
-Relation Parser::rename(stringstream& command){
+Relation Parser::rename( stringstream& command ){
 
-	readWhite(command);
+	readWhite( command );
 
 	vector<string> attributeNames;
 
-	if( parseAttributeList(command, attributeNames) < 0){
-		return Relation();
+	if ( parseAttributeList( command, attributeNames ) < 0 ){
+		return Relation( );
 	}
 
-	Relation r = parseExpr(command);
+	Relation r = parseExpr( command );
 
-	if( r.isEmpty() ){
+	if ( r.isEmpty( ) ){
 		return r;
 	}
 
-	return database.renameAttributes(attributeNames, r);
+	return database.renameAttributes( attributeNames, r );
 
 }
 
 //DONE - NOT TESTED
-int Parser::parseCommand(stringstream& command){
+int Parser::parseCommand( stringstream& command ){
 
-	string word = readAlphaNumWord(command);
-	
-	if( word == "OPEN" ){
-	
-		string relationName = readAlphaNumWord(command);
-		
+	string word = readAlphaNumWord( command );
+
+	if ( word == "OPEN" ){
+
+		string relationName = readAlphaNumWord( command );
+
 		//Catch problem before execution
-		if( readSemi(command) < 0){
+		if ( readSemi( command ) < 0 ){
 			return INVALID;
 		}
-		
-		openFile(relationName);
-		
+
+		openFile( relationName );
+
 		return SUCCESS;
-	
-	}else if( word == "CLOSE" ){
-	
-		string relationName = readAlphaNumWord(command);
 
-		if( closeFile(relationName) < 0 ){
+	}
+	else if ( word == "CLOSE" ){
+
+		string relationName = readAlphaNumWord( command );
+
+		if ( closeFile( relationName ) < 0 ){
 			return INVALID;
 		}
 
-		if( readSemi(command) < 0){
+		if ( readSemi( command ) < 0 ){
 			return INVALID;
 		}
 
-	}else if( word == "SHOW" ){
-	
-		string relationName = readAlphaNumWord(command);
-		
+	}
+	else if ( word == "SHOW" ){
+
+		string relationName = readAlphaNumWord( command );
+
 		//Catch problem before execution
-		if( readSemi(command) < 0){
+		if ( readSemi( command ) < 0 ){
 			return INVALID;
 		}
-	
-		cout<< *database.accessRelation(relationName);
-	
-		return SUCCESS;
-	
-	}else if( word == "WRITE" ){
 
-		string relationName = readAlphaNumWord(command);
-		
+		cout << *database.accessRelation( relationName );
+
+		return SUCCESS;
+
+	}
+	else if ( word == "WRITE" ){
+
+		string relationName = readAlphaNumWord( command );
+
 		//Catch problem before execution
-		if( readSemi(command) < 0){
+		if ( readSemi( command ) < 0 ){
 			return INVALID;
 		}
 
-		if( writeFile(relationName) < 0){
-			return INVALID;
-		}
-
-		return SUCCESS;
-
-	}else if( word == "INSERT" ){
-
-		string into = readAlphaNumWord(command);
-
-		if( into != "INTO" ){
-			return INVALID;
-		}
-
-		if( insertInto(command) < 0){
+		if ( writeFile( relationName ) < 0 ){
 			return INVALID;
 		}
 
 		return SUCCESS;
 
-	}else if( word == "DELETE" ){
+	}
+	else if ( word == "INSERT" ){
 
-		string from = readAlphaNumWord(command);
+		string into = readAlphaNumWord( command );
 
-		if( from != "FROM" ){
+		if ( into != "INTO" ){
 			return INVALID;
 		}
 
-		if( deleteFrom(command) < 0){
-			return INVALID;
-		}
-
-		return SUCCESS;
-
-	}else if( word == "CREATE" ){
-		string table = readAlphaNumWord(command);
-
-		if( table != "TABLE" ){
-			return INVALID;
-		}
-
-		if( createTable(command) < 0){
+		if ( insertInto( command ) < 0 ){
 			return INVALID;
 		}
 
 		return SUCCESS;
 
-	}else if( word == "UPDATE" ){
+	}
+	else if ( word == "DELETE" ){
 
-		if( update(command) < 0){
+		string from = readAlphaNumWord( command );
+
+		if ( from != "FROM" ){
+			return INVALID;
+		}
+
+		if ( deleteFrom( command ) < 0 ){
 			return INVALID;
 		}
 
 		return SUCCESS;
 
-	}else{
+	}
+	else if ( word == "CREATE" ){
+		string table = readAlphaNumWord( command );
+
+		if ( table != "TABLE" ){
+			return INVALID;
+		}
+
+		if ( createTable( command ) < 0 ){
+			return INVALID;
+		}
+
+		return SUCCESS;
+
+	}
+	else if ( word == "UPDATE" ){
+
+		if ( update( command ) < 0 ){
+			return INVALID;
+		}
+
+		return SUCCESS;
+
+	}
+	else{
 
 		return INVALID;
 
@@ -306,23 +314,23 @@ int Parser::parseCommand(stringstream& command){
 }
 
 //DONE - NOT DEBUGGED
-int Parser::parseQuery(stringstream& command){
+int Parser::parseQuery( stringstream& command ){
 
-	string relationName = readAlphaNumWord(command);
+	string relationName = readAlphaNumWord( command );
 
-	if( readArrow(command) < 0){
+	if ( readArrow( command ) < 0 ){
 		return INVALID;
 	}
 
-	Relation targetRelation = parseExpr(command);
+	Relation targetRelation = parseExpr( command );
 
-	if( targetRelation.isEmpty() ){
+	if ( targetRelation.isEmpty( ) ){
 		return INVALID;
 	}
 
-	targetRelation.setName(relationName);
+	targetRelation.setName( relationName );
 
-	addView(targetRelation);
+	addView( targetRelation );
 
 	return SUCCESS;
 
@@ -330,116 +338,120 @@ int Parser::parseQuery(stringstream& command){
 
 
 //DONE
-int peekAndReadAddition(stringstream& command){
-	
-	readWhite(command);
-	
+int peekAndReadAddition( stringstream& command ){
+
+	readWhite( command );
+
 	char plus;
-	plus = command.peek();
-	
-	if( plus != '+' ){
+	plus = command.peek( );
+
+	if ( plus != '+' ){
 		return INVALID;
 	}
-	
-	command.get();
-	
+
+	command.get( );
+
 	return SUCCESS;
-	
+
 }
 
 //DONE
-int peekAndReadSubtraction(stringstream& command){
-	
-	readWhite(command);
-	
+int peekAndReadSubtraction( stringstream& command ){
+
+	readWhite( command );
+
 	char sub;
-	sub = command.peek();
-	
-	if( plus != '-' ){
+	sub = command.peek( );
+
+	if ( plus != '-' ){
 		return INVALID;
 	}
-	
-	command.get();
-	
+
+	command.get( );
+
 	return SUCCESS;
-	
+
 }
 
 //DONE
-int peekAndReadMultiplication(stringstream& command){
-	
-	readWhite(command);
-	
+int peekAndReadMultiplication( stringstream& command ){
+
+	readWhite( command );
+
 	char mult;
-	mult = command.peek();
-	
-	if( plus != '*' ){
+	mult = command.peek( );
+
+	if ( plus != '*' ){
 		return INVALID;
 	}
-	
-	command.get();
-	
+
+	command.get( );
+
 	return SUCCESS;
-	
+
 }
 
 int Parser::readOperator( stringstream& command, Operator& o ){
 
 	char c;
-	command.get(c);
-	
-	switch (c){
-	
-	case ('='):
-	
-	command.get(c);
-	if( c != '=' ){
-		return INVALID;
-	}else{
-		o = EQUALS;
-		return SUCCESS;
-	}
-	break;
-	
-	case ('!'):
-	
-	command.get(c);
-	if( c != '=' ){
-		return INVALID;
-	}else{
-		o = NEQ;
-		return SUCCESS;
-	}
-	break;
-	
-	case ('<'):
-	
-	c = command.peek();
-	
-	if(c != '='){
-		o = LE;
-	}else{
-		o = LEQ;
-	}
-	break;
-	
-	case ('>'):
-	
-	c = command.peek();
-	
-	if(c != '='){
-		o = GE;
-	}else{
-		o = GEQ;
-	}
-	break;
-	
+	command.get( c );
+
+	switch ( c ){
+
+	case ( '=' ) :
+
+		command.get( c );
+		if ( c != '=' ){
+			return INVALID;
+		}
+		else{
+			o = EQUALS;
+			return SUCCESS;
+		}
+		break;
+
+	case ( '!' ) :
+
+		command.get( c );
+		if ( c != '=' ){
+			return INVALID;
+		}
+		else{
+			o = NEQ;
+			return SUCCESS;
+		}
+		break;
+
+	case ( '<' ) :
+
+		c = command.peek( );
+
+		if ( c != '=' ){
+			o = LE;
+		}
+		else{
+			o = LEQ;
+		}
+		break;
+
+	case ( '>' ) :
+
+		c = command.peek( );
+
+		if ( c != '=' ){
+			o = GE;
+		}
+		else{
+			o = GEQ;
+		}
+		break;
+
 	default:
-	return INVALID;
-	
-	
+		return INVALID;
+
+
 	}
-	
+
 	return INVALID;
 
 }
@@ -447,7 +459,7 @@ int Parser::readOperator( stringstream& command, Operator& o ){
 //TODO
 //Put an integer from command into 'i'. Return invalid if method fails
 //IF THE METHOD FAILS THIS FUNCTION MUST RETURN COMMAND TO ITS INITIAL STATE
-int parseInteger(stringstream& command, int& i){
+int parseInteger( stringstream& command, int& i ){
 
 
 
@@ -455,337 +467,355 @@ int parseInteger(stringstream& command, int& i){
 
 
 //UNDER CONSTRUCTION
-Condition Parser::parseCondition(stringstream& command){
+Condition Parser::parseCondition( stringstream& command ){
 
-	readWhite(command);
-	
+	readWhite( command );
+
 	bool firstIsLit = false;
 	bool secondIsLit = false;
-	
+
 	bool firstEntryIsVC = false;
 	bool secondEntryIsVC = false;
-	
+
 	string first;
 	int firstI;
 	string second;
 	int secondI;
-	
+
 	char next;
-	
+
 	//Read first word/literal
-	next = command.peek();
-	
-	if( next == '"' ){
+	next = command.peek( );
+
+	if ( next == '"' ){
 		firstIsLit = true;
-		command.get();
-		first = readAlphaNumWord(command);
-	}else{
-	
-		if( parseInteger(command, firstI) < 0){
-			first = readAlphaNumWord(command);
+		command.get( );
+		first = readAlphaNumWord( command );
+	}
+	else{
+
+		if ( parseInteger( command, firstI ) < 0 ){
+			first = readAlphaNumWord( command );
 			firstEntryIsVC = true;
 		}
-	
+
 	}
-	
-	if( firstIsLit ){
-	
-		command.get(next);
-		
-		if( next != '"' ){
-			return Condition();
+
+	if ( firstIsLit ){
+
+		command.get( next );
+
+		if ( next != '"' ){
+			return Condition( );
 		}
-	
+
 	}
-	
-	readWhite(command);
-	
+
+	readWhite( command );
+
 	//Read operator
 	Operator o;
-	
-	if( readOperator(command, o) < 0 ){
-		return Condition();
+
+	if ( readOperator( command, o ) < 0 ){
+		return Condition( );
 	}
-	
-	readWhite(command);
-	
-	next = command.peek();
-	
-	if( next == '"' ){
+
+	readWhite( command );
+
+	next = command.peek( );
+
+	if ( next == '"' ){
 		secondIsLit = true;
-		command.get();
-		second = readAlphaNumWord(command);
-	}else{
-	
-		if( parseInteger(command, secondI) < 0){
-			second = readAlphaNumWord(command);
+		command.get( );
+		second = readAlphaNumWord( command );
+	}
+	else{
+
+		if ( parseInteger( command, secondI ) < 0 ){
+			second = readAlphaNumWord( command );
 			secondEntryIsVC = true;
 		}
-	
+
 	}
-	
-	if( secondIsLit ){
-	
-		command.get(next);
-		
-		if( next != '"' ){
-			return Condition();
+
+	if ( secondIsLit ){
+
+		command.get( next );
+
+		if ( next != '"' ){
+			return Condition( );
 		}
-	
+
 	}
-	
-	if( firstIsLit ){
-	
-		if( secondIsLit ){
+
+	if ( firstIsLit ){
+
+		if ( secondIsLit ){
 			//TWO LITERALS
-		
+
 		}
-	
-	//FIRST ONLY IS LITERAL
-	
-		if( secondEntryIsVC ){
-		
-		}else{
-		
+
+		//FIRST ONLY IS LITERAL
+
+		if ( secondEntryIsVC ){
+
 		}
-	
-	}else if( secondIsLit ){
-	
-	//SECOND ONLY IS LITERAL
-	
-		if( firstEntryIsVC ){
-		
-		}else{
-		
+		else{
+
 		}
-	
-	}else{
-	
-	//NONE IS LITERAL
-	
-		if( firstEntryIsVC ){
-			
-			if( secondEntryIsVC ){
-			
-			
-			}else{
-			
+
+	}
+	else if ( secondIsLit ){
+
+		//SECOND ONLY IS LITERAL
+
+		if ( firstEntryIsVC ){
+
+		}
+		else{
+
+		}
+
+	}
+	else{
+
+		//NONE IS LITERAL
+
+		if ( firstEntryIsVC ){
+
+			if ( secondEntryIsVC ){
+
+
 			}
-		
-		}else{
-		
-			if( secondEntryIsVC ){
-			
-			}else{
-			
+			else{
+
 			}
-		
+
 		}
-	
+		else{
+
+			if ( secondEntryIsVC ){
+
+			}
+			else{
+
+			}
+
+		}
+
 	}
 
 }
 
-vector<Condition> parseConditions(stringstream& command){
+vector<Condition> parseConditions( stringstream& command ){
 
 	vector<Condition> conditions;
 
-	readWhite(command);
+	readWhite( command );
 
 	int paren = 0;
 
 	//Read in parentheses and increment paren
-	
+
 	char next;
-	command.get(next);
-	
-	if( next != '(' ){
+	command.get( next );
+
+	if ( next != '(' ){
 		return conditions;
-	}else{
+	}
+	else{
 		++paren;
 	}
-	
-	while( paren > 0 ){
-	
-		readWhite(command);
-		
-		command.get(next);
-		
-		if( next == '(' ){
+
+	while ( paren > 0 ){
+
+		readWhite( command );
+
+		command.get( next );
+
+		if ( next == '(' ){
 			++paren;
-		}else{
-		
-		
-		
 		}
-	
+		else{
+
+
+
+		}
+
 	}
-	
+
 	//Read in a (Open Parentheses) OR (name OR string) Operator (name OR string)
-	
+
 	//Read in a (Close Parentheses) OR (connector)
 
 	//if paren == 0, we're done
-	
-	
+
+
 }
 
 //DONE - NOT DEBUGGED
-Relation Parser::parseExpr(stringstream& command){
+Relation Parser::parseExpr( stringstream& command ){
 
-	readWhite(command);
+	readWhite( command );
 
 	//Parentheses are optional. We ask here, did they put them in?
 	bool openParen;
 
-	if(command.peek() == '('){
+	if ( command.peek( ) == '(' ){
 		openParen = true;
-		command.get();
+		command.get( );
 	}
 
 	//Find command it matches to.
 
 	//Could be word, or relation name, or relation name followed by +/-
 
-	string word = readAlphaNumWord(command);
+	string word = readAlphaNumWord( command );
 
 	Relation targetRelation;
 
-	if( word == "project" ){
+	if ( word == "project" ){
 
-		targetRelation = projection(command);
+		targetRelation = projection( command );
 
-		readWhite(command);
+		readWhite( command );
 
-		if( openParen && command.peek() != ')' ){
-			return Relation();
+		if ( openParen && command.peek( ) != ')' ){
+			return Relation( );
 		}
 
-		command.get();
+		command.get( );
 
 		return targetRelation;
 
-	}else if( word == "select" ){
+	}
+	else if ( word == "select" ){
 
-		targetRelation = selection(command);
+		targetRelation = selection( command );
 
-		readWhite(command);
+		readWhite( command );
 
-		if( openParen && command.peek() != ')' ){
-			return Relation();
+		if ( openParen && command.peek( ) != ')' ){
+			return Relation( );
 		}
 
-		command.get();
+		command.get( );
 
 		return targetRelation;
 
-	}else if( word == "rename" ){
+	}
+	else if ( word == "rename" ){
 
-		targetRelation = rename(command);
+		targetRelation = rename( command );
 
-		readWhite(command);
+		readWhite( command );
 
-		if( openParen && command.peek() != ')' ){
-			return Relation();
+		if ( openParen && command.peek( ) != ')' ){
+			return Relation( );
 		}
 
-		command.get();
+		command.get( );
 
 		return targetRelation;
 
-	}else{
+	}
+	else{
 
 		//At this point we assume what we have is the name of a relation
 
 		string relationA = word;
 
 
-		if( readSemi(command) > 0 ){
+		if ( readSemi( command ) > 0 ){
 
-			targetRelation = getRelation(relationA);
+			targetRelation = getRelation( relationA );
 
-			readWhite(command);
+			readWhite( command );
 
-			if( openParen && command.peek() != ')' ){
-				return Relation();
+			if ( openParen && command.peek( ) != ')' ){
+				return Relation( );
 			}
 
-			command.get();
+			command.get( );
 
 			return targetRelation;
 
-		}else if( peekAndReadAddition(command) > 0 ){
+		}
+		else if ( peekAndReadAddition( command ) > 0 ){
 
-			string relationB = readAlphaNumWord(command);
+			string relationB = readAlphaNumWord( command );
 
 
-			targetRelation = database.unionTwoRelations(relationA, relationB);
+			targetRelation = database.unionTwoRelations( relationA, relationB );
 
-			readWhite(command);
+			readWhite( command );
 
-			if( openParen && command.peek() != ')' ){
-				return Relation();
+			if ( openParen && command.peek( ) != ')' ){
+				return Relation( );
 			}
 
-			command.get();
-
-			return targetRelation;
-			
-		}else if( peekAndReadSubtraction(command) > 0){
-
-			string relationB = readAlphaNumWord(command);
-
-
-			targetRelation = database.differenceTwoRelation(relationA, relationB);
-
-			readWhite(command);
-
-			if( openParen && command.peek() != ')' ){
-				return Relation();
-			}
-
-			command.get();
+			command.get( );
 
 			return targetRelation;
 
-		}else if( peekAndReadMultiplication(command) > 0){
+		}
+		else if ( peekAndReadSubtraction( command ) > 0 ){
 
-			string relationB = readAlphaNumWord(command);
+			string relationB = readAlphaNumWord( command );
 
-			targetRelation = database.crossProduct(relationA, relationB);
 
-			readWhite(command);
+			targetRelation = database.differenceTwoRelation( relationA, relationB );
 
-			if( openParen && command.peek() != ')' ){
-				return Relation();
+			readWhite( command );
+
+			if ( openParen && command.peek( ) != ')' ){
+				return Relation( );
 			}
 
-			command.get();
+			command.get( );
 
 			return targetRelation;
 
-		}else{
+		}
+		else if ( peekAndReadMultiplication( command ) > 0 ){
+
+			string relationB = readAlphaNumWord( command );
+
+			targetRelation = database.crossProduct( relationA, relationB );
+
+			readWhite( command );
+
+			if ( openParen && command.peek( ) != ')' ){
+				return Relation( );
+			}
+
+			command.get( );
+
+			return targetRelation;
+
+		}
+		else{
 
 			//Only valid operation left is JOIN
 
-			string join = readAlphaNumWord(command);
+			string join = readAlphaNumWord( command );
 
-			if( join != "JOIN" ){
-				return Relation();
+			if ( join != "JOIN" ){
+				return Relation( );
 			}
 
-			string relationB = readAlphaNumWord(command);
-		
+			string relationB = readAlphaNumWord( command );
 
-			targetRelation = database.naturalJoin(relationA, relationB);
 
-			readWhite(command);
+			targetRelation = database.naturalJoin( relationA, relationB );
 
-			if( openParen && command.peek() != ')' ){
-				return Relation();
+			readWhite( command );
+
+			if ( openParen && command.peek( ) != ')' ){
+				return Relation( );
 			}
 
-			command.get();
+			command.get( );
 
 			return targetRelation;
 
@@ -797,27 +827,27 @@ Relation Parser::parseExpr(stringstream& command){
 
 }
 
-int Parser::parse(string s){
+int Parser::parse( string s ){
 
-	if(s == "EXIT"){
+	if ( s == "EXIT" ){
 		return EXIT;
 	}
 
 	stringstream command;
-	command>>s;
-	
+	command >> s;
+
 	//Try to parse it as a command - if it returns error, then we continue
-	if(parseCommand(command) > 0){
-		
+	if ( parseCommand( command ) > 0 ){
+
 		return SUCCESS;
-	
+
 	}
 
 	//Restore the command
-	command.clear();
-	command>>s;
+	command.clear( );
+	command >> s;
 
-	if( parseQuery(command) > 0 ){
+	if ( parseQuery( command ) > 0 ){
 		return SUCCESS;
 	}
 
