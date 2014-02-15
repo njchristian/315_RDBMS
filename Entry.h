@@ -27,6 +27,16 @@ public:
 		t = VARCHAR;
 	}
 
+	void setInt( int i ){
+		intEntry = i;
+		t = INTEGER;
+	}
+
+	void setVC( string str ){
+		vcEntry = str;
+		t = VARCHAR;
+	}
+
 	// Public Functions
 	bool isInt(){
 		return t==INTEGER;

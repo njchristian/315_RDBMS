@@ -25,8 +25,11 @@ Relation Parser::getRelation( string r ){
 //We pass the integer values of the characters so our check is quick
 bool Parser::isAlphaNum( int c ){
 
-	int ZERO = 48;
-	int NINE = 57;
+	return (isAlpha(c) || isNum(c));
+
+}
+
+bool Parser::isAlpha( int c){
 
 	int A = 65;
 	int Z = 90;
@@ -36,7 +39,16 @@ bool Parser::isAlphaNum( int c ){
 
 	int UNDERSCORE = 95;
 
-	return ( ( c >= ZERO && c <= NINE ) || ( c >= A && c <= Z ) || ( c >= a && c <= z ) || UNDERSCORE );
+	return ( c >= A && c <= Z ) || ( c >= a && c <= z ) || c == UNDERSCORE;
+
+}
+
+bool Parser::isNum( int c){
+
+	int ZERO = 48;
+	int NINE = 57;
+
+	return (c >= ZERO && c <= NINE );
 
 }
 
@@ -122,12 +134,8 @@ int Parser::parseAttributeList( stringstream& command, vector<string>& attribute
 		return INVALID;
 	}
 
-
-
 	char commaOrClose;
 	string name;
-
-
 
 	do{
 
@@ -165,7 +173,11 @@ int Parser::deleteFrom( stringstream& command ) {
 	}
 
 	// Get the conditions that will be used by the delete function
-	vector<Condition> deleteConditions = parseConditions( command );
+	vector<Condition> deleteConditions;
+
+	if( parseConditions(command, deleteConditions) < 0 ){
+		return INVALID;
+	}
 
 	// Call the delete function on the relation
 	database.deleteFromRelation( relationName, deleteConditions );
@@ -636,54 +648,148 @@ int Parser::readOperator( stringstream& command, Operation& o ){
 //TODO
 //Put an integer from command into 'i'. Return invalid if method fails
 //IF THE METHOD FAILS THIS FUNCTION MUST RETURN COMMAND TO ITS INITIAL STATE
-int Parser::parseInteger( stringstream& command, int& i ){
+int Parser::parseInteger( stringstream& command, int& arg ){
 
+	vector<char> chars;
 
+	//push back until we find something not an int
+	while( isNum(command.peek()) ){
+		chars.push_back( command.get() );
+	}
+
+	if( isAlpha(command.peek() ) ){
+
+		for(int i = chars.size() - 1; i >= 0; i--){
+
+			command.putback(chars.at(i));
+
+		}
+
+		return INVALID;
+	}else{
+
+		string a = "";
+		for(int i = 0; i < chars.size(); i++){
+			a.push_back(chars.at(i));
+		}
+
+		stringstream ss;
+		ss<<a;
+		ss>>arg;
+
+		return SUCCESS;
+	}
+
+	
 
 }
 
 
+int Parser::findConnector( stringstream& copy, Connector c, int paren){
+
+	readWhite(copy);
+
+	char next;
+
+	copy.get(next);
+
+	while(next == ')' || next == ' '){
+		//if it was a parentheses, keep track to see if we hit the end of the condition list
+		if(next == ')'){
+			paren--;
+
+			if(paren == 0){
+				c = NONE;
+				return SUCCESS;
+			}
+
+		}
+
+		copy.get(next);
+	}
+
+	if(next == '&'){
+		copy.get(next);
+
+		if(next == '&'){
+
+			c = AND;
+			return SUCCESS;
+		}else{
+			return INVALID;
+		}
+
+	}else if(next == '|'){
+
+		copy.get(next);
+
+		if(next == '|'){
+			c = OR;
+			return SUCCESS;
+		}else{
+			return INVALID;
+		}
+
+	}else{
+		return INVALID;
+	}
+
+}
+
 //UNDER CONSTRUCTION
-Condition Parser::parseCondition( stringstream& command ){
+int Parser::parseCondition( stringstream& command, int paren, Condition& condition ){
 
 	readWhite( command );
 
 	bool firstIsLit = false;
+	bool firstIsStr = false;
 	bool secondIsLit = false;
-
-	bool firstEntryIsVC = false;
-	bool secondEntryIsVC = false;
+	bool secondIsStr = false;
 
 	string first;
 	int firstI;
 	string second;
 	int secondI;
 
+	Entry a;
+	Entry b;
+
 	char next;
 
 	//Read first word/literal
 	next = command.peek( );
 
+	//Check if the string starts with a quote. If it does it is a literal string
 	if ( next == '"' ){
 		firstIsLit = true;
+		firstIsStr = true;
 		command.get( );
 		first = readAlphaNumWord( command );
+		a.setVC(first);
 	}
 	else{
 
+		//If not, it could either be a literal integer, or it is an attribute
+
 		if ( parseInteger( command, firstI ) < 0 ){
+			//parseInteger FAILED - it is attribute
+
 			first = readAlphaNumWord( command );
-			firstEntryIsVC = true;
+		}else{
+			//parseInteger SUCCESS - it is int
+
+			firstIsLit = true;
+			a.setInt(firstI);
 		}
 
 	}
 
-	if ( firstIsLit ){
+	if ( firstIsStr ){
 
 		command.get( next );
 
 		if ( next != '"' ){
-			return Condition( );
+			return INVALID;
 		}
 
 	}
@@ -694,97 +800,79 @@ Condition Parser::parseCondition( stringstream& command ){
 	Operation o;
 
 	if ( readOperator( command, o ) < 0 ){
-		return Condition( );
+		INVALID;
 	}
 
 	readWhite( command );
 
 	next = command.peek( );
 
+		//Check if the string starts with a quote. If it does it is a literal string
 	if ( next == '"' ){
 		secondIsLit = true;
+		secondIsStr = true;
 		command.get( );
-		second = readAlphaNumWord( command );
+		first = readAlphaNumWord( command );
+		a.setVC(second);
 	}
 	else{
 
+		//If not, it could either be a literal integer, or it is an attribute
+
 		if ( parseInteger( command, secondI ) < 0 ){
+			//parseInteger FAILED - it is attribute
+
 			second = readAlphaNumWord( command );
-			secondEntryIsVC = true;
+		}else{
+			//parseInteger SUCCESS - it is int
+
+			secondIsLit = true;
+			a.setInt(secondI);
 		}
 
 	}
 
-	if ( secondIsLit ){
+	if ( secondIsStr ){
 
 		command.get( next );
 
 		if ( next != '"' ){
-			return Condition( );
+			return INVALID;
 		}
 
+	}
+
+	Connector conn;
+
+	stringstream copy(command);
+
+	if( findConnector(copy, conn, paren) < 0 ){
+		return INVALID;
 	}
 
 	if ( firstIsLit ){
 
 		if ( secondIsLit ){
 			//TWO LITERALS
-
-		}
-
-		//FIRST ONLY IS LITERAL
-
-		if ( secondEntryIsVC ){
-
-		}
-		else{
-
+			
+			condition = Condition(a, o, b, conn, paren);
+		}else{
+			condition = Condition(a, o, second, conn, paren);
 		}
 
 	}
 	else if ( secondIsLit ){
-
 		//SECOND ONLY IS LITERAL
-
-		if ( firstEntryIsVC ){
-
-		}
-		else{
-
-		}
-
+		condition = Condition(first, o, b, conn, paren);
 	}
 	else{
-
 		//NONE IS LITERAL
-
-		if ( firstEntryIsVC ){
-
-			if ( secondEntryIsVC ){
-
-
-			}
-			else{
-
-			}
-
-		}
-		else{
-
-			if ( secondEntryIsVC ){
-
-			}
-			else{
-
-			}
-
-		}
-
+		condition = Condition(first, o, second, conn, paren);
 	}
 
 }
 
-vector<Condition> Parser::parseConditions( stringstream& command ){
+int Parser::parseConditions( stringstream& command, vector<Condition>& conditions ){
 
 	vector<Condition> conditions;
 
@@ -798,13 +886,19 @@ vector<Condition> Parser::parseConditions( stringstream& command ){
 	command.get( next );
 
 	if ( next != '(' ){
-		return conditions;
+		return INVALID;
 	}
 	else{
 		++paren;
 	}
 
+
+	//Start of main loop - while we don't get to the end of parentheses
 	while ( paren > 0 ){
+
+		//Read in a (Open Parentheses) OR (name OR string) Operator (name OR string) Connector
+
+		Condition c;
 
 		readWhite( command );
 
@@ -815,19 +909,18 @@ vector<Condition> Parser::parseConditions( stringstream& command ){
 		}
 		else{
 
+			if( parseCondition(command, paren, c) < 0 ){
+				return INVALID;
+			}
 
-
+			conditions.push_back(Condition(c));
 		}
 
 	}
 
-	//Read in a (Open Parentheses) OR (name OR string) Operator (name OR string)
-
-	//Read in a (Close Parentheses) OR (connector)
-
 	//if paren == 0, we're done
 
-
+	return SUCCESS;
 }
 
 //DONE - NOT DEBUGGED
@@ -1036,10 +1129,10 @@ int Parser::parse( string s ){
 Relation Parser::selection( stringstream& command ) {
 
 	// Parse and get the conditions
-	vector<Condition> conditions = parseConditions( command );
+	vector<Condition> conditions;
 
 	// If no conditions then return empty Relation
-	if ( conditions.empty( ) ) {
+	if ( parseConditions(command, conditions) < 0 ) {
 		return Relation( );
 	}
 

@@ -29,6 +29,10 @@ class Parser{
 	//Is c alpha numeric or '_'?
 	bool isAlphaNum( int c );
 
+	bool isNum( int c );
+
+	bool isAlpha( int c );
+
 	//IO FUNCTIONS
 	//These are functions which deal with files and commands have already been parsed for the most part
 
@@ -141,13 +145,15 @@ class Parser{
 	//DONE
 	int readOperator( stringstream& command, Operation& o ); // changed operator& to operation&
 
+	int findConnector( stringstream& copy, Connector c, int paren );
+
 	//UNDER CONSTRUCTION
 	//Read a single condition
-	Condition parseCondition( stringstream& command );
+	int parseCondition( stringstream& command, int paren, Condition& condition );
 
 	//UNDER CONSTRUCTION
 	//takes in a stream which has been identified as a condition and returns the resulting condition list
-	vector<Condition> parseConditions( stringstream& command );
+	int parseConditions( stringstream& command, vector<Condition>& conditions );
 
 	//DONE
 	//takes in a stream which has been identified as a query and returns a relation

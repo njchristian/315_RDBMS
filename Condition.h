@@ -4,8 +4,6 @@
 #include "Entry.h"
 #include "Connector.h"
 
-enum Operation{EQUALS, GR, GREQ, LE, LEEQ, NEQ};
-
 class Condition{
 
 	bool isLiteral;
@@ -34,6 +32,7 @@ class Condition{
 public:
 
 	// Constructors
+	Condition(){}
 
 	//two literals (Rarely Used..)
 	Condition(Entry o1, Operation givenOp, Entry o2, Connector givenC, int p);
