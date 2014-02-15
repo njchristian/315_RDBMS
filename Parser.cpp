@@ -151,6 +151,29 @@ int Parser::parseAttributeList( stringstream& command, vector<string>& attribute
 }
 
 
+Relation Parser::crossProduct( stringstream& command ) {
+	
+	// Get the first relation
+	Relation relationA = parseExpr( command );
+
+	// Make sure it is not empty
+	if ( relationA.isEmpty( ) ) {
+		return relationA;
+	}
+
+	// Get the second relation
+	Relation relationB = parseExpr( command );
+
+	// Make sure it is not empty
+	if ( relationB.isEmpty( ) ) {
+		return relationB;
+	}
+
+	// Return the result
+	return database.crossProduct( relationA, relationB );
+}
+
+
 Relation Parser::difference( stringstream& command ) {
 	
 	// Get the first relation

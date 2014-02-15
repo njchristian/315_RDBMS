@@ -86,7 +86,7 @@ class Parser{
 	//DONE
 	Relation difference( stringstream& command );
 
-	//TODO
+	//DONE
 	Relation crossProduct( stringstream& command );
 
 	//DONE
