@@ -11,7 +11,7 @@
 //Gets a relation from views or from database
 Relation Parser::getRelation( string r ){
 
-	for ( int i = 0; i < views.size( ); i++ ){
+	for ( unsigned i = 0; i < views.size( ); i++ ){
 		if ( views.at( i ).getName( ) == r ){
 			return views.at( i );
 		}
