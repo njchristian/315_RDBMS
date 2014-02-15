@@ -70,14 +70,17 @@ public:
 	Relation naturalJoin( string relationA, string relationB ){ return naturalJoin(findRelation(relationA) , findRelation(relationB)); }
 
 	Relation projection( vector<string> attributeNames, Relation* targetRelation );
+	Relation projection( vector<string> attributeNames, Relation targetRelation ) { return projection( attributeNames, &targetRelation ); }
 	Relation projection( vector<string> attributeNames, string relationName ){ return projection(attributeNames, findRelation(relationName)); }
 
 	void removeTupleFromRelation( vector<Entry> tuple, string relationName );
 
 	Relation renameAttributes( vector<string> newNames, Relation* targetRelation );
+	Relation renameAttributes( vector<string> newNames, Relation targetRelation ) { return renameAttributes( newNames, &targetRelation ); }
 	Relation renameAttributes( vector<string> newNames, string relationName ){ return renameAttributes( newNames, findRelation(relationName)); }
 	
-	Relation selection( vector<Condition>, Relation* targetRelation);
+	Relation selection( vector<Condition> conditions, Relation* targetRelation);
+	Relation selection( vector<Condition> conditions, Relation targetRelation ) { return selection( conditions, &targetRelation ); }
 	Relation selection( vector<Condition> conditions, string targetRelationName ){ return selection( conditions, findRelation( targetRelationName)); }
 
 	Relation unionTwoRelations( Relation* targetRelationA, Relation* targetRelationB );

@@ -74,7 +74,7 @@ class Parser{
 	//The query command ("project", "select", "rename", etc.) has already been read by the parser
 
 
-	//TODO
+	//DONE (I think)
 	Relation selection( stringstream& command );
 
 	//DONE
@@ -133,7 +133,7 @@ class Parser{
 	int parseInteger( stringstream& command, int& i );
 
 	//DONE
-	int readOperator( stringstream& command, Operator& o );
+	int readOperator( stringstream& command, Operation& o ); // changes operator& to operation&
 
 	//UNDER CONSTRUCTION
 	//Read a single condition

@@ -338,14 +338,14 @@ int Parser::parseQuery( stringstream& command ){
 
 
 //DONE
-int peekAndReadAddition( stringstream& command ){
+int Parser::peekAndReadAddition( stringstream& command ) {
 
 	readWhite( command );
 
 	char plus;
 	plus = command.peek( );
 
-	if ( plus != '+' ){
+	if ( plus != '+' ) {
 		return INVALID;
 	}
 
@@ -356,14 +356,14 @@ int peekAndReadAddition( stringstream& command ){
 }
 
 //DONE
-int peekAndReadSubtraction( stringstream& command ){
+int Parser::peekAndReadSubtraction( stringstream& command ) {
 
 	readWhite( command );
 
 	char sub;
 	sub = command.peek( );
 
-	if ( plus != '-' ){
+	if ( sub != '-' ){ // changed plus to sub, copy and paste error?
 		return INVALID;
 	}
 
@@ -374,14 +374,14 @@ int peekAndReadSubtraction( stringstream& command ){
 }
 
 //DONE
-int peekAndReadMultiplication( stringstream& command ){
+int Parser::peekAndReadMultiplication( stringstream& command ){
 
 	readWhite( command );
 
 	char mult;
 	mult = command.peek( );
 
-	if ( plus != '*' ){
+	if ( mult != '*' ){
 		return INVALID;
 	}
 
@@ -391,7 +391,7 @@ int peekAndReadMultiplication( stringstream& command ){
 
 }
 
-int Parser::readOperator( stringstream& command, Operator& o ){
+int Parser::readOperator( stringstream& command, Operation& o ){
 
 	char c;
 	command.get( c );
@@ -459,7 +459,7 @@ int Parser::readOperator( stringstream& command, Operator& o ){
 //TODO
 //Put an integer from command into 'i'. Return invalid if method fails
 //IF THE METHOD FAILS THIS FUNCTION MUST RETURN COMMAND TO ITS INITIAL STATE
-int parseInteger( stringstream& command, int& i ){
+int Parser::parseInteger( stringstream& command, int& i ){
 
 
 
@@ -514,7 +514,7 @@ Condition Parser::parseCondition( stringstream& command ){
 	readWhite( command );
 
 	//Read operator
-	Operator o;
+	Operation o;
 
 	if ( readOperator( command, o ) < 0 ){
 		return Condition( );
@@ -607,7 +607,7 @@ Condition Parser::parseCondition( stringstream& command ){
 
 }
 
-vector<Condition> parseConditions( stringstream& command ){
+vector<Condition> Parser::parseConditions( stringstream& command ){
 
 	vector<Condition> conditions;
 
@@ -856,7 +856,29 @@ int Parser::parse( string s ){
 
 
 
+Relation Parser::selection( stringstream& command ) {
 
+	// Parse and get the conditions
+	vector<Condition> conditions = parseConditions( command );
+
+	// If no conditions then return empty Relation
+	if ( conditions.empty( ) ) {
+		return Relation( );
+	}
+
+	// Get the target relation
+	Relation targetRelation = parseExpr( command );
+
+	// If the relation is empty then return the empty relation
+	if ( targetRelation.isEmpty( ) ) {
+		return targetRelation;
+	}
+
+	// return the result of the selection operation
+	return database.selection( conditions, targetRelation );
+
+
+}
 
 
 
