@@ -60,7 +60,7 @@ class Parser{
 	//Parse the rest of delete from command
 	int deleteFrom( stringstream& command );
 
-	//TODO
+	//Under Construction
 	//Parse the rest of insert into command
 	int insertInto( stringstream& command );
 
