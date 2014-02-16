@@ -436,53 +436,6 @@ int Parser::insertInto( stringstream& command ) {
 }
 
 
-// DONE - not tested
-Relation Parser::crossProduct( stringstream& command ) {
-	
-	// Get the first relation
-	Relation relationA = parseExpr( command );
-
-	// Make sure it is not empty
-	if ( relationA.isEmpty( ) ) {
-		return relationA;
-	}
-
-	// Get the second relation
-	Relation relationB = parseExpr( command );
-
-	// Make sure it is not empty
-	if ( relationB.isEmpty( ) ) {
-		return relationB;
-	}
-
-	// Return the result
-	return database.crossProduct( relationA, relationB );
-}
-
-
-// DONE - not tested
-Relation Parser::difference( stringstream& command ) {
-	
-	// Get the first relation
-	Relation relationA = parseExpr( command );
-
-	// Make sure it is not empty
-	if ( relationA.isEmpty( ) ) {
-		return relationA;
-	}
-
-	// Get the second relation
-	Relation relationB = parseExpr( command );
-
-	// Make sure it is not empty
-	if ( relationB.isEmpty( ) ) {
-		return relationB;
-	}
-
-	// Return the result
-	return database.differenceTwoRelation( relationA, relationB );
-}
-
 
 //DONE
 Relation Parser::projection( stringstream& command ){
@@ -1302,26 +1255,4 @@ Relation Parser::selection( stringstream& command ) {
 }
 
 
-// DONE - not tested
-Relation Parser::relationUnion( stringstream& command ) {
 
-	// Get the first relation
-	Relation relationA = parseExpr( command );
-
-	// Make sure it is not empty
-	if ( relationA.isEmpty( ) ) {
-		return relationA;
-	}
-
-	// Get the second relation
-	Relation relationB = parseExpr( command );
-
-	// Make sure it is not empty
-	if ( relationB.isEmpty( ) ) {
-		return relationB;
-	}
-
-	// Return the result
-	return database.unionTwoRelations( relationA, relationB );
-
-}

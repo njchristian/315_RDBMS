@@ -37,14 +37,14 @@ class Parser{
 	//IO FUNCTIONS
 	//These are functions which deal with files and commands have already been parsed for the most part
 
-	//UNDER CONSTRUCTION - CAMERON
+	//DONE
 	int writeFile( string relationName );
 
-	//TODO 
+	//DONE 
 	//Opens a file by relation name, and parses all commands in file.
 	int openFile( string relationName );
 
-	//TODO
+	//DONE
 	//Close a file when done
 	int closeFile( string relationName );
 
@@ -84,15 +84,6 @@ class Parser{
 
 	//DONE
 	Relation projection( stringstream& command );
-
-	//DONE - not tested
-	Relation relationUnion( stringstream& command );
-
-	//DONE - not tested
-	Relation difference( stringstream& command );
-
-	//DONE - not tested
-	Relation crossProduct( stringstream& command );
 
 	//DONE
 	Relation rename( stringstream& command );
@@ -140,19 +131,22 @@ class Parser{
 	// will already be consumed and this should not consume the closing parenthesis
 	Entry readLiteral( stringstream& command );
 
-	//TODO
+	//DONE
 	int parseInteger( stringstream& command, int& i );
 
 	//DONE
 	int readOperator( stringstream& command, Operation& o ); // changed operator& to operation&
 
+	//DONE
+	//This finds out what the next connector is. We give it a copy of the stringstream
+	//so we don't have to worry about returning it to the original state
 	int findConnector( stringstream& copy, Connector c, int paren );
 
-	//UNDER CONSTRUCTION
+	//DONE
 	//Read a single condition
 	int parseCondition( stringstream& command, int paren, Condition& condition );
 
-	//UNDER CONSTRUCTION
+	//DONE
 	//takes in a stream which has been identified as a condition and returns the resulting condition list
 	int parseConditions( stringstream& command, vector<Condition>& conditions );
 
