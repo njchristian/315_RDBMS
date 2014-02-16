@@ -50,7 +50,7 @@ int Parser::writeFile( string relationName ){
 
 	}
 
-	header = header + ");";
+	header = header + ");\n";
 
 	file << header;
 
@@ -86,12 +86,50 @@ int Parser::writeFile( string relationName ){
 
 		}
 
-		entry = entry + ");";
+		entry = entry + ");\n";
 
+		file << entry;
 	}
 
 	//I'm not sure how this could fail
 	return SUCCESS;
+}
+
+int Parser::openFile( string relationName ){
+
+	string line;
+
+	string filename = relationName;
+
+	filename = filename + ".db";
+
+	ifstream file( filename );
+
+	if( file.is_open() ){
+
+		while( getline( file, line ) ){
+
+			parse(line);
+
+		}
+		file.close();
+	}else{
+		//file did not open
+		return INVALID;
+	}
+
+
+	return SUCCESS;
+}
+
+int Parser::closeFile( string name ){
+
+	string filename = name + ".db";
+
+	fstream f(name);
+
+	f.close();
+
 }
 
 //Gets a relation from views or from database
