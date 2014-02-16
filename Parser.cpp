@@ -222,12 +222,29 @@ Entry readLiteral( stringstream& command ) {
 	return nextEntry;
 }
 
+Entry Parser::readLiteral( stringstream& command ){
+
+	int a; 
+
+	if( parseInteger(command, a) < 0 ){
+
+		return Entry( readAlphaNumWord(command) );
+
+	}else{
+		return Entry(a);
+	}
+
+
+}
+
 
 // Done, for sure needs testing -------------------------------------should this check that the tuple has the right attributes for the relation or should database check?
 int Parser::insertInto( stringstream& command ) {
 
-	// Get the target Relation
-	Relation targetRelation = parseExpr( command ); // not sure about this
+	// Get the target Relation name
+	string relationName = readAlphaNumWord(command);
+
+
 
 	// Read and verify the values key word.
 	string valuesKeyWord = readAlphaNumWord( command );
@@ -255,7 +272,7 @@ int Parser::insertInto( stringstream& command ) {
 		while ( command.peek( ) != ')' ) {
 			helperEntry = readLiteral( command );
 			//------------------------------------------should this check to see if the entry was formatted bad?
-			tuple.push_back( helperEntry );
+			tuple.push_back( Entry(helperEntry) );
 			
 			// consume the comma if there is one
 			if ( command.peek( ) == ',' ) {
@@ -263,10 +280,14 @@ int Parser::insertInto( stringstream& command ) {
 			}
 		}
 
-		// Consume the closing parenthesis
-		command.get( );
+		char close;
+		command.get( close );
 
-		database.addTupleToRelation( tuple, targetRelation );
+		if( close != ')' ){
+			return INVALID;
+		}
+
+		database.addTupleToRelation( tuple, database.accessRelation(relationName) );
 	}
 	else {
 
@@ -279,12 +300,12 @@ int Parser::insertInto( stringstream& command ) {
 		// Get the target relation
 		Relation whatToReadFrom = parseExpr( command );
 
-		Relation* newRelation = database.insertIntoFromRelation( targetRelation, whatToReadFrom );
-
-		// check to make sure inserting actually happened
-		if ( *newRelation == targetRelation ) {
+		if( whatToReadFrom.isEmpty() ){
 			return INVALID;
 		}
+
+		//Can we not just call union? Does that command do something different? - Cameron
+		database.insertIntoFromRelation( database.accessRelation(relationName), whatToReadFrom );
 	}
 
 	return SUCCESS;

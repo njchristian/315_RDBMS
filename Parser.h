@@ -36,7 +36,7 @@ class Parser{
 	//IO FUNCTIONS
 	//These are functions which deal with files and commands have already been parsed for the most part
 
-	//TODO
+	//UNDER CONSTRUCTION - CAMERON
 	int writeFile( string relationName );
 
 	//TODO 
