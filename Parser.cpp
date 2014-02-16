@@ -8,6 +8,92 @@
 
 //luin.uial@gmail.com
 
+int Parser::writeFile( string relationName ){
+
+	Relation r = database.accessRelation(relationName);
+
+	vector<Attribute> atts = r.getAttributes();
+
+	vector<vector<Entry*>> table = r.getAllEntries();
+
+	string filename = relationName;
+	filename = filename + ".db";
+
+	ofstream file;
+	file.open( filename );
+
+	string header = "CREATE TABLE " + r.getName() + '(';
+
+	for(int i = 0; i < atts.size(); i++){
+
+		header = header + atts.at(i).name + ' ';
+
+		header = header + (atts.at(i).t == INTEGER ? "INTEGER" : "VARCHAR");
+
+		if(i != atts.size() - 1){
+			header = header + ',';
+		}
+
+	}
+
+	header = header + ')' + " PRIMARY KEY (";
+
+	vector<int> keys = r.getKeys();
+
+	for(int i = 0; i < keys.size(); i++){
+
+		header = header + atts.at(keys.at(i)).name;
+
+		if(i != keys.size() - 1){
+			header = header + ',';
+		}
+
+	}
+
+	header = header + ");";
+
+	file << header;
+
+	int rowSize = atts.size();
+
+	for(int i = 0; i < table.size(); i++){
+
+		string entry = "INSERT INTO " + relationName + " VALUES FROM (";
+
+		for(int j = 0; j < rowSize; j++){
+
+			bool flag = atts.at(j).t == VARCHAR;
+
+			if(flag){
+				entry = entry + '"';
+			}
+
+			Entry* thisEntry = table.at(i).at(j);
+			string t;
+
+
+			if(thisEntry->isInt()){
+				t = thisEntry->getEntryI();
+			}else{
+				t = thisEntry->getEntryVC();
+			}
+
+			entry = entry + t;
+
+			if( j != rowSize - 1 ){
+				entry = entry + ',';
+			}
+
+		}
+
+		entry = entry + ");";
+
+	}
+
+	//I'm not sure how this could fail
+	return SUCCESS;
+}
+
 //Gets a relation from views or from database
 Relation Parser::getRelation( string r ){
 
