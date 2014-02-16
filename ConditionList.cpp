@@ -58,7 +58,12 @@ bool ConditionList::evalOnTuple( int tupleIndex ) {
 
 	}
 
+	if( localConditions.size() == 1 ){
+		return localConditions.front().getLiteral();
+	}
+
 	while ( localHP > 0 ) {
+
 
 		for ( list<Condition>::iterator i = localConditions.begin( ); 
 			i != localConditions.end( ); i++ ){
