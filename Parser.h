@@ -57,7 +57,7 @@ class Parser{
 
 
 
-	//TODO - I'm planning on working on this today - Taylor
+	//Mostly done, needs finishing up and testing
 	//Parse the rest of a create table command
 	int createTable( stringstream& command );
 
@@ -96,6 +96,9 @@ class Parser{
 	//DONE
 	//Reads an attribute list (comma seperated strings, surrounded by parentheses)
 	int parseAttributeList( stringstream& command, vector<string>& attributeNames );
+
+	// UNDER CONSTRUCTION
+	int parseTypedAttribute( stringstream& command, vector<Attribute>& attributeList );
 
 	//DONE
 	//Peeks to see if next character is a plus sign;

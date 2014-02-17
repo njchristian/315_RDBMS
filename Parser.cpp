@@ -287,6 +287,113 @@ int Parser::parseAttributeList( stringstream& command, vector<string>& attribute
 }
 
 
+// Parse a typed attribute, does not consume the commas
+int Parser::parseTypedAttribute( stringstream& command, vector<Attribute>& attributeList ) {
+	// Get attribute name
+	string attributeName = readAlphaNumWord( command );
+
+	readWhite( command );
+
+	// Get the type - VARCHAR or INTEGER
+	string type = "";
+	while ( command.peek( ) != '(' ) {
+		type += command.get( );
+	}
+
+	if ( type == "VARCHAR" ) {
+		// consume the '('
+		if ( command.peek( ) != '(' ) {
+			return INVALID;
+		}
+		command.get( );
+
+		// read the size
+		int sizeOfString;
+		if ( parseInteger( command, sizeOfString ) < 0 ) {
+			return INVALID;
+		}
+
+		// consume the ')'
+		if ( command.peek( ) != ')' ) {
+			return INVALID;
+		}
+		command.get( );
+
+		// not sure what to do with the size here
+		Attribute newAttribute( attributeName, VARCHAR );
+		attributeList.push_back( newAttribute );
+
+		return SUCCESS;
+	}
+	else if ( type == "INTEGER" ) {
+		// create the new attribute
+		Attribute newAttribute( attributeName, INTEGER );
+		attributeList.push_back( newAttribute );
+
+		return SUCCESS;
+	}
+	else {
+		return INVALID;
+	}
+
+}
+
+
+int Parser::createTable( stringstream& command ) {
+	// Get the relation's name
+	string relationName = readAlphaNumWord( command );
+
+	// Check and consume the opening parenthesis
+	char openingParenthesis = command.get( );
+	if ( openingParenthesis != '(' ) {
+		return INVALID;
+	}
+
+	vector<Attribute> attributeList;
+
+	// Parse the attribute list
+	while ( command.peek( ) != ')' ) {
+		parseTypedAttribute( command, attributeList );
+		
+		// consume the comma if it is there
+		if ( command.peek( ) == ',' ) {
+			command.get( );
+		}
+
+		// get rid of white space if it is there
+		readWhite( command );
+	}
+
+	// consume closing parenthesis
+	command.get( );
+
+	// Parse the PRIMARY KEY part
+	string primaryKeyWord = readAlphaNumWord( command );
+
+	if ( primaryKeyWord != "PRIMARY" ) {
+		return INVALID;
+	}
+
+	string keyKeyWord = readAlphaNumWord( command );
+
+	if ( keyKeyWord != "KEY" ) {
+		return INVALID;
+	}
+
+	// Get the key
+	vector<string> attributeNames;
+
+	parseAttributeList( command, attributeNames );
+
+	// Add relation to database
+	// not sure how to pass the keys thing
+	database.addRelationToDatabase( relationName, );
+
+	return SUCCESS;
+
+}
+
+
 // DONE - not tested
 int Parser::deleteFrom( stringstream& command ) {
 
