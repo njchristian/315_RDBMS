@@ -395,6 +395,63 @@ int Parser::createTable( stringstream& command ) {
 
 
 // DONE - not tested
+int Parser::update( stringstream& command ) {
+	// Get the relation's name
+	string relationName = readAlphaNumWord( command );
+
+	string setKeyWord = readAlphaNumWord( command );
+
+	if ( setKeyWord != "SET" ) {
+		return INVALID;
+	}
+
+	vector<string> attributeNames;
+	vector<Entry> newValues;
+
+	// is this list of stuff suppose to be enclosed in parentheses or not?
+	// maybe need a better condition for this loop
+	while ( true ) {
+		// Parse the attribute name
+		string attrName = readAlphaNumWord( command );
+		
+		// Break if the WHERE key word is reached
+		if ( attrName == "WHERE" ) {
+			break;
+		}
+		
+		attributeNames.push_back( attrName );
+		
+		// Check for equal sign
+		if ( command.peek( ) != '=' ) {
+			return INVALID;
+		}
+		// Consume equal sign
+		command.get( );
+
+		// Parse the literal
+		newValues.push_back( readLiteral( command ) );
+
+		// consume a comma if there is one
+		if ( command.peek( ) == ',' ) {
+			command.get( );
+		}
+
+	}
+
+	// Get the conditions that will be used by the delete function
+	vector<Condition> updateConditions;
+
+	if ( parseConditions( command, updateConditions ) < 0 ) {
+		return INVALID;
+	}
+
+	database.update( relationName, attributeNames, newValues, updateConditions );
+
+	return SUCCESS;
+}
+
+
+// DONE - not tested
 int Parser::deleteFrom( stringstream& command ) {
 
 	// Get the relation's name
@@ -422,7 +479,10 @@ int Parser::deleteFrom( stringstream& command ) {
 
 
 //DONE - needs testing
-Entry readLiteral( stringstream& command ) {
+Entry Parser::readLiteral( stringstream& command ) {
+	
+	readWhite( command );
+	
 	Entry nextEntry;
 
 	char nextChar = command.peek( );
@@ -453,6 +513,8 @@ Entry readLiteral( stringstream& command ) {
 
 		nextEntry = Entry( actualIntLiteral );
 	}
+
+	readWhite( command );
 
 	return nextEntry;
 }

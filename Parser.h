@@ -69,7 +69,7 @@ class Parser{
 	//Parse the rest of insert into command
 	int insertInto( stringstream& command );
 
-	//TODO - I'm planning on working on this today - Taylor
+	//DONE - not tested
 	//Parse the rest of update command
 	int update( stringstream& command );
 
