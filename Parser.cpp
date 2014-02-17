@@ -699,7 +699,7 @@ int Parser::parseCommand( stringstream& command ){
 			return INVALID;
 		}
 
-		cout << *database.accessRelation( relationName );
+		cout << getRelation( relationName );
 
 		return SUCCESS;
 
@@ -1020,7 +1020,7 @@ int Parser::findConnector( stringstream& copy, Connector c, int paren ){
 
 }
 
-//UNDER CONSTRUCTION
+//DONE
 int Parser::parseCondition( stringstream& localCommand, int paren, Condition& condition ) {
 
 	readWhite( localCommand );
@@ -1084,7 +1084,7 @@ int Parser::parseCondition( stringstream& localCommand, int paren, Condition& co
 	Operation o;
 
 	if ( readOperator( localCommand, o ) < 0 ){
-		INVALID;
+		return INVALID;
 	}
 
 	readWhite( localCommand );
@@ -1096,8 +1096,8 @@ int Parser::parseCondition( stringstream& localCommand, int paren, Condition& co
 		secondIsLit = true;
 		secondIsStr = true;
 		localCommand.get( );
-		first = readAlphaNumWord( localCommand );
-		a.setVC(second);
+		second = readAlphaNumWord( localCommand );
+		b.setVC(second);
 	}
 	else {
 
@@ -1111,7 +1111,7 @@ int Parser::parseCondition( stringstream& localCommand, int paren, Condition& co
 			//parseInteger SUCCESS - it is int
 
 			secondIsLit = true;
-			a.setInt(secondI);
+			b.setInt(secondI);
 		}
 
 	}
@@ -1128,14 +1128,17 @@ int Parser::parseCondition( stringstream& localCommand, int paren, Condition& co
 
 	Connector conn = NONE;
 
-	//stringstream copy construtor is private
-	//this should work
+	string save = myGetLine( localCommand );
+
 	stringstream copy;
-	copy <<localCommand.rdbuf();
+	copy << save;
 
 	if( findConnector(copy, conn, paren) < 0 ){
 		return INVALID;
 	}
+
+	localCommand.clear();
+	localCommand << save;
 
 	if ( firstIsLit ){
 
@@ -1159,7 +1162,21 @@ int Parser::parseCondition( stringstream& localCommand, int paren, Condition& co
 
 }
 
-// Gets a compiler warning that not all control paths return a value. Does this need to be fixed???????
+string Parser::myGetLine( stringstream& command ){
+
+	string result = "";
+	char next;
+	
+
+	while( command.get(next) ){
+		result.push_back(next);
+	}
+
+	return result;
+
+}
+
+
 int Parser::parseConditions( stringstream& command, vector<Condition>& conditions ) {
 
 	//Redefinition of conditions
@@ -1185,13 +1202,13 @@ int Parser::parseConditions( stringstream& command, vector<Condition>& condition
 	//Start of main loop - while we don't get to the end of parentheses
 	while ( paren > 0 ){
 
-		//Read in a (Open Parentheses) OR (name OR string) Operator (name OR string) Connector
+		//Read in a (Open Parentheses) OR (name OR string) Operator (name OR string) (Optional Parens) Connector
 
 		Condition c;
 
 		readWhite( command );
 
-		command.get( next );
+		next = command.peek();
 
 		if ( next == '(' ){
 			++paren;
@@ -1203,6 +1220,17 @@ int Parser::parseConditions( stringstream& command, vector<Condition>& condition
 			}
 
 			conditions.push_back(Condition(c));
+		}
+
+		readWhite(command);
+
+		char closeParen = command.peek();
+
+		while(closeParen == ')'){
+			command.get();
+			paren--;
+			readWhite(command);
+			closeParen = command.peek();
 		}
 
 	}
@@ -1218,7 +1246,7 @@ Relation Parser::parseExpr( stringstream& command ){
 	readWhite( command );
 
 	//Parentheses are optional. We ask here, did they put them in?
-	bool openParen;
+	bool openParen = false;
 
 	if ( command.peek( ) == '(' ){
 		openParen = true;
@@ -1402,11 +1430,11 @@ int Parser::parse( string s ){
 
 	}
 
-	//Restore the command
-	command.clear( );
-	command >> s;
+	//Get a new stream
+	stringstream second;
+	second << s;
 
-	if ( parseQuery( command ) > 0 ){
+	if ( parseQuery( second ) > 0 ){
 		return SUCCESS;
 	}
 

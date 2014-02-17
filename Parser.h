@@ -92,6 +92,7 @@ class Parser{
 
 	//GENERAL PARSER FUNCTIONS
 
+	string myGetLine( stringstream& command );
 
 	//DONE
 	//Reads an attribute list (comma seperated strings, surrounded by parentheses)

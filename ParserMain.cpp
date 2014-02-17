@@ -32,5 +32,11 @@ int main(){
 	dml = "SHOW animals;";
 	execute(dml);
 	
+	dml = "dogs <- select (kind == \"dog\") animals;";
+	execute(dml);
+
+	dml = "SHOW dogs;";
+	execute(dml);
+
 	return 1;
 }
