@@ -6,8 +6,14 @@
 #include "../Database/Entry.h"
 #include "../Database/Condition.h"
 #include "../Database/Type.h"
+#include "../Database/Parser.h"
+//#include "../Database/ConditionList.h"
+//#include "../Database/Connector.h"
+#include "../Database/DBCell.h"
+//#include "../Database/Operation.h"
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -28,11 +34,68 @@ namespace UnitTest1
 		vector<vector<Entry>> entries;
 		vector<vector<Entry>> e2;
 
-		
+		TEST_METHOD_INITIALIZE(init234)
+		{
+			testAtts.push_back(Attribute("Name", VARCHAR));
+			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Age", INTEGER));
+
+	
+			keys.push_back(0);
+			keys.push_back(2);
+
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+			entries.push_back(vector<Entry>());
+
+			entries.at(0).push_back(Entry("Abby"));
+			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry(1));
+
+
+			entries.at(1).push_back(Entry("Zipper"));
+			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry(14));
+
+			entries.at(2).push_back(Entry("Bailey"));
+			entries.at(2).push_back(Entry("Davin"));
+			entries.at(2).push_back(Entry(6));
+	
+			d.addRelationToDatabase("Dogs", testAtts, keys);
+
+			d.addTupleToRelation(entries.at(0), "Dogs");
+			d.addTupleToRelation(entries.at(1), "Dogs");
+			d.addTupleToRelation(entries.at(2), "Dogs");
+
+			//relation more dogs
+			e2.push_back(vector<Entry>());
+			e2.push_back(vector<Entry>());
+			e2.push_back(vector<Entry>());
+
+			e2.at(0).push_back(Entry("Tyler"));
+			e2.at(0).push_back(Entry("Garren"));
+			e2.at(0).push_back(Entry(5));
+
+			e2.at(1).push_back(Entry("Abby"));
+			e2.at(1).push_back(Entry("Amy"));
+			e2.at(1).push_back(Entry(3));
+
+			e2.at(2).push_back(Entry("Dusty"));
+			e2.at(2).push_back(Entry("Rodger"));
+			e2.at(2).push_back(Entry(11));
+
+			d.addRelationToDatabase("More Dogs", testAtts, keys);
+
+			d.addTupleToRelation(e2.at(0), "More Dogs");
+			d.addTupleToRelation(e2.at(1), "More Dogs");
+			d.addTupleToRelation(e2.at(2), "More Dogs");
+
+			 Relation rel = d.naturalJoin( "More Dogs", "Dogs" );
+		}
 		
 		TEST_METHOD(create)
 		{
-			
+		
 			testAtts.push_back(Attribute("Name", VARCHAR));
 			testAtts.push_back(Attribute("Owner", VARCHAR));
 			testAtts.push_back(Attribute("Age", INTEGER));
@@ -76,33 +139,9 @@ namespace UnitTest1
 
 		TEST_METHOD(dropTable)
 		{
-			testAtts.push_back(Attribute("Name", VARCHAR));
-			testAtts.push_back(Attribute("Owner", VARCHAR));
-			testAtts.push_back(Attribute("Age", INTEGER));
-
-	
-			keys.push_back(0);
-			keys.push_back(2);
-
-			entries.push_back(vector<Entry>());
-			entries.push_back(vector<Entry>());
-			entries.push_back(vector<Entry>());
-
-			entries.at(0).push_back(Entry("Abby"));
-			entries.at(0).push_back(Entry("Amy"));
-			entries.at(0).push_back(Entry(3));
-
-			d.addTupleToRelation(entries.at(0), "Dogs");
-			d.addTupleToRelation(entries.at(1), "Dogs");
-			d.addTupleToRelation(entries.at(2), "Dogs");
-
-			d.addRelationToDatabase("Dogs", testAtts, keys);
-
 			d.removeRelationFromDatabase( "Dogs" );
 
-			string emptyString = "";
-
-			Assert::AreEqual( d.accessRelation( "Dogs")->getName(), emptyString );
+			Assert::IsNull( d.accessRelation( "Dogs") );
 
 		}
 
@@ -112,7 +151,6 @@ namespace UnitTest1
 			testAtts.push_back(Attribute("Owner", VARCHAR));
 			testAtts.push_back(Attribute("Age", INTEGER));
 
-	
 			keys.push_back(0);
 			keys.push_back(2);
 
@@ -124,12 +162,9 @@ namespace UnitTest1
 			entries.at(0).push_back(Entry("Amy"));
 			entries.at(0).push_back(Entry(3));
 
-			d.addTupleToRelation(entries.at(0), "Dogs");
-			d.addTupleToRelation(entries.at(1), "Dogs");
-			d.addTupleToRelation(entries.at(2), "Dogs");
-
 			d.addRelationToDatabase("Dogs", testAtts, keys);
 
+			d.addTupleToRelation(entries.at(0), "Dogs");
 
 			vector<Entry> newTuple1;
 
@@ -173,12 +208,10 @@ namespace UnitTest1
 			entries.at(1).push_back(Entry("Melodie"));
 			entries.at(1).push_back(Entry(14));
 
-			d.addTupleToRelation(entries.at(0), "Dogs");
-			d.addTupleToRelation(entries.at(1), "Dogs");
-			d.addTupleToRelation(entries.at(2), "Dogs");
-
 			d.addRelationToDatabase("Dogs", testAtts, keys);
 
+			d.addTupleToRelation(entries.at(0), "Dogs");
+			d.addTupleToRelation(entries.at(1), "Dogs");
 
 			vector<Condition> c3;
 	
@@ -208,31 +241,9 @@ namespace UnitTest1
 			
 			c.push_back(Condition("Age", GR, 4, AND, 1));
 
-			testAtts.push_back(Attribute("Name", VARCHAR));
-			testAtts.push_back(Attribute("Owner", VARCHAR));
-			testAtts.push_back(Attribute("Age", INTEGER));
-
-	
-			keys.push_back(0);
-			keys.push_back(2);
-
-			entries.push_back(vector<Entry>());
-			entries.push_back(vector<Entry>());
-			entries.push_back(vector<Entry>());
-
-			entries.at(0).push_back(Entry("Abby"));
-			entries.at(0).push_back(Entry("Amy"));
-			entries.at(0).push_back(Entry(3));
-
-			d.addTupleToRelation(entries.at(0), "Dogs");
-			d.addTupleToRelation(entries.at(1), "Dogs");
-			d.addTupleToRelation(entries.at(2), "Dogs");
-
-			d.addRelationToDatabase("Dogs", testAtts, keys);
-
 			Relation relation = d.selection( c, "Dogs");
 
-			Assert::AreEqual( relation.getNumTuples(), 0 );
+			Assert::AreEqual( relation.getNumTuples(), 2 );
 			
 		}
 
@@ -634,11 +645,92 @@ namespace UnitTest1
 			d.addTupleToRelation(e2.at(1), "More Dogs");
 			d.addTupleToRelation(e2.at(2), "More Dogs");
 
-			 Relation rel = d.naturalJoin( "More Dogs", "Dog" );
+			 Relation rel = d.naturalJoin( "More Dogs", "Dogs" );
 
 			 Assert::AreEqual(rel.getNumTuples(), max( d.accessRelation("More Dogs")->getNumTuples(), d.accessRelation("Dogs")->getNumTuples() ) );
 			 
 		}
+
+		
+
+		TEST_METHOD(naturalJoinCommand)
+		{
+			//string dml = "";
+		}
+
+		TEST_METHOD(selectionCommand)
+		{
+			Parser p(d);
+			string dml = "puppies <- select (Age == \"1\") Dogs;\n";
+
+			p.parse(dml);
+
+			Relation* relation = d.accessRelation( "puppies" );
+
+			Assert::IsNotNull( relation );
+
+		
+		}
+
+		TEST_METHOD(differenceCommand)
+		{
+
+		}
+
+		TEST_METHOD(projectionCommand)
+		{
+
+		}
+
+		TEST_METHOD(renameCommand)
+		{
+
+		}
+
+		TEST_METHOD(insertIntoCommand)
+		{
+
+		}
+
+		TEST_METHOD(crossPorductCommand)
+		{
+
+		}
+
+		TEST_METHOD(createTableCommand)
+		{
+
+		}
+
+		TEST_METHOD(writeFileCommand)
+		{
+
+		}
+
+		TEST_METHOD(closeFileCommand)
+		{
+
+		}
+
+		TEST_METHOD(openFileCommand)
+		{
+
+		}
+
+		TEST_METHOD(showCommand)
+		{
+
+		}
+
+		TEST_METHOD(updateCommand)
+		{
+
+		}
+
+		
+
+
+
 
 	};
 }

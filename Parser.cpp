@@ -387,7 +387,7 @@ int Parser::createTable( stringstream& command ) {
 
 	// Add relation to database
 	// not sure how to pass the keys thing
-	database.addRelationToDatabase( relationName, );
+	//database.addRelationToDatabase( relationName, );
 
 	return SUCCESS;
 
