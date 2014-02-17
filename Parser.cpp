@@ -295,10 +295,7 @@ int Parser::parseTypedAttribute( stringstream& command, vector<Attribute>& attri
 	readWhite( command );
 
 	// Get the type - VARCHAR or INTEGER
-	string type = "";
-	while ( command.peek( ) != '(' ) {
-		type += command.get( );
-	}
+	string type = readAlphaNumWord( command );
 
 	if ( type == "VARCHAR" ) {
 		// consume the '('
@@ -320,7 +317,7 @@ int Parser::parseTypedAttribute( stringstream& command, vector<Attribute>& attri
 		command.get( );
 
 		// not sure what to do with the size here
-		Attribute newAttribute( attributeName, VARCHAR );
+		Attribute newAttribute( attributeName, VARCHAR, sizeOfString );
 		attributeList.push_back( newAttribute );
 
 		return SUCCESS;
@@ -335,6 +332,8 @@ int Parser::parseTypedAttribute( stringstream& command, vector<Attribute>& attri
 	else {
 		return INVALID;
 	}
+
+	readWhite(command);
 
 }
 
@@ -353,7 +352,10 @@ int Parser::createTable( stringstream& command ) {
 
 	// Parse the attribute list
 	while ( command.peek( ) != ')' ) {
-		parseTypedAttribute( command, attributeList );
+
+		if( parseTypedAttribute( command, attributeList ) < 0 ){
+			return 0;
+		}
 		
 		// consume the comma if it is there
 		if ( command.peek( ) == ',' ) {
@@ -365,7 +367,11 @@ int Parser::createTable( stringstream& command ) {
 	}
 
 	// consume closing parenthesis
-	command.get( );
+	char closingParen = command.get( );
+
+	if( closingParen != ')' ){
+		return INVALID;
+	}
 
 	// Parse the PRIMARY KEY part
 	string primaryKeyWord = readAlphaNumWord( command );
@@ -385,9 +391,24 @@ int Parser::createTable( stringstream& command ) {
 
 	parseAttributeList( command, attributeNames );
 
-	// Add relation to database
-	// not sure how to pass the keys thing
-	//database.addRelationToDatabase( relationName, );
+	vector<int> keys;
+
+	//Find keys
+	for(int i = 0; i < attributeList.size(); i++){
+
+		for(int j = 0; j < attributeNames.size(); j++){
+
+			if( attributeList.at(i).name == attributeNames.at(j) ){
+				keys.push_back(i);
+				//break inner loop
+				j = attributeNames.size();
+			}
+
+		}
+
+	}
+
+	database.addRelationToDatabase( relationName, attributeList, keys );
 
 	return SUCCESS;
 
@@ -429,7 +450,12 @@ int Parser::update( stringstream& command ) {
 		command.get( );
 
 		// Parse the literal
-		newValues.push_back( readLiteral( command ) );
+		Entry newVal;
+		if( readLiteral( command, newVal ) < 0 ){
+			return INVALID;
+		}
+
+		newValues.push_back( Entry(newVal) );
 
 		// consume a comma if there is one
 		if ( command.peek( ) == ',' ) {
@@ -478,66 +504,39 @@ int Parser::deleteFrom( stringstream& command ) {
 }
 
 
-//DONE - needs testing
-Entry Parser::readLiteral( stringstream& command ) {
-	
-	readWhite( command );
-	
-	Entry nextEntry;
+int Parser::readLiteral( stringstream& command, Entry& e ) {
 
-	char nextChar = command.peek( );
-
-	// If the literal is a string
-	if ( nextChar == '\"' ) {
-		string stringLiteral = "";
-
-		// keep reading characters into the string until the closing quotes
-		while ( command.peek( ) != '\"' ) {
-			stringLiteral += command.get( );
-		}
-
-		nextEntry = Entry( stringLiteral );
-	}
-
-	// if the literal is an integer
-	else if ( isdigit( nextChar ) ) {
-		string intLiteral = "";
-
-		// read all of the digits into a string
-		while ( isdigit( command.peek( ) ) ) {
-			intLiteral += command.get( );
-		}
-
-		// convert the string into an int
-		int actualIntLiteral = stoi( intLiteral );
-
-		nextEntry = Entry( actualIntLiteral );
-	}
-
-	readWhite( command );
-
-	return nextEntry;
-}
-
-
-Entry Parser::readLiteral( stringstream& command ) {
+	readWhite(command);
 
 	int a;
 
 	if ( parseInteger( command, a ) < 0 ){
 
-		return Entry( readAlphaNumWord( command ) );
+		char quote;
+		command.get(quote);
+
+		if(quote != '"'){
+			return INVALID;
+		}
+
+		e = Entry( readAlphaNumWord( command ) );
+
+		command.get(quote);
+		if(quote != '"'){
+			return INVALID;
+		}
 
 	}
 	else {
-		return Entry( a );
+		e = Entry(a);
+
 	}
 
-
+	return SUCCESS;
 }
 
 
-// Done, for sure needs testing -------------------------------------should this check that the tuple has the right attributes for the relation or should database check?
+// Done, for sure needs testing -------should this check that the tuple has the right attributes for the relation or should database check?
 int Parser::insertInto( stringstream& command ) {
 
 	// Get the target Relation name
@@ -569,22 +568,26 @@ int Parser::insertInto( stringstream& command ) {
 		
 		// keep reading literals until there is a ')'
 		while ( command.peek( ) != ')' ) {
-			helperEntry = readLiteral( command );
-			//------------------------------------------should this check to see if the entry was formatted bad?
+			if( readLiteral( command, helperEntry ) < 0 ){
+				return INVALID;
+			}
+
 			tuple.push_back( Entry( helperEntry ) );
 
+			readWhite(command);
+
+			char next = command.peek();
 			// consume the comma if there is one
-			if ( command.peek( ) == ',' ) {
+			if ( next == ',' ) {
 				command.get( );
+			}else if( next != ')' ){
+				return INVALID;
 			}
+
 		}
 
 		char close;
 		command.get( close );
-
-		if ( close != ')' ) {
-			return INVALID;
-		}
 
 		database.addTupleToRelation( tuple, database.accessRelation( relationName ) );
 	}
@@ -933,7 +936,7 @@ int Parser::parseInteger( stringstream& command, int& arg ) {
 		chars.push_back( command.get( ) );
 	}
 
-	if ( isAlpha( command.peek( ) ) ){
+	if ( isAlpha( command.peek( ) ) || chars.size() == 0 ){
 
 		for ( int i = chars.size( ) - 1; i >= 0; i-- ){
 
@@ -1390,7 +1393,7 @@ int Parser::parse( string s ){
 	}
 
 	stringstream command;
-	command >> s;
+	command << s;
 
 	//Try to parse it as a command - if it returns error, then we continue
 	if ( parseCommand( command ) > 0 ){

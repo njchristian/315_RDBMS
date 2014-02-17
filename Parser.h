@@ -132,7 +132,7 @@ class Parser{
 	//DONE - needs testing
 	// reads and returns an entry for the insert into function, opening parenthesis
 	// will already be consumed and this should not consume the closing parenthesis
-	Entry readLiteral( stringstream& command );
+	int readLiteral( stringstream& command, Entry& e );
 
 	//DONE
 	int parseInteger( stringstream& command, int& i );

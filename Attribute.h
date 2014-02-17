@@ -11,9 +11,11 @@ struct Attribute{
 	// Data members
 	Type t;
 	string name;
+	int vcSize;
 
 	// Constructor
 	Attribute(string n, Type ty) : t(ty), name(n) { }
+	Attribute(string n, Type ty, int size) : t(ty), name(n), vcSize(size) { }
 
 	Attribute() : t(INTEGER), name("default") { }
 
