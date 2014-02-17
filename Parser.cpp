@@ -8,13 +8,13 @@
 
 //luin.uial@gmail.com
 
-int Parser::writeFile( string relationName ){
+int Parser::writeFile( string relationName ) {
 
-	Relation r = database.accessRelation(relationName);
+	Relation r = database.accessRelation( relationName );
 
-	vector<Attribute> atts = r.getAttributes();
+	vector<Attribute> atts = r.getAttributes( );
 
-	vector<vector<Entry*>> table = r.getAllEntries();
+	vector<vector<Entry*>> table = r.getAllEntries( );
 
 	string filename = relationName;
 	filename = filename + ".db";
@@ -22,15 +22,15 @@ int Parser::writeFile( string relationName ){
 	ofstream file;
 	file.open( filename );
 
-	string header = "CREATE TABLE " + r.getName() + '(';
+	string header = "CREATE TABLE " + r.getName( ) + '(';
 
-	for(int i = 0; i < atts.size(); i++){
+	for ( unsigned i = 0; i < atts.size( ); i++ ) {
 
-		header = header + atts.at(i).name + ' ';
+		header = header + atts.at( i ).name + ' ';
 
-		header = header + (atts.at(i).t == INTEGER ? "INTEGER" : "VARCHAR");
+		header = header + ( atts.at( i ).t == INTEGER ? "INTEGER" : "VARCHAR" );
 
-		if(i != atts.size() - 1){
+		if ( i != atts.size( ) - 1 ) {
 			header = header + ',';
 		}
 
@@ -38,13 +38,13 @@ int Parser::writeFile( string relationName ){
 
 	header = header + ')' + " PRIMARY KEY (";
 
-	vector<int> keys = r.getKeys();
+	vector<int> keys = r.getKeys( );
 
-	for(int i = 0; i < keys.size(); i++){
+	for ( unsigned i = 0; i < keys.size( ); i++ ) {
 
-		header = header + atts.at(keys.at(i)).name;
+		header = header + atts.at( keys.at( i ) ).name;
 
-		if(i != keys.size() - 1){
+		if ( i != keys.size( ) - 1 ) {
 			header = header + ',';
 		}
 
@@ -54,33 +54,34 @@ int Parser::writeFile( string relationName ){
 
 	file << header;
 
-	int rowSize = atts.size();
+	int rowSize = atts.size( );
 
-	for(int i = 0; i < table.size(); i++){
+	for ( unsigned i = 0; i < table.size( ); i++ ) {
 
 		string entry = "INSERT INTO " + relationName + " VALUES FROM (";
 
-		for(int j = 0; j < rowSize; j++){
+		for ( int j = 0; j < rowSize; j++ ) {
 
-			bool flag = atts.at(j).t == VARCHAR;
+			bool flag = atts.at( j ).t == VARCHAR;
 
-			if(flag){
+			if ( flag ) {
 				entry = entry + '"';
 			}
 
-			Entry* thisEntry = table.at(i).at(j);
+			Entry* thisEntry = table.at( i ).at( j );
 			string t;
 
 
-			if(thisEntry->isInt()){
-				t = thisEntry->getEntryI();
-			}else{
-				t = thisEntry->getEntryVC();
+			if ( thisEntry->isInt( ) ) {
+				t = thisEntry->getEntryI( );
+			}
+			else {
+				t = thisEntry->getEntryVC( );
 			}
 
 			entry = entry + t;
 
-			if( j != rowSize - 1 ){
+			if ( j != rowSize - 1 ) {
 				entry = entry + ',';
 			}
 
@@ -92,10 +93,11 @@ int Parser::writeFile( string relationName ){
 	}
 
 	//I'm not sure how this could fail
+	// It's the thought that counts? lol I don't know either -Taylor
 	return SUCCESS;
 }
 
-int Parser::openFile( string relationName ){
+int Parser::openFile( string relationName ) {
 
 	string line;
 
@@ -105,15 +107,16 @@ int Parser::openFile( string relationName ){
 
 	ifstream file( filename );
 
-	if( file.is_open() ){
+	if ( file.is_open( ) ) {
 
-		while( getline( file, line ) ){
+		while ( getline( file, line ) ) {
 
-			parse(line);
+			parse( line );
 
 		}
-		file.close();
-	}else{
+		file.close( );
+	}
+	else {
 		//file did not open
 		return INVALID;
 	}
@@ -122,18 +125,19 @@ int Parser::openFile( string relationName ){
 	return SUCCESS;
 }
 
-int Parser::closeFile( string name ){
+int Parser::closeFile( string name ) {
 
 	string filename = name + ".db";
 
-	fstream f(name);
+	fstream f( name );
 
-	f.close();
+	f.close( );
 
+	return SUCCESS;
 }
 
 //Gets a relation from views or from database
-Relation Parser::getRelation( string r ){
+Relation Parser::getRelation( string r ) {
 
 	for ( unsigned i = 0; i < views.size( ); i++ ){
 		if ( views.at( i ).getName( ) == r ){
@@ -147,13 +151,13 @@ Relation Parser::getRelation( string r ){
 
 //DONE
 //We pass the integer values of the characters so our check is quick
-bool Parser::isAlphaNum( int c ){
+bool Parser::isAlphaNum( int c ) {
 
-	return (isAlpha(c) || isNum(c));
+	return ( isAlpha( c ) || isNum( c ) );
 
 }
 
-bool Parser::isAlpha( int c){
+bool Parser::isAlpha( int c) {
 
 	int A = 65;
 	int Z = 90;
@@ -167,7 +171,7 @@ bool Parser::isAlpha( int c){
 
 }
 
-bool Parser::isNum( int c){
+bool Parser::isNum( int c) {
 
 	int ZERO = 48;
 	int NINE = 57;
@@ -177,14 +181,14 @@ bool Parser::isNum( int c){
 }
 
 //DONE - NOT TESTED
-string Parser::readAlphaNumWord( stringstream& command ){
+string Parser::readAlphaNumWord( stringstream& command ) {
 
 	readWhite( command );
 
 	string result = "";
 	char next;
 
-	while ( isAlphaNum( command.peek( ) ) ){
+	while ( isAlphaNum( command.peek( ) ) ) {
 
 		command.get( next );
 		result.push_back( next );
@@ -197,23 +201,23 @@ string Parser::readAlphaNumWord( stringstream& command ){
 }
 
 //DONE
-void Parser::readWhite( stringstream& command ){
+void Parser::readWhite( stringstream& command ) {
 
-	while ( command.peek( ) == ' ' ){
+	while ( command.peek( ) == ' ' ) {
 		command.get( );
 	}
 
 }
 
 //DONE
-int Parser::readSemi( stringstream& command ){
+int Parser::readSemi( stringstream& command ) {
 
 	readWhite( command );
 
 	char semi;
 	command.get( semi );
 
-	if ( semi == ';' ){
+	if ( semi == ';' ) {
 		return SUCCESS;
 	}
 
@@ -224,7 +228,7 @@ int Parser::readSemi( stringstream& command ){
 }
 
 //DONE
-int Parser::readArrow( stringstream& command ){
+int Parser::readArrow( stringstream& command ) {
 
 	readWhite( command );
 
@@ -233,7 +237,7 @@ int Parser::readArrow( stringstream& command ){
 
 	command.get( less );
 
-	if ( less != '<' || command.peek( ) != '-' ){
+	if ( less != '<' || command.peek( ) != '-' ) {
 
 		command.putback( less );
 		return INVALID;
@@ -247,14 +251,14 @@ int Parser::readArrow( stringstream& command ){
 }
 
 //DONE
-int Parser::parseAttributeList( stringstream& command, vector<string>& attributeNames ){
+int Parser::parseAttributeList( stringstream& command, vector<string>& attributeNames ) {
 
 	readWhite( command );
 
 	char open;
 	command.get( open );
 
-	if ( open != '(' ){
+	if ( open != '(' ) {
 		return INVALID;
 	}
 
@@ -299,7 +303,7 @@ int Parser::deleteFrom( stringstream& command ) {
 	// Get the conditions that will be used by the delete function
 	vector<Condition> deleteConditions;
 
-	if( parseConditions(command, deleteConditions) < 0 ){
+	if ( parseConditions( command, deleteConditions ) < 0 ) {
 		return INVALID;
 	}
 
@@ -313,7 +317,7 @@ int Parser::deleteFrom( stringstream& command ) {
 //DONE - needs testing
 Entry readLiteral( stringstream& command ) {
 	Entry nextEntry;
-	
+
 	char nextChar = command.peek( );
 
 	// If the literal is a string
@@ -346,16 +350,18 @@ Entry readLiteral( stringstream& command ) {
 	return nextEntry;
 }
 
-Entry Parser::readLiteral( stringstream& command ){
 
-	int a; 
+Entry Parser::readLiteral( stringstream& command ) {
 
-	if( parseInteger(command, a) < 0 ){
+	int a;
 
-		return Entry( readAlphaNumWord(command) );
+	if ( parseInteger( command, a ) < 0 ){
 
-	}else{
-		return Entry(a);
+		return Entry( readAlphaNumWord( command ) );
+
+	}
+	else {
+		return Entry( a );
 	}
 
 
@@ -366,7 +372,7 @@ Entry Parser::readLiteral( stringstream& command ){
 int Parser::insertInto( stringstream& command ) {
 
 	// Get the target Relation name
-	string relationName = readAlphaNumWord(command);
+	string relationName = readAlphaNumWord( command );
 
 
 
@@ -391,13 +397,13 @@ int Parser::insertInto( stringstream& command ) {
 
 		vector<Entry> tuple;
 		Entry helperEntry;
-		// ... needs to read a tuple
+		
 		// keep reading literals until there is a ')'
 		while ( command.peek( ) != ')' ) {
 			helperEntry = readLiteral( command );
 			//------------------------------------------should this check to see if the entry was formatted bad?
-			tuple.push_back( Entry(helperEntry) );
-			
+			tuple.push_back( Entry( helperEntry ) );
+
 			// consume the comma if there is one
 			if ( command.peek( ) == ',' ) {
 				command.get( );
@@ -407,11 +413,11 @@ int Parser::insertInto( stringstream& command ) {
 		char close;
 		command.get( close );
 
-		if( close != ')' ){
+		if ( close != ')' ) {
 			return INVALID;
 		}
 
-		database.addTupleToRelation( tuple, database.accessRelation(relationName) );
+		database.addTupleToRelation( tuple, database.accessRelation( relationName ) );
 	}
 	else {
 
@@ -424,12 +430,13 @@ int Parser::insertInto( stringstream& command ) {
 		// Get the target relation
 		Relation whatToReadFrom = parseExpr( command );
 
-		if( whatToReadFrom.isEmpty() ){
+		if ( whatToReadFrom.isEmpty( ) ) {
 			return INVALID;
 		}
 
 		//Can we not just call union? Does that command do something different? - Cameron
-		database.insertIntoFromRelation( database.accessRelation(relationName), whatToReadFrom );
+		// We could but we already had this in database so I just used it. - Taylor
+		database.insertIntoFromRelation( database.accessRelation( relationName ), whatToReadFrom );
 	}
 
 	return SUCCESS;
@@ -438,17 +445,17 @@ int Parser::insertInto( stringstream& command ) {
 
 
 //DONE
-Relation Parser::projection( stringstream& command ){
+Relation Parser::projection( stringstream& command ) {
 
 	vector<string> attributeNames;
 
-	if ( parseAttributeList( command, attributeNames ) < 0 ){
+	if ( parseAttributeList( command, attributeNames ) < 0 ) {
 		return Relation( );
 	}
 
 	Relation r = parseExpr( command );
 
-	if ( r.isEmpty( ) ){
+	if ( r.isEmpty( ) ) {
 		return r;
 	}
 
@@ -457,19 +464,19 @@ Relation Parser::projection( stringstream& command ){
 }
 
 //TODO
-Relation Parser::rename( stringstream& command ){
+Relation Parser::rename( stringstream& command ) {
 
 	readWhite( command );
 
 	vector<string> attributeNames;
 
-	if ( parseAttributeList( command, attributeNames ) < 0 ){
+	if ( parseAttributeList( command, attributeNames ) < 0 ) {
 		return Relation( );
 	}
 
 	Relation r = parseExpr( command );
 
-	if ( r.isEmpty( ) ){
+	if ( r.isEmpty( ) ) {
 		return r;
 	}
 
@@ -482,12 +489,12 @@ int Parser::parseCommand( stringstream& command ){
 
 	string word = readAlphaNumWord( command );
 
-	if ( word == "OPEN" ){
+	if ( word == "OPEN" ) {
 
 		string relationName = readAlphaNumWord( command );
 
 		//Catch problem before execution
-		if ( readSemi( command ) < 0 ){
+		if ( readSemi( command ) < 0 ) {
 			return INVALID;
 		}
 
@@ -496,27 +503,27 @@ int Parser::parseCommand( stringstream& command ){
 		return SUCCESS;
 
 	}
-	else if ( word == "CLOSE" ){
+	else if ( word == "CLOSE" ) {
 
 		string relationName = readAlphaNumWord( command );
 
-		if ( closeFile( relationName ) < 0 ){
+		if ( closeFile( relationName ) < 0 ) {
 			return INVALID;
 		}
 
-		if ( readSemi( command ) < 0 ){
+		if ( readSemi( command ) < 0 ) {
 			return INVALID;
 		}
 
 		return SUCCESS;
 
 	}
-	else if ( word == "SHOW" ){
+	else if ( word == "SHOW" ) {
 
 		string relationName = readAlphaNumWord( command );
 
 		//Catch problem before execution
-		if ( readSemi( command ) < 0 ){
+		if ( readSemi( command ) < 0 ) {
 			return INVALID;
 		}
 
@@ -525,76 +532,76 @@ int Parser::parseCommand( stringstream& command ){
 		return SUCCESS;
 
 	}
-	else if ( word == "WRITE" ){
+	else if ( word == "WRITE" ) {
 
 		string relationName = readAlphaNumWord( command );
 
 		//Catch problem before execution
-		if ( readSemi( command ) < 0 ){
+		if ( readSemi( command ) < 0 ) {
 			return INVALID;
 		}
 
-		if ( writeFile( relationName ) < 0 ){
+		if ( writeFile( relationName ) < 0 ) {
 			return INVALID;
 		}
 
 		return SUCCESS;
 
 	}
-	else if ( word == "INSERT" ){
+	else if ( word == "INSERT" ) {
 
 		string into = readAlphaNumWord( command );
 
-		if ( into != "INTO" ){
+		if ( into != "INTO" ) {
 			return INVALID;
 		}
 
-		if ( insertInto( command ) < 0 ){
+		if ( insertInto( command ) < 0 ) {
 			return INVALID;
 		}
 
 		return SUCCESS;
 
 	}
-	else if ( word == "DELETE" ){
+	else if ( word == "DELETE" ) {
 
 		string from = readAlphaNumWord( command );
 
-		if ( from != "FROM" ){
+		if ( from != "FROM" ) {
 			return INVALID;
 		}
 
-		if ( deleteFrom( command ) < 0 ){
+		if ( deleteFrom( command ) < 0 ) {
 			return INVALID;
 		}
 
 		return SUCCESS;
 
 	}
-	else if ( word == "CREATE" ){
+	else if ( word == "CREATE" ) {
 		string table = readAlphaNumWord( command );
 
-		if ( table != "TABLE" ){
+		if ( table != "TABLE" ) {
 			return INVALID;
 		}
 
-		if ( createTable( command ) < 0 ){
-			return INVALID;
-		}
-
-		return SUCCESS;
-
-	}
-	else if ( word == "UPDATE" ){
-
-		if ( update( command ) < 0 ){
+		if ( createTable( command ) < 0 ) {
 			return INVALID;
 		}
 
 		return SUCCESS;
 
 	}
-	else{
+	else if ( word == "UPDATE" ) {
+
+		if ( update( command ) < 0 ) {
+			return INVALID;
+		}
+
+		return SUCCESS;
+
+	}
+	else {
 
 		return INVALID;
 
@@ -652,7 +659,7 @@ int Parser::peekAndReadSubtraction( stringstream& command ) {
 	char sub;
 	sub = command.peek( );
 
-	if ( sub != '-' ){ // changed plus to sub, copy and paste error?
+	if ( sub != '-' ){ 
 		return INVALID;
 	}
 
@@ -693,7 +700,7 @@ int Parser::readOperator( stringstream& command, Operation& o ){
 		if ( c != '=' ){
 			return INVALID;
 		}
-		else{
+		else {
 			o = EQUALS;
 			return SUCCESS;
 		}
@@ -705,7 +712,7 @@ int Parser::readOperator( stringstream& command, Operation& o ){
 		if ( c != '=' ){
 			return INVALID;
 		}
-		else{
+		else {
 			o = NEQ;
 			return SUCCESS;
 		}
@@ -718,7 +725,7 @@ int Parser::readOperator( stringstream& command, Operation& o ){
 		if ( c != '=' ){
 			o = LE;
 		}
-		else{
+		else {
 			o = LEQ;
 		}
 		break;
@@ -730,7 +737,7 @@ int Parser::readOperator( stringstream& command, Operation& o ){
 		if ( c != '=' ){
 			o = GR;
 		}
-		else{
+		else {
 			o = GREQ;
 		}
 		break;
@@ -748,96 +755,101 @@ int Parser::readOperator( stringstream& command, Operation& o ){
 //TODO
 //Put an integer from command into 'i'. Return invalid if method fails
 //IF THE METHOD FAILS THIS FUNCTION MUST RETURN COMMAND TO ITS INITIAL STATE
-int Parser::parseInteger( stringstream& command, int& arg ){
+int Parser::parseInteger( stringstream& command, int& arg ) {
 
 	vector<char> chars;
 
 	//push back until we find something not an int
-	while( isNum(command.peek()) ){
-		chars.push_back( command.get() );
+	while ( isNum( command.peek( ) ) ){
+		chars.push_back( command.get( ) );
 	}
 
-	if( isAlpha(command.peek() ) ){
+	if ( isAlpha( command.peek( ) ) ){
 
-		for(int i = chars.size() - 1; i >= 0; i--){
+		for ( int i = chars.size( ) - 1; i >= 0; i-- ){
 
-			command.putback(chars.at(i));
+			command.putback( chars.at( i ) );
 
 		}
 
 		return INVALID;
-	}else{
+	}
+	else {
 
 		string a = "";
-		for(int i = 0; i < chars.size(); i++){
-			a.push_back(chars.at(i));
+		for ( unsigned i = 0; i < chars.size( ); i++ ){
+			a.push_back( chars.at( i ) );
 		}
 
 		stringstream ss;
-		ss<<a;
-		ss>>arg;
+		ss << a;
+		ss >> arg;
 
 		return SUCCESS;
 	}
 
-	
+
 
 }
 
 
-int Parser::findConnector( stringstream& copy, Connector c, int paren){
+int Parser::findConnector( stringstream& copy, Connector c, int paren ){
 
-	readWhite(copy);
+	readWhite( copy );
 
 	char next;
 
-	copy.get(next);
+	copy.get( next );
 
-	while(next == ')' || next == ' '){
+	while ( next == ')' || next == ' ' ){
 		//if it was a parentheses, keep track to see if we hit the end of the condition list
-		if(next == ')'){
+		if ( next == ')' ){
 			paren--;
 
-			if(paren == 0){
+			if ( paren == 0 ){
 				c = NONE;
 				return SUCCESS;
 			}
 
 		}
 
-		copy.get(next);
+		copy.get( next );
 	}
 
-	if(next == '&'){
-		copy.get(next);
+	if ( next == '&' ){
+		copy.get( next );
 
-		if(next == '&'){
+		if ( next == '&' ){
 
 			c = AND;
 			return SUCCESS;
-		}else{
+		}
+		else {
 			return INVALID;
 		}
 
-	}else if(next == '|'){
+	}
+	else if ( next == '|' ){
 
-		copy.get(next);
+		copy.get( next );
 
-		if(next == '|'){
+		if ( next == '|' ){
 			c = OR;
 			return SUCCESS;
-		}else{
+		}
+		else {
 			return INVALID;
 		}
 
-	}else{
+	}
+	else {
 		return INVALID;
 	}
 
 }
 
 //UNDER CONSTRUCTION
-int Parser::parseCondition( stringstream& localCommand, int paren, Condition& condition ){
+int Parser::parseCondition( stringstream& localCommand, int paren, Condition& condition ) {
 
 	readWhite( localCommand );
 
@@ -867,7 +879,7 @@ int Parser::parseCondition( stringstream& localCommand, int paren, Condition& co
 		first = readAlphaNumWord( localCommand );
 		a.setVC(first);
 	}
-	else{
+	else {
 
 		//If not, it could either be a literal integer, or it is an attribute
 
@@ -875,7 +887,7 @@ int Parser::parseCondition( stringstream& localCommand, int paren, Condition& co
 			//parseInteger FAILED - it is attribute
 
 			first = readAlphaNumWord( localCommand );
-		}else{
+		} else {
 			//parseInteger SUCCESS - it is int
 
 			firstIsLit = true;
@@ -915,7 +927,7 @@ int Parser::parseCondition( stringstream& localCommand, int paren, Condition& co
 		first = readAlphaNumWord( localCommand );
 		a.setVC(second);
 	}
-	else{
+	else {
 
 		//If not, it could either be a literal integer, or it is an attribute
 
@@ -923,7 +935,7 @@ int Parser::parseCondition( stringstream& localCommand, int paren, Condition& co
 			//parseInteger FAILED - it is attribute
 
 			second = readAlphaNumWord( localCommand );
-		}else{
+		} else {
 			//parseInteger SUCCESS - it is int
 
 			secondIsLit = true;
@@ -975,7 +987,8 @@ int Parser::parseCondition( stringstream& localCommand, int paren, Condition& co
 
 }
 
-int Parser::parseConditions( stringstream& command, vector<Condition>& conditions ){
+// Gets a compiler warning that not all control paths return a value. Does this need to be fixed???????
+int Parser::parseConditions( stringstream& command, vector<Condition>& conditions ) {
 
 	//Redefinition of conditions
 	//vector<Condition> conditions;
@@ -1236,7 +1249,7 @@ Relation Parser::selection( stringstream& command ) {
 	vector<Condition> conditions;
 
 	// If no conditions then return empty Relation
-	if ( parseConditions(command, conditions) < 0 ) {
+	if ( parseConditions( command, conditions ) < 0 ) {
 		return Relation( );
 	}
 
@@ -1253,6 +1266,3 @@ Relation Parser::selection( stringstream& command ) {
 
 
 }
-
-
-
