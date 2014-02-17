@@ -27,7 +27,8 @@ public:
 
 	Attribute* accessAttribute( string name, string relationName );
 
-	Relation* accessRelation( string name );
+	Relation accessRelation( string name );
+	Relation* accessRelationPointer( string name );
 
 	Entry accessTuple( );
 

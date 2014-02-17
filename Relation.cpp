@@ -90,6 +90,7 @@ vector<string> Relation::getAttributeNames(){
 
 // Check to see if a relation has the specified tuple in it already.
 bool Relation::hasTuple( vector<Entry*> tuple )  {
+
 	for ( int i = 0; i < table.size( ); ++i ) {
 		
 		bool currentTuple = true;

@@ -38,5 +38,17 @@ int main(){
 	dml = "SHOW dogs;";
 	execute(dml);
 
+	dml = "old_dogs <- select (years > 8) dogs;";
+	execute(dml);
+
+	dml = "SHOW old_dogs;";
+	execute(dml);
+
+	dml = "cats_or_dogs <- dogs + (select (kind == \"cat\") animals);";
+	execute(dml);
+
+	dml = "SHOW cats_or_dogs;";
+	execute(dml);
+
 	return 1;
 }

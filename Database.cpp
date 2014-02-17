@@ -46,9 +46,21 @@ Attribute* Database::accessAttribute( string name , string relationName ) {
 
 
 // Returns a pointer to the relation with the specified name.
-Relation* Database::accessRelation( string name ) {
+Relation Database::accessRelation( string name ) {
+	
+	Relation* r = findRelation(name);
 
-	return findRelation( name );
+	if( r == NULL ){
+		return Relation();
+	}
+
+	return *r;
+}
+
+Relation* Database::accessRelationPointer( string name ){
+
+	return findRelation(name);
+
 }
 
 
@@ -405,6 +417,8 @@ Relation Database::selection( vector<Condition> conditions,
 	}
 
 	result.setAttributes( targetRelation->getAttributes( ) );
+
+	result.setKeys( targetRelation->getKeys() );
 
 	return result;
 }

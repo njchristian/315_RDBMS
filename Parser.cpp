@@ -145,7 +145,9 @@ Relation Parser::getRelation( string r ) {
 		}
 	}
 
-	return database.accessRelation( r );
+	Relation t = database.accessRelation( r );
+
+	return t;
 
 }
 
@@ -589,7 +591,7 @@ int Parser::insertInto( stringstream& command ) {
 		char close;
 		command.get( close );
 
-		database.addTupleToRelation( tuple, database.accessRelation( relationName ) );
+		database.addTupleToRelation( tuple, database.accessRelationPointer( relationName ) );
 	}
 	else {
 
@@ -608,7 +610,7 @@ int Parser::insertInto( stringstream& command ) {
 
 		//Can we not just call union? Does that command do something different? - Cameron
 		// We could but we already had this in database so I just used it. - Taylor
-		database.insertIntoFromRelation( database.accessRelation( relationName ), whatToReadFrom );
+		database.insertIntoFromRelation( database.accessRelationPointer( relationName ), whatToReadFrom );
 	}
 
 	return SUCCESS;
@@ -900,6 +902,7 @@ int Parser::readOperator( stringstream& command, Operation& o ){
 		else {
 			o = LEQ;
 		}
+		return SUCCESS;
 		break;
 
 	case ( '>' ) :
@@ -912,6 +915,7 @@ int Parser::readOperator( stringstream& command, Operation& o ){
 		else {
 			o = GREQ;
 		}
+		return SUCCESS;
 		break;
 
 	default:
@@ -1313,27 +1317,17 @@ Relation Parser::parseExpr( stringstream& command ){
 		string relationA = word;
 
 
-		if ( readSemi( command ) > 0 ){
+		if ( peekAndReadAddition( command ) > 0 ){
 
-			targetRelation = getRelation( relationA );
+			Relation relationB = parseExpr( command );
 
-			readWhite( command );
-
-			if ( openParen && command.peek( ) != ')' ){
-				return Relation( );
+			if( relationB.isEmpty() ){
+				return Relation();
 			}
 
-			command.get( );
+			Relation targetRelationA = getRelation( relationA );
 
-			return targetRelation;
-
-		}
-		else if ( peekAndReadAddition( command ) > 0 ){
-
-			string relationB = readAlphaNumWord( command );
-
-
-			targetRelation = database.unionTwoRelations( relationA, relationB );
+			targetRelation = database.unionTwoRelations( targetRelationA, &relationB );
 
 			readWhite( command );
 
@@ -1383,12 +1377,14 @@ Relation Parser::parseExpr( stringstream& command ){
 		}
 		else{
 
-			//Only valid operation left is JOIN
+			//Only valid operation left is JOIN or a relation name
 
 			string join = readAlphaNumWord( command );
 
 			if ( join != "JOIN" ){
-				return Relation( );
+				
+				return getRelation( relationA ); 
+
 			}
 
 			string relationB = readAlphaNumWord( command );

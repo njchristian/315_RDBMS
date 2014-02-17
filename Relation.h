@@ -75,6 +75,8 @@ public:
 
 	void setAttributeNames( vector<string> newNames );
 
+	void setKeys( vector<int> k ){ keys = k; }
+
 	void setName( string n ){ relationName = n; }
 
 	void setTable( vector<vector<Entry*> > newTable ) { table = newTable;  }
