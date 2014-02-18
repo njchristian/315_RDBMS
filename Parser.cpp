@@ -971,14 +971,15 @@ int Parser::parseInteger( stringstream& command, int& arg ) {
 }
 
 
-int Parser::findConnector( stringstream& copy, Connector c, int paren ){
-
-	readWhite( copy );
+int Parser::findConnector( stringstream& command, Connector& c, int paren ){
+	//char count
+	int cc = 0;
+	readWhite( command );
 
 	char next;
 
-	copy.get( next );
-
+	command.get( next );
+	++cc;
 	while ( next == ')' || next == ' ' ){
 		//if it was a parentheses, keep track to see if we hit the end of the condition list
 		if ( next == ')' ){
@@ -986,36 +987,45 @@ int Parser::findConnector( stringstream& copy, Connector c, int paren ){
 
 			if ( paren == 0 ){
 				c = NONE;
+				for(int i = 0; i < cc; ++i){
+					command.unget();
+				}
 				return SUCCESS;
 			}
 
 		}
 
-		copy.get( next );
+		command.get( next );
+		++cc;
 	}
 
 	if ( next == '&' ){
-		copy.get( next );
-
+		command.get( next );
+		++cc;
 		if ( next == '&' ){
 
 			c = AND;
+			for(int i = 0; i < cc; ++i){
+				command.unget();
+			}
 			return SUCCESS;
-		}
-		else {
+
+		} else {
 			return INVALID;
 		}
 
 	}
 	else if ( next == '|' ){
 
-		copy.get( next );
-
+		command.get( next );
+		++cc;
 		if ( next == '|' ){
 			c = OR;
+			for(int i = 0; i < cc; ++i){
+				command.unget();
+			}
 			return SUCCESS;
-		}
-		else {
+		} else {
 			return INVALID;
 		}
 
@@ -1134,17 +1144,10 @@ int Parser::parseCondition( stringstream& localCommand, int paren, Condition& co
 
 	Connector conn = NONE;
 
-	string save = myGetLine( localCommand );
 
-	stringstream copy;
-	copy << save;
-
-	if( findConnector(copy, conn, paren) < 0 ){
+	if( findConnector(localCommand, conn, paren) < 0 ){
 		return INVALID;
 	}
-
-	localCommand.clear();
-	localCommand << save;
 
 	if ( firstIsLit ){
 
@@ -1184,9 +1187,6 @@ string Parser::myGetLine( stringstream& command ){
 
 
 int Parser::parseConditions( stringstream& command, vector<Condition>& conditions ) {
-
-	//Redefinition of conditions
-	//vector<Condition> conditions;
 
 	readWhite( command );
 
@@ -1237,6 +1237,32 @@ int Parser::parseConditions( stringstream& command, vector<Condition>& condition
 			paren--;
 			readWhite(command);
 			closeParen = command.peek();
+
+			if( paren == 0 ){
+				break;
+			}
+		}
+
+
+		//This parses a strange way - the condition parser has already looked ahead to see
+		//if theres a connector, but we still need to get rid of it if there was
+		char connector = command.peek();
+
+		switch (connector){
+
+		case ('&'):
+			command.get();
+			if( command.get() != '&' ){
+				return INVALID;
+			}
+			break;
+
+		case ('|'):
+			command.get();
+			if( command.get() != '|' ){
+				return INVALID;
+			}
+			break;
 		}
 
 	}
@@ -1344,10 +1370,13 @@ Relation Parser::parseExpr( stringstream& command ){
 		}
 		else if ( peekAndReadSubtraction( command ) > 0 ){
 
-			string relationB = readAlphaNumWord( command );
+			Relation relationB = parseExpr( command );
 
+			if( relationB.isEmpty() ){
+				return Relation();
+			}
 
-			targetRelation = database.differenceTwoRelation( relationA, relationB );
+			targetRelation = database.differenceTwoRelation( getRelation( relationA ), relationB );
 
 			readWhite( command );
 
@@ -1362,9 +1391,13 @@ Relation Parser::parseExpr( stringstream& command ){
 		}
 		else if ( peekAndReadMultiplication( command ) > 0 ){
 
-			string relationB = readAlphaNumWord( command );
+			Relation relationB = parseExpr( command );
 
-			targetRelation = database.crossProduct( relationA, relationB );
+			if( relationB.isEmpty() ){
+				return Relation();
+			}
+
+			targetRelation = database.crossProduct( getRelation( relationA ), relationB );
 
 			readWhite( command );
 

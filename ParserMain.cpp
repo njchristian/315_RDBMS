@@ -29,12 +29,26 @@ int main(){
 	dml = "INSERT INTO animals VALUES FROM (\"Joe\", \"bird\", 2);";
 	execute(dml);
 
+	dml = "CREATE TABLE store (name VARCHAR(20), price INTEGER) PRIMARY KEY (name, price)";
+	execute(dml);
+
+	dml = "INSERT INTO store VALUES FROM (\"PuppyStore\", 400);";
+	execute(dml);
+
+	dml = "INSERT INTO store VALUES FROM (\"Farm\", 100);";
+	execute(dml);
+
 	dml = "SHOW animals;";
 	execute(dml);
 	
+	dml = "SHOW store;";
+	execute(dml);
+
 	dml = "dogs <- select (kind == \"dog\") animals;";
 	execute(dml);
 
+
+	
 	dml = "SHOW dogs;";
 	execute(dml);
 
@@ -57,6 +71,33 @@ int main(){
 	execute(dml);
 
 	dml = "SHOW species;";
+	execute(dml);
+
+	dml = "a <- rename (aname, akind) (project (name, kind) animals);";
+	execute(dml);
+
+	dml = "SHOW a;";
+	execute(dml);
+
+	dml = "common_names <- project (name) (select (aname == name && akind != kind) (a * animals));";
+	execute(dml);
+
+	dml = "SHOW common_names;";
+	execute(dml);
+	
+	dml = "answer <- common_names;";
+	execute(dml);
+
+	dml = "SHOW answer;";
+	execute(dml);
+
+	dml = "	WRITE animals;";
+	execute(dml);
+
+	dml = "CLOSE animals;";
+	execute(dml);
+
+	dml = "EXIT;";
 	execute(dml);
 
 	return 1;
