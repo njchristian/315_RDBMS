@@ -845,10 +845,10 @@ namespace UnitTest1
 		TEST_METHOD(updateCommand)
 		{
 			Parser p(d);
-			string dml = "UPDATE Dogs SET Age = 40 WHERE (Name == \"Melodie\");";
+			string dml = "UPDATE Dogs SET Age = 40 WHERE (Owner == \"Melodie\");";
 
-			//p.parse(dml);
-			Assert::AreEqual( p.parse( dml ), 1 );
+			p.parse(dml);
+			//Assert::AreEqual( p.parse( dml ), 1 );
 
 			Relation relation = p.getRelation("Dogs");
 
@@ -865,7 +865,7 @@ namespace UnitTest1
 			entryPointers.push_back( &test[2] );
 
 			
-			//Assert::IsTrue( relation.hasTuple( entryPointers ) );
+			Assert::IsTrue( relation.hasTuple( entryPointers ) );
 
 		}
 
@@ -952,7 +952,7 @@ namespace UnitTest1
 		TEST_METHOD( crossProductCommandBad )
 		{
 			Parser p( d );
-			string dml = "both_dogsA <- Dogs ** More_Dogs";
+			string dml = "both_dogsA <- Dogs ** More_Dogs;";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
 		}
@@ -969,8 +969,34 @@ namespace UnitTest1
 			Assert::AreEqual( p.parse( dml ), -1 );
 		}
 
+		TEST_METHOD( deleteCommand )
+		{
+			Parser p( d );
+			string dml = "DELETE FROM Dogs WHERE (Age == 14);";
 
+			p.parse( dml );
 
+			Relation relation = d.accessRelation( "Dogs" );
+
+			Assert::AreEqual( relation.getNumTuples( ), 2 );
+
+		}
+		TEST_METHOD( deleteCommandBad )
+		{
+			Parser p( d );
+			string dml = "DELETE FROM Dogs WHREE (Age == 14);";
+
+			Assert::AreEqual( p.parse( dml ), -1 );
+
+			dml = "DELETE FROM Dogs WHERE fhfhfhfh;";
+
+			Assert::AreEqual( p.parse( dml ), -1 );
+
+			dml = "DELETE FORM Dogs WHERE (Age == 14);";
+
+			Assert::AreEqual( p.parse( dml ), -1 );
+
+		}
 
 	};
 }
