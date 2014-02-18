@@ -1,3 +1,10 @@
+/*
+	This main shows example input and output. An example output file for this
+	can be found in animals.db in the same folder as the main source code.
+	After the main finishes its example, it remains open as a command line
+	interface for the user to use to perform their own database functions.
+*/
+
 #include "DBCell.h"
 #include <iostream>
 
