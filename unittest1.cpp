@@ -827,22 +827,40 @@ namespace UnitTest1
 
 		TEST_METHOD(writeFileCommand)
 		{
+			Parser p(d);
+			string dml = "OPEN Dogs;";
+			p.parse(dml);
+			dml = "WRITE Dogs;";
 
+			Assert::AreEqual( p.parse(dml), 1);
 		}
 
 		TEST_METHOD(closeFileCommand)
 		{
+			Parser p(d);
+			string dml = "OPEN Dogs;";
+			p.parse(dml);
+			dml = "WRITE Dogs;";
+			p.parse(dml);
+			dml = "CLOSE Dogs;";
 
+			Assert::AreEqual( p.parse(dml), 1);
 		}
 
 		TEST_METHOD(openFileCommand)
 		{
+			Parser p(d);
+			string dml = "WRITE Dogs;";
 
+			Assert::AreEqual( p.parse(dml), 1);
 		}
 
 		TEST_METHOD(showCommand)
 		{
+			Parser p(d);
+			string dml = "SHOW Dogs;";
 
+			Assert::AreEqual( p.parse(dml), 1);
 		}
 
 		TEST_METHOD(updateCommand)
