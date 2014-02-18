@@ -1,10 +1,6 @@
 #include "Parser.h"
 
 
-#define SUCCESS 1
-#define INVALID -1
-#define EXIT -2
-
 
 //luin.uial@gmail.com
 
@@ -362,7 +358,7 @@ int Parser::createTable( stringstream& command ) {
 	while ( command.peek( ) != ')' ) {
 
 		if( parseTypedAttribute( command, attributeList ) < 0 ){
-			return 0;
+			return INVALID;
 		}
 		
 		// consume the comma if it is there
