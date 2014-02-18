@@ -7,6 +7,8 @@ void readInput(){
 
 	string line = "";
 
+	cout<<"\n\n";
+
 	do{
 
 		cout<<"Enter a dml command:\n";
@@ -121,7 +123,7 @@ int main(){
 
 	dml = "SHOW animals;";
 	execute(dml);
-	
+
 	dml = "old_dogs <- select (years > 8) dogs;";
 	execute(dml);
 
@@ -165,6 +167,12 @@ int main(){
 	execute(dml);
 
 	dml = "SHOW answer;";
+	execute(dml);
+
+	dml = "DELETE FROM animals WHERE (years < 5);";
+	execute(dml);
+
+	dml = "SHOW animals;";
 	execute(dml);
 
 	dml = "WRITE animals;";

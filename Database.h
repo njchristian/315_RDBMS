@@ -56,7 +56,8 @@ public:
 	Relation crossProduct( string relationA, string relationB ){ return crossProduct(findRelation(relationA) , findRelation(relationB)); }
 	Relation crossProduct( Relation targetRelationA, Relation targetRelationB ){ return crossProduct( &targetRelationA, &targetRelationB ); }
 
-	Relation deleteFromRelation( string relationA, vector<Condition> conditions);
+	Relation deleteFromRelation( Relation* relationA, vector<Condition> conditions);
+	Relation deleteFromRelation( string relationA, vector<Condition> conditions){ return deleteFromRelation(findRelation(relationA), conditions); }
 
 	Relation differenceTwoRelation( Relation* targetRelationA, Relation* targetRelationB );
 	Relation differenceTwoRelation( Relation targetRelationA, Relation targetRelationB ) { return differenceTwoRelation( &targetRelationA, &targetRelationB ); }

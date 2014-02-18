@@ -150,9 +150,7 @@ Relation Database::crossProduct( Relation* relationA, Relation* relationB ) {
 	return result;
 }
 
-Relation Database::deleteFromRelation( string relationA, vector<Condition> conditions ){
-
-	Relation* targetRelation = findRelation( relationA );
+Relation Database::deleteFromRelation( Relation* targetRelation, vector<Condition> conditions ){
 
 	ConditionList cl = ConditionList( conditions, targetRelation );
 
