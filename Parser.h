@@ -28,8 +28,7 @@ class Parser{
 		views.push_back( r );
 	}
 
-	//Get a relation from views or database
-	Relation getRelation( string r );
+	
 
 	//Is c alpha numeric or '_'?
 	bool isAlphaNum( int c );
@@ -91,8 +90,6 @@ class Parser{
 
 	//DONE
 	Relation rename( stringstream& command );
-
-
 
 	//GENERAL PARSER FUNCTIONS
 
@@ -178,6 +175,8 @@ public:
 
 	int parse( string command );
 
+	//Get a relation from views or database
+	Relation getRelation( string r );
 
 };
 

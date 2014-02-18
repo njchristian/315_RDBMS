@@ -358,7 +358,7 @@ int Parser::createTable( stringstream& command ) {
 	while ( command.peek( ) != ')' ) {
 
 		if( parseTypedAttribute( command, attributeList ) < 0 ){
-			return 0;
+			return INVALID;
 		}
 		
 		// consume the comma if it is there
