@@ -28,7 +28,7 @@ int Parser::writeFile( string relationName ) {
 
 		header = header + atts.at( i ).name + ' ';
 
-		header = header + ( atts.at( i ).t == INTEGER ? "INTEGER" : "VARCHAR" );
+		header = header + ( atts.at( i ).t == INTEGER ? "INTEGER" : "VARCHAR(20)" );
 
 		if ( i != atts.size( ) - 1 ) {
 			header = header + ',';
@@ -62,7 +62,7 @@ int Parser::writeFile( string relationName ) {
 
 		for ( int j = 0; j < rowSize; j++ ) {
 
-			bool flag = atts.at( j ).t == VARCHAR;
+			bool flag = (atts.at( j ).t == VARCHAR);
 
 			if ( flag ) {
 				entry = entry + '"';
@@ -73,13 +73,19 @@ int Parser::writeFile( string relationName ) {
 
 
 			if ( thisEntry->isInt( ) ) {
-				t = thisEntry->getEntryI( );
+				stringstream ss;
+				ss << thisEntry->getEntryI();
+				t = ss.str();
 			}
 			else {
 				t = thisEntry->getEntryVC( );
 			}
 
 			entry = entry + t;
+
+			if(flag){
+				entry = entry + '"';
+			}
 
 			if ( j != rowSize - 1 ) {
 				entry = entry + ',';
@@ -1447,7 +1453,7 @@ Relation Parser::parseExpr( stringstream& command ){
 
 int Parser::parse( string s ){
 
-	if ( s == "EXIT" ){
+	if ( s == "EXIT;" ){
 		return EXIT;
 	}
 

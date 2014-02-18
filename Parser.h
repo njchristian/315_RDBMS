@@ -24,6 +24,9 @@ class Parser{
 		views.push_back( r );
 	}
 
+	//Get a relation from views or database
+	Relation getRelation( string r );
+
 	//Is c alpha numeric or '_'?
 	bool isAlphaNum( int c );
 
@@ -141,7 +144,7 @@ class Parser{
 	//DONE
 	//This finds out what the next connector is. We give it a copy of the stringstream
 	//so we don't have to worry about returning it to the original state
-	int findConnector( stringstream& copy, Connector c, int paren );
+	int findConnector( stringstream& copy, Connector& c, int paren );
 
 	//DONE
 	//Read a single condition
@@ -171,8 +174,6 @@ public:
 
 	int parse( string command );
 
-	//Get a relation from views or database
-	Relation getRelation( string r );
 
 };
 
