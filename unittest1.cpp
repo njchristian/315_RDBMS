@@ -251,65 +251,31 @@ namespace UnitTest1
 
 		TEST_METHOD(difference)
 		{
-
-			testAtts.push_back(Attribute("Name", VARCHAR));
-			testAtts.push_back(Attribute("Owner", VARCHAR));
-			testAtts.push_back(Attribute("Age", INTEGER));
-
-	
-			keys.push_back(0);
-			keys.push_back(2);
-
-			entries.push_back(vector<Entry>());
-			entries.push_back(vector<Entry>());
-			entries.push_back(vector<Entry>());
-
-			entries.at(0).push_back(Entry("Abby"));
-			entries.at(0).push_back(Entry("Amy"));
-			entries.at(0).push_back(Entry(3));
-
-
-			entries.at(1).push_back(Entry("Zipper"));
-			entries.at(1).push_back(Entry("Melodie"));
-			entries.at(1).push_back(Entry(14));
-
-			entries.at(2).push_back(Entry("Bailey"));
-			entries.at(2).push_back(Entry("Davin"));
-			entries.at(2).push_back(Entry(6));
-	
-			d.addRelationToDatabase("Dogs", testAtts, keys);
-
-			d.addTupleToRelation(entries.at(0), "Dogs");
-			d.addTupleToRelation(entries.at(1), "Dogs");
-			d.addTupleToRelation(entries.at(2), "Dogs");
-
-			//relation More_Dogs
-			e2.push_back(vector<Entry>());
-			e2.push_back(vector<Entry>());
-			e2.push_back(vector<Entry>());
-
-			e2.at(0).push_back(Entry("Tyler"));
-			e2.at(0).push_back(Entry("Garren"));
-			e2.at(0).push_back(Entry(5));
-
-			e2.at(1).push_back(Entry("Abby"));
-			e2.at(1).push_back(Entry("Amy"));
-			e2.at(1).push_back(Entry(3));
-
-			e2.at(2).push_back(Entry("Dusty"));
-			e2.at(2).push_back(Entry("Rodger"));
-			e2.at(2).push_back(Entry(11));
-
-			d.addRelationToDatabase("More_Dogs", testAtts, keys);
-
-			d.addTupleToRelation(e2.at(0), "More_Dogs");
-			d.addTupleToRelation(e2.at(1), "More_Dogs");
-			d.addTupleToRelation(e2.at(2), "More_Dogs");
-
-			Relation relationA = d.differenceTwoRelation( "More_Dogs", "Dogs" );
 			Relation relationB = d.differenceTwoRelation( "Dogs", "More_Dogs" );
+			Relation test("test",testAtts,keys);
 
-			Assert::AreEqual( relationA.getNumTuples(), relationB.getNumTuples() );
+			d.addRelationToDatabase( test) ;
+
+			vector<vector<Entry>> testEntries;
+			testEntries.push_back(vector<Entry>());
+			testEntries.push_back(vector<Entry>());
+			testEntries.push_back(vector<Entry>());
+
+			testEntries.at(0).push_back(Entry("Zipper"));
+			testEntries.at(0).push_back(Entry("Melodie"));
+			testEntries.at(0).push_back(Entry(14));
+
+			testEntries.at(1).push_back(Entry("Bailey"));
+			testEntries.at(1).push_back(Entry("Davin"));
+			testEntries.at(1).push_back(Entry(6));
+
+			d.addTupleToRelation(testEntries.at(0), "test");
+			d.addTupleToRelation(testEntries.at(1), "test");
+
+			test = d.accessRelation("test");
+
+			Assert::AreEqual( relationB.getEntry(0,0)->getEntryVC(), test.getEntry(0,0)->getEntryVC());
+			Assert::AreEqual( relationB.getEntry(1,0)->getEntryVC(), test.getEntry(1,0)->getEntryVC());
 		}
 
 		TEST_METHOD(accessAttribute)
@@ -704,7 +670,6 @@ namespace UnitTest1
 			dml = "both_dogsB <- More_Dogs - Dogs";
 			p.parse( dml );
 			Relation relationA = p.getRelation("both_dogsA");
-			//Relation relationB = p.getRelation("both_dogsB");
 
 			Relation test("test",testAtts,keys);
 
@@ -748,6 +713,21 @@ namespace UnitTest1
 			Assert::AreEqual(attributes[0], relation.getAttributeNames()[0]);
 			Assert::AreEqual(attributes[1], relation.getAttributeNames()[1]); 	
 
+		}
+
+		TEST_METHOD(unionCommand)
+		{
+			Parser p (d );
+			string dml = "both_dogsA <- Dogs + More_Dogs;";
+			p.parse( dml );
+
+			dml = "both_dogsB <- More_Dogs + Dogs;";
+			p.parse( dml );
+
+			Relation relationA = p.getRelation("both_dogsA");
+			Relation relationB = p.getRelation("both_dogsB");
+
+			Assert::AreEqual( relationA.getNumTuples() , relationB.getNumTuples() );
 		}
 
 		TEST_METHOD(renameCommand)
