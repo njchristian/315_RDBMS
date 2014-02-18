@@ -67,7 +67,7 @@ namespace UnitTest1
 			d.addTupleToRelation(entries.at(1), "Dogs");
 			d.addTupleToRelation(entries.at(2), "Dogs");
 
-			//relation more dogs
+			//relation More_Dogs
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
@@ -84,13 +84,13 @@ namespace UnitTest1
 			e2.at(2).push_back(Entry("Rodger"));
 			e2.at(2).push_back(Entry(11));
 
-			d.addRelationToDatabase("More Dogs", testAtts, keys);
+			d.addRelationToDatabase("More_Dogs", testAtts, keys);
 
-			d.addTupleToRelation(e2.at(0), "More Dogs");
-			d.addTupleToRelation(e2.at(1), "More Dogs");
-			d.addTupleToRelation(e2.at(2), "More Dogs");
+			d.addTupleToRelation(e2.at(0), "More_Dogs");
+			d.addTupleToRelation(e2.at(1), "More_Dogs");
+			d.addTupleToRelation(e2.at(2), "More_Dogs");
 
-			 Relation rel = d.naturalJoin( "More Dogs", "Dogs" );
+			 Relation rel = d.naturalJoin( "More_Dogs", "Dogs" );
 		}
 		
 		TEST_METHOD(create)
@@ -131,17 +131,19 @@ namespace UnitTest1
 
 			//In the final project, this is stored in the database cell. This is for the relations the
 			//user create via assignment (the <- operator).
-			Relation* dogs = d.accessRelation("Dogs");
+			Relation dogs = d.accessRelation("Dogs");
 			//testing projection
 			//to really test projection we need to overload the == operator for relations
-			Assert::AreEqual( d.projection( dogs->getAttributeNames(), dogs->getName() ).getAttributeAt(0).name, dogs->getAttributeAt(0).name ); //testing projection
+			Assert::AreEqual( d.projection( dogs.getAttributeNames(), dogs.getName() ).getAttributeAt(0).name, dogs.getAttributeAt(0).name ); //testing projection
 		}
 
 		TEST_METHOD(dropTable)
 		{
 			d.removeRelationFromDatabase( "Dogs" );
 
-			Assert::IsNull( d.accessRelation( "Dogs") );
+			string emptyString = "";
+
+			Assert::AreEqual( d.accessRelation( "Dogs").getName(), emptyString );
 
 		}
 
@@ -180,7 +182,7 @@ namespace UnitTest1
 			entryPointers.push_back( &newTuple1[1] );
 			entryPointers.push_back( &newTuple1[2] );
 
-			Assert::IsTrue( d.accessRelation( "Dogs" )->hasTuple( entryPointers ) );
+			Assert::IsTrue( d.accessRelation( "Dogs" ).hasTuple( entryPointers ) );
 
 		}
 
@@ -231,7 +233,7 @@ namespace UnitTest1
 			entryPointers.push_back( &test[1] );
 			entryPointers.push_back( &test[2] );
 
-			Assert::IsFalse( d.accessRelation( "Dogs" )->hasTuple( entryPointers ) );
+			Assert::IsFalse( d.accessRelation( "Dogs" ).hasTuple( entryPointers ) );
 
 		}
 
@@ -281,7 +283,7 @@ namespace UnitTest1
 			d.addTupleToRelation(entries.at(1), "Dogs");
 			d.addTupleToRelation(entries.at(2), "Dogs");
 
-			//relation more dogs
+			//relation More_Dogs
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
@@ -298,14 +300,14 @@ namespace UnitTest1
 			e2.at(2).push_back(Entry("Rodger"));
 			e2.at(2).push_back(Entry(11));
 
-			d.addRelationToDatabase("More Dogs", testAtts, keys);
+			d.addRelationToDatabase("More_Dogs", testAtts, keys);
 
-			d.addTupleToRelation(e2.at(0), "More Dogs");
-			d.addTupleToRelation(e2.at(1), "More Dogs");
-			d.addTupleToRelation(e2.at(2), "More Dogs");
+			d.addTupleToRelation(e2.at(0), "More_Dogs");
+			d.addTupleToRelation(e2.at(1), "More_Dogs");
+			d.addTupleToRelation(e2.at(2), "More_Dogs");
 
-			Relation relationA = d.differenceTwoRelation( "More Dogs", "Dogs" );
-			Relation relationB = d.differenceTwoRelation( "Dogs", "More Dogs" );
+			Relation relationA = d.differenceTwoRelation( "More_Dogs", "Dogs" );
+			Relation relationB = d.differenceTwoRelation( "Dogs", "More_Dogs" );
 
 			Assert::AreEqual( relationA.getNumTuples(), relationB.getNumTuples() );
 		}
@@ -343,8 +345,8 @@ namespace UnitTest1
 			d.addTupleToRelation(entries.at(1), "Dogs");
 			d.addTupleToRelation(entries.at(2), "Dogs");
 
-			Relation* dogs = d.accessRelation("Dogs");
-			vector<Attribute> dogAttributes = dogs->getAttributes();
+			Relation dogs = d.accessRelation("Dogs");
+			vector<Attribute> dogAttributes = dogs.getAttributes();
 			string name = "Name";
 
 			Assert::AreEqual( (d.accessAttribute( dogAttributes[0].name, "Dogs" ))->name , name);
@@ -400,15 +402,15 @@ namespace UnitTest1
 			e2.at(2).push_back(Entry("Rodger"));
 			e2.at(2).push_back(Entry(11));
 
-			d.addRelationToDatabase("More Dogs", testAtts, keys);
+			d.addRelationToDatabase("More_Dogs", testAtts, keys);
 
-			d.addTupleToRelation(e2.at(0), "More Dogs");
-			d.addTupleToRelation(e2.at(1), "More Dogs");
-			d.addTupleToRelation(e2.at(2), "More Dogs");
+			d.addTupleToRelation(e2.at(0), "More_Dogs");
+			d.addTupleToRelation(e2.at(1), "More_Dogs");
+			d.addTupleToRelation(e2.at(2), "More_Dogs");
 
 			//test set union
-			Assert::AreEqual( ( d.unionTwoRelations( "More Dogs" , "Dogs" ) ).getNumTuples(),
-				( d.unionTwoRelations( "Dogs" , "More Dogs" ) ).getNumTuples() );
+			Assert::AreEqual( ( d.unionTwoRelations( "More_Dogs" , "Dogs" ) ).getNumTuples(),
+				( d.unionTwoRelations( "Dogs" , "More_Dogs" ) ).getNumTuples() );
 
 		}
 			//test set difference
@@ -446,7 +448,7 @@ namespace UnitTest1
 			d.addTupleToRelation(entries.at(1), "Dogs");
 			d.addTupleToRelation(entries.at(2), "Dogs");
 
-			//relation more dogs
+			//relation More_Dogs
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
@@ -463,16 +465,16 @@ namespace UnitTest1
 			e2.at(2).push_back(Entry("Rodger"));
 			e2.at(2).push_back(Entry(11));
 
-			d.addRelationToDatabase("More Dogs", testAtts, keys);
+			d.addRelationToDatabase("More_Dogs", testAtts, keys);
 
-			d.addTupleToRelation(e2.at(0), "More Dogs");
-			d.addTupleToRelation(e2.at(1), "More Dogs");
-			d.addTupleToRelation(e2.at(2), "More Dogs");
+			d.addTupleToRelation(e2.at(0), "More_Dogs");
+			d.addTupleToRelation(e2.at(1), "More_Dogs");
+			d.addTupleToRelation(e2.at(2), "More_Dogs");
 
 
 			//test cross product
-			Assert::AreEqual( ( d.crossProduct( "More Dogs" , "Dogs" ) ).getNumTuples(),
-				( d.crossProduct( "Dogs" , "More Dogs" ) ).getNumTuples() );
+			Assert::AreEqual( ( d.crossProduct( "More_Dogs" , "Dogs" ) ).getNumTuples(),
+				( d.crossProduct( "Dogs" , "More_Dogs" ) ).getNumTuples() );
 
 			//test natural join
 
@@ -512,16 +514,16 @@ namespace UnitTest1
 			d.addTupleToRelation(entries.at(1), "Dogs");
 			d.addTupleToRelation(entries.at(2), "Dogs");
 
-			Relation* dogs = d.accessRelation("Dogs");
+			Relation dogs = d.accessRelation("Dogs");
 			//testing renaming
 			vector<string> newAttributeName;
 			newAttributeName.push_back("Dog Name");
 			newAttributeName.push_back("Owner Name");
 			newAttributeName.push_back("Dog age");
 
-			Assert::AreEqual( d.renameAttributes( newAttributeName, dogs->getName() ).getAttributeNames()[0], newAttributeName[0]  );
-			Assert::AreEqual( d.renameAttributes( newAttributeName, dogs->getName() ).getAttributeNames()[1], newAttributeName[1]  );
-			Assert::AreEqual( d.renameAttributes( newAttributeName, dogs->getName() ).getAttributeNames()[2], newAttributeName[2]  );
+			Assert::AreEqual( d.renameAttributes( newAttributeName, dogs.getName() ).getAttributeNames()[0], newAttributeName[0]  );
+			Assert::AreEqual( d.renameAttributes( newAttributeName, dogs.getName() ).getAttributeNames()[1], newAttributeName[1]  );
+			Assert::AreEqual( d.renameAttributes( newAttributeName, dogs.getName() ).getAttributeNames()[2], newAttributeName[2]  );
 
 			Assert::AreEqual(1,1); //testing test
 		}
@@ -586,7 +588,7 @@ namespace UnitTest1
 			entryPointers.push_back( &test[1] );
 			entryPointers.push_back( &test[2] );
 
-			Assert::IsTrue( d.accessRelation( "Dogs" )->hasTuple( entryPointers ) );
+			Assert::IsTrue( d.accessRelation( "Dogs" ).hasTuple( entryPointers ) );
 		}
 
 		TEST_METHOD(naturalJoin)
@@ -622,7 +624,7 @@ namespace UnitTest1
 			d.addTupleToRelation(entries.at(1), "Dogs");
 			d.addTupleToRelation(entries.at(2), "Dogs");
 
-			//relation more dogs
+			//relation More_Dogs
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
@@ -639,15 +641,15 @@ namespace UnitTest1
 			e2.at(2).push_back(Entry("Rodger"));
 			e2.at(2).push_back(Entry(11));
 
-			d.addRelationToDatabase("More Dogs", testAtts, keys);
+			d.addRelationToDatabase("More_Dogs", testAtts, keys);
 
-			d.addTupleToRelation(e2.at(0), "More Dogs");
-			d.addTupleToRelation(e2.at(1), "More Dogs");
-			d.addTupleToRelation(e2.at(2), "More Dogs");
+			d.addTupleToRelation(e2.at(0), "More_Dogs");
+			d.addTupleToRelation(e2.at(1), "More_Dogs");
+			d.addTupleToRelation(e2.at(2), "More_Dogs");
 
-			 Relation rel = d.naturalJoin( "More Dogs", "Dogs" );
+			 Relation rel = d.naturalJoin( "More_Dogs", "Dogs" );
 
-			 Assert::AreEqual(rel.getNumTuples(), max( d.accessRelation("More Dogs")->getNumTuples(), d.accessRelation("Dogs")->getNumTuples() ) );
+			 Assert::AreEqual(rel.getNumTuples(), max( d.accessRelation("More_Dogs").getNumTuples(), d.accessRelation("Dogs").getNumTuples() ) );
 			 
 		}
 
@@ -655,51 +657,147 @@ namespace UnitTest1
 
 		TEST_METHOD(naturalJoinCommand)
 		{
-			//string dml = "";
+			Parser p( d );
+
+			string dml = "CREATE TABLE DogsAgain (Name VARCHAR(20), Owner VARCHAR(20), Age INTEGER) PRIMARY KEY (Name, Age);";
+			p.parse(dml);
+
+			dml = "INSERT INTO DogsAgain VALUES FROM (\"Abby\", \"Amy\", 3);";
+			p.parse(dml);
+			dml = "INSERT INTO DogsAgain VALUES FROM (\"Dusty\", \"Rodger\", 11);";
+			p.parse(dml);
+			dml = "INSERT INTO DogsAgain VALUES FROM (\"Tyler\", \"Gerren\", 5);";
+			p.parse(dml);
+			dml = "INSERT INTO DogsAgain VALUES FROM (\"Tweety\", \"Some Girl\", 1);";
+			p.parse(dml);
+			dml = "INSERT INTO DogsAgain VALUES FROM (\"Joe\", \"ADude\", 2);";
+			p.parse(dml);
+			dml = "Many <- DogsAgain JOIN Dogs;";
+
+			p.parse( dml );
+
+			Relation relation = p.getRelation( "Many" );
+
+			Assert::AreEqual( relation.getNumTuples(), max( p.getRelation("DogsAgain").getNumTuples(), d.accessRelation("Dogs").getNumTuples() )  );
 		}
 
 		TEST_METHOD(selectionCommand)
 		{
-			Parser p(d);
-			string dml = "puppies <- select (Age == \"1\") Dogs;\n";
+			Parser p (d );
+			string dml = "puppies <- select (Age == 1) Dogs;";
 
-			p.parse(dml);
+			p.parse( dml );
 
-			Relation* relation = d.accessRelation( "puppies" );
+			Relation relation = p.getRelation("puppies");
 
-			Assert::IsNotNull( relation );
-
+			Assert::AreEqual( relation.getNumTuples() , 1 );
 		
 		}
 
 		TEST_METHOD(differenceCommand)
 		{
+			Parser p (d );
+			string dml = "both_dogsA <- Dogs - More_Dogs";
 
+			p.parse( dml );
+
+			dml = "both_dogsB <- More_Dogs - Dogs";
+			p.parse( dml );
+			Relation relationA = p.getRelation("both_dogsA");
+			Relation relationB = p.getRelation("both_dogsB");
+
+
+			Assert::AreEqual( relationA.getNumTuples(), relationB.getNumTuples() );
 		}
 
 		TEST_METHOD(projectionCommand)
 		{
+			Parser p (d );
+			string dml = "a <- project (Name, Age) Dogs;";
+
+			p.parse( dml );
+
+			Relation relation = p.getRelation("a");
+
+			vector<string> attributes;
+			attributes.push_back("Name");
+			attributes.push_back("Age");
+
+			Assert::AreEqual(attributes[0], relation.getAttributeNames()[0]);
+			Assert::AreEqual(attributes[1], relation.getAttributeNames()[1]); 	
 
 		}
 
 		TEST_METHOD(renameCommand)
 		{
+			Parser p (d );
+			string dml = "a <- rename (AName, AAge) (project (Name, Age) Dogs);";
+
+			p.parse( dml );
+
+			Relation relation = p.getRelation("a");
+
+			vector<string> attributes;
+			attributes.push_back("AName");
+			attributes.push_back("AAge");
+
+			Assert::AreEqual(attributes[0], relation.getAttributeNames()[0]);
+			Assert::AreEqual(attributes[1], relation.getAttributeNames()[1]); 
 
 		}
 
 		TEST_METHOD(insertIntoCommand)
 		{
+			Parser p( d );
+			string dml = "INSERT INTO Dogs VALUES FROM (\"Spot\", \"Timmy\", 4);";
 
+			p.parse( dml );
+
+			Relation relation = d.accessRelation( "Dogs" );
+
+			vector<Entry> newTuple1;
+
+			newTuple1.push_back(Entry("Spot"));
+			newTuple1.push_back(Entry("Timmy"));
+			newTuple1.push_back(Entry(4));
+
+			vector<Entry*> entryPointers;
+
+			entryPointers.push_back( &newTuple1[0] );
+			entryPointers.push_back( &newTuple1[1] );
+			entryPointers.push_back( &newTuple1[2] );
+
+			Assert::IsTrue( relation.hasTuple( entryPointers ) );
 		}
 
-		TEST_METHOD(crossPorductCommand)
+		TEST_METHOD(crossProductCommand)
 		{
+			Parser p (d );
+			string dml = "both_dogsA <- Dogs * More_Dogs";
 
+			p.parse( dml );
+
+			dml = "both_dogsB <- More_Dogs * Dogs";
+			p.parse( dml );
+			Relation relationA = p.getRelation("both_dogsA");
+			Relation relationB = p.getRelation("both_dogsB");
+
+
+			Assert::AreEqual( relationA.getNumTuples(), relationB.getNumTuples() );
 		}
 
 		TEST_METHOD(createTableCommand)
 		{
+			Parser p(d);
+			string dml = "CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);";
 
+			p.parse(dml);
+
+			Relation relation = d.accessRelation( "animals" );
+
+			string name = "animals";
+
+			Assert::AreEqual( d.accessRelation( "animals" ).getName(), name );
 		}
 
 		TEST_METHOD(writeFileCommand)
