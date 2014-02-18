@@ -610,6 +610,7 @@ int Parser::insertInto( stringstream& command ) {
 
 		//Can we not just call union? Does that command do something different? - Cameron
 		// We could but we already had this in database so I just used it. - Taylor
+
 		database.insertIntoFromRelation( database.accessRelationPointer( relationName ), whatToReadFrom );
 	}
 
@@ -701,7 +702,8 @@ int Parser::parseCommand( stringstream& command ){
 			return INVALID;
 		}
 
-		cout << getRelation( relationName );
+		Relation r = getRelation( relationName );
+		cout << r;
 
 		return SUCCESS;
 

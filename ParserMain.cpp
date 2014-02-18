@@ -50,5 +50,14 @@ int main(){
 	dml = "SHOW cats_or_dogs;";
 	execute(dml);
 
+	dml = "CREATE TABLE species (kind VARCHAR(10)) PRIMARY KEY (kind);";
+	execute(dml);
+
+	dml = "INSERT INTO species VALUES FROM RELATION project (kind) animals;";
+	execute(dml);
+
+	dml = "SHOW species;";
+	execute(dml);
+
 	return 1;
 }

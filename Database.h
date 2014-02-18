@@ -43,6 +43,7 @@ public:
 
 	// do these need to return Relation* or void???
 	Relation* insertIntoFromRelation( Relation* relationA, Relation* relationB );
+	Relation* insertIntoFromRelation( Relation* relationA, Relation relationB ){ return insertIntoFromRelation( relationA, &relationB); }
 	Relation* insertIntoFromRelation( string relationA, Relation* relationB ) { return insertIntoFromRelation( findRelation( relationA ), relationB ); }
 	Relation* insertIntoFromRelation( Relation relationA, Relation relationB ) { return insertIntoFromRelation( &relationA, &relationB ); }
 
