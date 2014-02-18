@@ -1,0 +1,3 @@
+CREATE TABLE animals(name VARCHAR(20),kind VARCHAR(20),years INTEGER) PRIMARY KEY (name,kind);
+INSERT INTO animals VALUES FROM ("Joe","cat",20);
+INSERT INTO animals VALUES FROM ("Spot","dog",10);
