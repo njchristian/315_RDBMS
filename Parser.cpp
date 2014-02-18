@@ -450,12 +450,16 @@ int Parser::update( stringstream& command ) {
 		
 		attributeNames.push_back( attrName );
 		
+		readWhite(command);
+
 		// Check for equal sign
 		if ( command.peek( ) != '=' ) {
 			return INVALID;
 		}
 		// Consume equal sign
 		command.get( );
+
+		readWhite(command);
 
 		// Parse the literal
 		Entry newVal;

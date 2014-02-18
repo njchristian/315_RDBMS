@@ -112,12 +112,16 @@ int main(){
 
 	dml = "dogs <- select (kind == \"dog\") animals;";
 	execute(dml);
-
-
 	
 	dml = "SHOW dogs;";
 	execute(dml);
 
+	dml = "UPDATE animals SET years = 20 WHERE (kind == \"cat\");";
+	execute(dml);
+
+	dml = "SHOW animals;";
+	execute(dml);
+	
 	dml = "old_dogs <- select (years > 8) dogs;";
 	execute(dml);
 
