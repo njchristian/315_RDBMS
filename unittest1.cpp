@@ -642,34 +642,6 @@ namespace UnitTest1
 			 
 		}
 
-		
-
-		TEST_METHOD(naturalJoinCommand)
-		{
-			Parser p( d );
-
-			string dml = "CREATE TABLE DogsAgain (Name VARCHAR(20), Owner VARCHAR(20), Age INTEGER) PRIMARY KEY (Name, Age);";
-			p.parse(dml);
-
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Abby\", \"Amy\", 3);";
-			p.parse(dml);
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Dusty\", \"Rodger\", 11);";
-			p.parse(dml);
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Tyler\", \"Gerren\", 5);";
-			p.parse(dml);
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Tweety\", \"Some Girl\", 1);";
-			p.parse(dml);
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Joe\", \"ADude\", 2);";
-			p.parse(dml);
-			dml = "Many <- DogsAgain JOIN Dogs;";
-
-			p.parse( dml );
-
-			Relation relation = p.getRelation( "Many" );
-
-			Assert::AreEqual( relation.getNumTuples(), max( p.getRelation("DogsAgain").getNumTuples(), d.accessRelation("Dogs").getNumTuples() )  );
-		}
-
 		TEST_METHOD(selectionCommand)
 		{
 			Parser p (d );
@@ -866,7 +838,7 @@ namespace UnitTest1
 		TEST_METHOD(updateCommand)
 		{
 			Parser p(d);
-			string dml = "UPDATE Dogs SET Age = 40 WHERE (Name == \"Melodie\");";
+			string dml = "UPDATE Dogs SET Age = 40 WHERE (Owner == \"Melodie\");";
 
 			p.parse(dml);
 
@@ -896,30 +868,6 @@ namespace UnitTest1
 			Assert::AreEqual( p.parse( dml ), -2 );
 		}
 
-		TEST_METHOD( naturalJoinCommandBad )
-		{
-			Parser p( d );
-
-			string dml = "CREATE TABLE DogsAgain (Name VARCHAR(20), Owner VARCHAR(20), Age INTEGER) PRIMARY KEY (Name, Age);";
-			p.parse( dml );
-
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Abby\", \"Amy\", 3);";
-			p.parse( dml );
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Dusty\", \"Rodger\", 11);";
-			p.parse( dml );
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Tyler\", \"Gerren\", 5);";
-			p.parse( dml );
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Tweety\", \"Some Girl\", 1);";
-			p.parse( dml );
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Joe\", \"ADude\", 2);";
-			p.parse( dml );
-			dml = "Many <- DogsAgain JONI Dogs;"; // spelled join wrong to test invalid check
-
-			
-
-			Assert::AreEqual( p.parse( dml ), -1 );
-		}
-
 		TEST_METHOD( selectionCommandBad )
 		{
 			Parser p( d );
@@ -940,15 +888,84 @@ namespace UnitTest1
 		TEST_METHOD( projectionCommandBad )
 		{
 			Parser p( d );
-			string dml = "a <- project (Name, Ega) Dogs;";
+		
+			string dml = "a <- project Name, Age Dogs;";
 
-			Assert::AreEqual( p.parse( dml ), -1 ); // is returning 1 instead of -1
-
-			//dml = "a <- project Name, Age Dogs;";
-
-			//Assert::AreEqual( p.parse( dml ), -1 );
+			Assert::AreEqual( p.parse( dml ), -1 );
 
 		}
+
+		TEST_METHOD( renameCommandBad )
+		{
+			Parser p( d );
+			string dml = "a <- rename AName, AAge (project (Name, Age) Dogs);";
+
+			Assert::AreEqual( p.parse( dml ), -1 );
+
+			dml = "a <- rena (AName, AAge) (project (Name, Age) Dogs);";
+
+			Assert::AreEqual( p.parse( dml ), -1 );
+
+		}
+
+		TEST_METHOD( insertIntoCommandBad )
+		{
+			Parser p( d );
+			string dml = "INSERT INTO Dogs VALUES FORM (\"Spot\", \"Timmy\", 4);";
+
+			Assert::AreEqual( p.parse( dml ), -1 );			
+		}
+
+		TEST_METHOD( crossProductCommandBad )
+		{
+			Parser p( d );
+			string dml = "both_dogsA <- Dogs ** More_Dogs";
+
+			Assert::AreEqual( p.parse( dml ), -1 );
+		}
+
+		TEST_METHOD( createTableCommandBad )
+		{
+			Parser p( d );
+			string dml = "CREATE TABLE animals name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);";
+
+			Assert::AreEqual( p.parse( dml ), -1 );
+
+			dml = "CREATE TABLE animals (name STRING(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);";
+
+			Assert::AreEqual( p.parse( dml ), -1 );
+		}
+
+		TEST_METHOD( deleteCommand )
+		{
+			Parser p( d );
+			string dml = "DELETE FROM Dogs WHERE (Age == 14);";
+
+			p.parse( dml );
+
+			Relation relation = d.accessRelation( "Dogs" );
+
+			Assert::AreEqual( relation.getNumTuples( ), 2 );
+
+		}
+		TEST_METHOD( deleteCommandBad )
+		{
+			Parser p( d );
+			string dml = "DELETE FROM Dogs WHREE (Age == 14);";
+
+			Assert::AreEqual( p.parse( dml ), -1 );
+
+			dml = "DELETE FROM Dogs WHERE fhfhfhfh;";
+
+			Assert::AreEqual( p.parse( dml ), -1 );
+
+			dml = "DELETE FORM Dogs WHERE (Age == 14);";
+
+			Assert::AreEqual( p.parse( dml ), -1 );
+
+		}
+
+
 
 
 	};
