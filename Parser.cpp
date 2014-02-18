@@ -1,10 +1,6 @@
 #include "Parser.h"
 
 
-#define SUCCESS 1
-#define INVALID -1
-#define EXIT -2
-
 
 //luin.uial@gmail.com
 

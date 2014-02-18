@@ -12,6 +12,10 @@
 #include <sstream>
 #include <vector>
 
+#define SUCCESS 1
+#define INVALID -1
+#define EXIT -2
+
 
 class Parser{
 
