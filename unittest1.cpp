@@ -78,7 +78,7 @@ namespace UnitTest1
 
 			e2.at(1).push_back(Entry("Abby"));
 			e2.at(1).push_back(Entry("Amy"));
-			e2.at(1).push_back(Entry(3));
+			e2.at(1).push_back(Entry(1));
 
 			e2.at(2).push_back(Entry("Dusty"));
 			e2.at(2).push_back(Entry("Rodger"));
@@ -704,10 +704,32 @@ namespace UnitTest1
 			dml = "both_dogsB <- More_Dogs - Dogs";
 			p.parse( dml );
 			Relation relationA = p.getRelation("both_dogsA");
-			Relation relationB = p.getRelation("both_dogsB");
+			//Relation relationB = p.getRelation("both_dogsB");
 
+			Relation test("test",testAtts,keys);
 
-			Assert::AreEqual( relationA.getNumTuples(), relationB.getNumTuples() );
+			d.addRelationToDatabase( test) ;
+
+			vector<vector<Entry>> testEntries;
+			testEntries.push_back(vector<Entry>());
+			testEntries.push_back(vector<Entry>());
+			testEntries.push_back(vector<Entry>());
+
+			testEntries.at(0).push_back(Entry("Zipper"));
+			testEntries.at(0).push_back(Entry("Melodie"));
+			testEntries.at(0).push_back(Entry(14));
+
+			testEntries.at(1).push_back(Entry("Bailey"));
+			testEntries.at(1).push_back(Entry("Davin"));
+			testEntries.at(1).push_back(Entry(6));
+
+			d.addTupleToRelation(testEntries.at(0), "test");
+			d.addTupleToRelation(testEntries.at(1), "test");
+
+			test = p.getRelation("test");
+
+			Assert::AreEqual( relationA.getEntry(0,0)->getEntryVC(), test.getEntry(0,0)->getEntryVC());
+			Assert::AreEqual( relationA.getEntry(1,0)->getEntryVC(), test.getEntry(1,0)->getEntryVC());
 		}
 
 		TEST_METHOD(projectionCommand)
@@ -822,6 +844,26 @@ namespace UnitTest1
 
 		TEST_METHOD(updateCommand)
 		{
+			Parser p(d);
+			string dml = "UPDATE Dogs SET Age = 40 WHERE (Name == \"Melodie\");";
+
+			p.parse(dml);
+
+			Relation relation = p.getRelation("Dogs");
+
+			vector<Entry> test;
+
+			test.push_back(Entry("Zipper"));
+			test.push_back(Entry("Melodie"));
+			test.push_back(Entry(40));
+
+			vector<Entry*> entryPointers;
+
+			entryPointers.push_back( &test[0] );
+			entryPointers.push_back( &test[1] );
+			entryPointers.push_back( &test[2] );
+
+			Assert::IsTrue( relation.hasTuple( entryPointers ) );
 
 		}
 
