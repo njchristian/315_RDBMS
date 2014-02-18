@@ -509,6 +509,12 @@ int Parser::deleteFrom( stringstream& command ) {
 		return INVALID;
 	}
 
+	Relation r = getRelation(relationName);
+
+	if(r.isEmpty()){
+		return INVALID;
+	}
+
 	// Call the delete function on the relation
 	database.deleteFromRelation( relationName, deleteConditions );
 
