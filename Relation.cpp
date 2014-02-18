@@ -203,11 +203,13 @@ bool operator==(Relation& relationA, Relation& relationB){
 // Output operator
 ostream& operator<<(ostream& os, Relation& a){
 
-	os<<"Name: "<<a.getName()<<"\n\n";
+	int WIDTH = 10;
+
+	os<<"\n\nRelation Name: "<<a.getName()<<"\n\n";
 
 	for(int i = 0; i < a.attributeSize(); ++i){
 
-		os<<a.getAttributeNameAt(i)<<": ";
+		os<<setw(WIDTH)<<a.getAttributeNameAt(i)<<": ";
 
 	}
 
@@ -227,7 +229,7 @@ ostream& operator<<(ostream& os, Relation& a){
 			}
 
 			ss>>tempS;
-			os<<tempS<<' ';
+			os<<setw(WIDTH)<<tempS<<' ';
 
 			ss.clear();
 		}
