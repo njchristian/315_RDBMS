@@ -4,6 +4,7 @@
 #include "Entry.h"
 #include "Attribute.h"
 #include "Condition.h"
+#include <iomanip>
 #include <sstream>
 #include <vector>
 
