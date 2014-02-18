@@ -709,6 +709,11 @@ int Parser::parseCommand( stringstream& command ){
 		}
 
 		Relation r = getRelation( relationName );
+
+		if( r.isEmpty() ){
+			return INVALID;
+		}
+
 		cout << r;
 
 		return SUCCESS;
@@ -805,6 +810,12 @@ int Parser::parseQuery( stringstream& command ){
 	if ( targetRelation.isEmpty( ) ){
 		return INVALID;
 	}
+
+	readWhite(command);
+
+	//if( readSemi( command ) < 0 ){
+	//	return INVALID;
+	//}
 
 	targetRelation.setName( relationName );
 
@@ -1361,6 +1372,10 @@ Relation Parser::parseExpr( stringstream& command ){
 
 			Relation targetRelationA = getRelation( relationA );
 
+			if( targetRelationA.isEmpty() ){
+				return Relation();
+			}
+
 			targetRelation = database.unionTwoRelations( targetRelationA, &relationB );
 
 			readWhite( command );
@@ -1382,7 +1397,13 @@ Relation Parser::parseExpr( stringstream& command ){
 				return Relation();
 			}
 
-			targetRelation = database.differenceTwoRelation( getRelation( relationA ), relationB );
+			Relation targetRelationA = getRelation( relationA );
+
+			if( targetRelationA.isEmpty() ){
+				return Relation();
+			}
+
+			targetRelation = database.differenceTwoRelation( targetRelationA , relationB );
 
 			readWhite( command );
 
@@ -1403,7 +1424,13 @@ Relation Parser::parseExpr( stringstream& command ){
 				return Relation();
 			}
 
-			targetRelation = database.crossProduct( getRelation( relationA ), relationB );
+			Relation targetRelationA = getRelation( relationA );
+
+			if( targetRelationA.isEmpty() ){
+				return Relation();
+			}
+
+			targetRelation = database.crossProduct( targetRelationA , relationB );
 
 			readWhite( command );
 
@@ -1453,7 +1480,9 @@ Relation Parser::parseExpr( stringstream& command ){
 
 int Parser::parse( string s ){
 
-	if ( s == "EXIT;" ){
+	
+
+	if ( s == "EXIT;" || s == "EXIT; " ){
 		return EXIT;
 	}
 

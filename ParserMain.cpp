@@ -3,9 +3,45 @@
 
 DBCell db;
 
+void readInput(){
+
+	string line = "";
+
+	do{
+
+		cout<<"Enter a dml command:\n";
+		cout<<">:";
+	line = "";
+
+	string word;
+
+	cin >> word;
+
+	while(word.at(word.size() - 1) != ';'){
+
+		line = line + word + ' ';
+
+		cin>>word;
+	}
+
+	line = line + word;
+
+	if( db.execute(line) < 0 ){
+		cout << "ERROR in:\n" << line <<'\n';
+	}
+
+	}while(line != "EXIT;" && line != "EXIT; " && line != "EXIT;\n");
+
+}
+
 void execute( string s ){
-	if ( db.execute(s) < 0 ){
+	int t = db.execute(s);
+	if ( t < 0 ){
 		
+		if( t == -2 ){
+			return;
+		}
+
 		cout<<"Invalid Command\n" << s <<'\n';
 	
 	}
@@ -13,8 +49,15 @@ void execute( string s ){
 
 int main(){
 
-	
+	/*
+	string dml = "OPEN animals;";
+	execute(dml);
 
+	dml = "SHOW animals;";
+	execute(dml);
+	*/
+
+	
 	string dml = "CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind)";
 	execute(dml);
 
@@ -27,6 +70,29 @@ int main(){
 	dml = "INSERT INTO animals VALUES FROM (\"Tweety\", \"bird\", 1);";
 	execute(dml);
 	dml = "INSERT INTO animals VALUES FROM (\"Joe\", \"bird\", 2);";
+	execute(dml);
+
+	dml = "CREATE TABLE age_rhyme (years INTEGER, rhyme VARCHAR(20)) PRIMARY KEY (years, rhyme)";
+	execute(dml);
+
+	dml = "INSERT INTO age_rhyme VALUES FROM (4, \"Furry\");";
+	execute(dml);
+	dml = "INSERT INTO age_rhyme VALUES FROM (10, \"Terrible\");";
+	execute(dml);
+	dml = "INSERT INTO age_rhyme VALUES FROM (3, \"Threatening\");";
+	execute(dml);
+	dml = "INSERT INTO age_rhyme VALUES FROM (1, \"Only\");";
+	execute(dml);
+	dml = "INSERT INTO age_rhyme VALUES FROM (2, \"Timely\");";
+	execute(dml);
+
+	dml = "SHOW age_rhyme;";
+	execute(dml);
+
+	dml = "b <- animals JOIN age_rhyme;";
+	execute(dml);
+
+	dml = "SHOW b;";
 	execute(dml);
 
 	dml = "CREATE TABLE store (name VARCHAR(20), price INTEGER) PRIMARY KEY (name, price)";
@@ -64,6 +130,12 @@ int main(){
 	dml = "SHOW cats_or_dogs;";
 	execute(dml);
 
+	dml = "cats <- cats_or_dogs - dogs;";
+	execute(dml);
+
+	dml = "SHOW cats;";
+	execute(dml);
+
 	dml = "CREATE TABLE species (kind VARCHAR(10)) PRIMARY KEY (kind);";
 	execute(dml);
 
@@ -91,7 +163,7 @@ int main(){
 	dml = "SHOW answer;";
 	execute(dml);
 
-	dml = "	WRITE animals;";
+	dml = "WRITE animals;";
 	execute(dml);
 
 	dml = "CLOSE animals;";
@@ -99,6 +171,8 @@ int main(){
 
 	dml = "EXIT;";
 	execute(dml);
+	
+	readInput();
 
 	return 1;
 }
