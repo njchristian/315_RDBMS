@@ -10,6 +10,10 @@ public:
 		// create relations
 	}
 
+	void run( ) {
+		// infinite loop until exit
+	}
+
 	void exit( ) {
 		// write file
 		// close file
@@ -19,8 +23,11 @@ public:
 	void showPlayers( );
 
 	void showGames( );
+
 	void showTeams( );
+
 	void showReferees( );
+
 	void showSports( );
 
 	void addPlayer( );
@@ -58,5 +65,7 @@ public:
 	void changeSportSeason( );
 
 	void displaySportsGames( );
+
+	void listPlayersOnTeam( );
 
 };
