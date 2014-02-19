@@ -16,36 +16,47 @@ public:
 		// exit
 	}
 
-	void showRelation( string relationName );
+	void showPlayers( );
 
-	addPlayer( );
+	void showGames( );
+	void showTeams( );
+	void showReferees( );
+	void showSports( );
 
-	addSport( );
+	void addPlayer( );
 
-	addTeam( );
+	void addSport( );
 
-	addGame( );
+	void addTeam( );
 
-	addCaptain( );
+	void addGame( );
 
-	removePlayer( );
+	void addReferee( );
 
-	removeSport( );
+	void removePlayer( );
 
-	removeTeam( );
+	void removeSport( );
 
-	removeGame( );
+	void removeTeam( );
 
-	removeCaptain( );
+	void removeGame( );
 
-	displaySportsPlayed( string playerName );
+	void removeReferee( );
 
-	listSports( );
+	void displaySportsPlayed( );
 
-	gamesWhenTeamCouldPlay( string teamName );
+	void gamesWhenTeamCouldPlay( );
 
-	getCaptains( );
+	void getReferees( );
 
+	void getNonReferees( );
 
+	void changeGameLocation( );
+
+	void changeGameTime( );
+
+	void changeSportSeason( );
+
+	void displaySportsGames( );
 
 };
