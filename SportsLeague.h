@@ -2,61 +2,24 @@
 
 class SportsLeague {
 
+	// Data members
 	DBCell database;
 
 public:
-	SportsLeague( ) {
-		// open file
-		// create relations
-	}
 
-	void run( ) {
-		// infinite loop until exit
-	}
+	// Constructor
+	SportsLeague( );
 
-	void exit( ) {
-		// write file
-		// close file
-		// exit
-	}
-
-	void showPlayers( );
-
-	void showGames( );
-
-	void showTeams( );
-
-	void showReferees( );
-
-	void showSports( );
+	// Member functions
+	void addGame( );
 
 	void addPlayer( );
+
+	void addReferee( );
 
 	void addSport( );
 
 	void addTeam( );
-
-	void addGame( );
-
-	void addReferee( );
-
-	void removePlayer( );
-
-	void removeSport( );
-
-	void removeTeam( );
-
-	void removeGame( );
-
-	void removeReferee( );
-
-	void displaySportsPlayed( );
-
-	void gamesWhenTeamCouldPlay( );
-
-	void getReferees( );
-
-	void getNonReferees( );
 
 	void changeGameLocation( );
 
@@ -66,6 +29,42 @@ public:
 
 	void displaySportsGames( );
 
+	void displaySportsPlayed( );
+
+	void exit( );
+
+	void getNonReferees( );
+
+	void getReferees( );
+
+	void gamesWhenTeamCouldPlay( );
+
 	void listPlayersOnTeam( );
+
+	void printMenu( );
+
+	void removeGame( );
+
+	void removePlayer( );
+
+	void removeReferee( );
+
+	void removeSport( );
+
+	void removeTeam( );	
+
+	bool retry( );
+
+	void run( );	
+
+	void showGames( );
+
+	void showPlayers( );
+
+	void showReferees( );
+
+	void showSports( );
+
+	void showTeams( );
 
 };
