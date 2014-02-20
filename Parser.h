@@ -130,6 +130,8 @@ class Parser{
 	//reads and returns an alphanumeric word from the stream. (a-z, A-Z, 0-9, _)
 	//This function first reads through any whitespace and then stores the word
 	string readAlphaNumWord( stringstream& command );
+	
+	int readAlphaNumWordStartsAlpha( stringstream& command, string result );
 
 	//DONE - needs testing
 	// reads and returns an entry for the insert into function, opening parenthesis

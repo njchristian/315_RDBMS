@@ -2,7 +2,7 @@
 
 
 
-//luin.uial@gmail.com
+//TAKE IN MULTIPLE WORD ATTRIBUTE NAMES
 
 int Parser::writeFile( string relationName ) {
 
@@ -216,6 +216,30 @@ string Parser::readAlphaNumWord( stringstream& command ) {
 	return result;
 }
 
+//DONE - NOT TESTED
+int Parser::readAlphaNumWordStartsAlpha( stringstream& command, string result ) {
+
+	readWhite( command );
+
+	result = "";
+	char next;
+
+	if( !isAlpha( command.peek() ) ){
+		return INVALID;
+	}
+	
+	while ( isAlphaNum( command.peek( ) ) ) {
+
+		command.get( next );
+		result.push_back( next );
+
+	}
+
+	readWhite( command );
+
+	return SUCCESS;
+}
+
 
 //DONE
 void Parser::readWhite( stringstream& command ) {
@@ -289,7 +313,9 @@ int Parser::parseAttributeList( stringstream& command, vector<string>& attribute
 
 		readWhite( command );
 
-		name = readAlphaNumWord( command );
+		if( readAlphaNumWordStartsAlpha( command, name ) < 0 ){
+			return INVALID;
+		}
 		attributeNames.push_back( name );
 
 		readWhite( command );
@@ -310,7 +336,11 @@ int Parser::parseAttributeList( stringstream& command, vector<string>& attribute
 // Parse a typed attribute, does not consume the commas
 int Parser::parseTypedAttribute( stringstream& command, vector<Attribute>& attributeList ) {
 	// Get attribute name
-	string attributeName = readAlphaNumWord( command );
+	string attributeName;
+	
+	if( readAlphaNumWordStartsAlpha( command, attributeName ) < 0 ){
+		return INVALID;
+	}
 
 	readWhite( command );
 
@@ -362,7 +392,10 @@ int Parser::parseTypedAttribute( stringstream& command, vector<Attribute>& attri
 // to add the new relation to the database.
 int Parser::createTable( stringstream& command ) {
 	// Get the relation's name
-	string relationName = readAlphaNumWord( command );
+	string relationName; 
+	if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
+		return INVALID;
+	}
 
 	// Check and consume the opening parenthesis
 	char openingParenthesis = command.get( );
@@ -441,7 +474,10 @@ int Parser::createTable( stringstream& command ) {
 // Parses an update command.
 int Parser::update( stringstream& command ) {
 	// Get the relation's name
-	string relationName = readAlphaNumWord( command );
+	string relationName;
+	if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
+		return INVALID;
+	}
 
 	string setKeyWord = readAlphaNumWord( command );
 
@@ -456,7 +492,10 @@ int Parser::update( stringstream& command ) {
 	// maybe need a better condition for this loop
 	while ( true ) {
 		// Parse the attribute name
-		string attrName = readAlphaNumWord( command );
+		string attrName;
+		if( readAlphaNumWordStartsAlpha( command, attrName ) < 0 ){
+			return INVALID;
+		}
 		
 		// Break if the WHERE key word is reached
 		if ( attrName == "WHERE" ) {
@@ -509,7 +548,11 @@ int Parser::update( stringstream& command ) {
 int Parser::deleteFrom( stringstream& command ) {
 
 	// Get the relation's name
-	string relationName = readAlphaNumWord( command );
+	string relationName;
+	
+	if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
+		return INVALID;
+	}
 
 	// Make sure the WHERE keyword is there
 	string whereKeyWord = readAlphaNumWord( command );
@@ -577,7 +620,10 @@ int Parser::readLiteral( stringstream& command, Entry& e ) {
 int Parser::insertInto( stringstream& command ) {
 
 	// Get the target Relation name
-	string relationName = readAlphaNumWord( command );
+	string relationName; 
+	if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
+		return INVALID;
+	}
 
 	// Read and verify the VALUES key word.
 	string valuesKeyWord = readAlphaNumWord( command );
@@ -699,7 +745,10 @@ int Parser::parseCommand( stringstream& command ){
 
 	if ( word == "OPEN" ) {
 
-		string relationName = readAlphaNumWord( command );
+		string relationName; 
+		if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
+			return INVALID;
+		}
 
 		//Catch problem before execution
 		if ( readSemi( command ) < 0 ) {
@@ -713,7 +762,10 @@ int Parser::parseCommand( stringstream& command ){
 	}
 	else if ( word == "CLOSE" ) {
 
-		string relationName = readAlphaNumWord( command );
+		string relationName;
+		if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
+			return INVALID;
+		}
 
 		if ( closeFile( relationName ) < 0 ) {
 			return INVALID;
@@ -728,7 +780,10 @@ int Parser::parseCommand( stringstream& command ){
 	}
 	else if ( word == "SHOW" ) {
 
-		string relationName = readAlphaNumWord( command );
+		string relationName; 
+		if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
+			return INVALID;
+		}
 
 		//Catch problem before execution
 		if ( readSemi( command ) < 0 ) {
@@ -748,7 +803,10 @@ int Parser::parseCommand( stringstream& command ){
 	}
 	else if ( word == "WRITE" ) {
 
-		string relationName = readAlphaNumWord( command );
+		string relationName; 
+		if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
+			return INVALID;
+		}
 
 		//Catch problem before execution
 		if ( readSemi( command ) < 0 ) {
@@ -826,7 +884,10 @@ int Parser::parseCommand( stringstream& command ){
 //DONE - NOT DEBUGGED
 int Parser::parseQuery( stringstream& command ){
 
-	string relationName = readAlphaNumWord( command );
+	string relationName; 
+	if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
+		return INVALID;
+	}
 
 	if ( readArrow( command ) < 0 ){
 		return INVALID;
@@ -1107,6 +1168,7 @@ int Parser::parseCondition( stringstream& localCommand, int paren, Condition& co
 		firstIsLit = true;
 		firstIsStr = true;
 		localCommand.get( );
+		
 		first = readAlphaNumWord( localCommand );
 		a.setVC(first);
 	}
@@ -1117,7 +1179,9 @@ int Parser::parseCondition( stringstream& localCommand, int paren, Condition& co
 		if ( parseInteger( localCommand, firstI ) < 0 ){
 			//parseInteger FAILED - it is attribute
 
-			first = readAlphaNumWord( localCommand );
+			if( readAlphaNumWordStartsAlpha( localCommand, first ) < 0 ){
+				return INVALID;
+			}
 		} else {
 			//parseInteger SUCCESS - it is int
 
@@ -1165,7 +1229,9 @@ int Parser::parseCondition( stringstream& localCommand, int paren, Condition& co
 		if ( parseInteger( localCommand, secondI ) < 0 ){
 			//parseInteger FAILED - it is attribute
 
-			second = readAlphaNumWord( localCommand );
+			if( readAlphaNumWordStartsAlpha( localCommand, second ) < 0 ){
+				return INVALID;
+			}
 		} else {
 			//parseInteger SUCCESS - it is int
 
