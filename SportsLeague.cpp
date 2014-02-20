@@ -1,6 +1,7 @@
 #include "SportsLeague.h"
 
 SportsLeague::SportsLeague( ) {
+	
 	// open file
 	// create the 5 relations
 }
@@ -8,6 +9,11 @@ SportsLeague::SportsLeague( ) {
 
 void SportsLeague::addGame( ) {
 	// InsertInto
+}
+
+
+void SportsLeague::addMenu( ) {
+
 }
 
 
@@ -60,23 +66,28 @@ void SportsLeague::exit( ) {
 }
 
 
+void SportsLeague::getAllReferees( ) {
+	// union
+}
+
+
 void SportsLeague::getNonReferees( ) {
 	// difference
 }
 
 
-void SportsLeague::getReferees( ) {
-	// union
+void SportsLeague::gamesWhenTeamCouldPlay( ) {
+	// cross product
 }
 
 
-void SportsLeague::gamesWhenTeamCouldPlay( ) {
-
+void listNamesOfSports( ) {
+	// project
 }
 
 
 void SportsLeague::listPlayersOnTeam( ) {
-	// 
+	// select
 }
 
 
@@ -87,6 +98,11 @@ void SportsLeague::printMenu( ) {
 
 void SportsLeague::removeGame( ) {
 	// delete
+}
+
+
+void SportsLeague::removeMenu( ) {
+
 }
 
 
@@ -119,14 +135,76 @@ bool SportsLeague::retry( ) {
 
 
 void SportsLeague::run( ) {
-	// infinite loop until exit
-	// print menu
-	// switch statement for options
+	cout << "Welcome to the Sports League managing program.\n";
+
+	char userChoice;
+	for ( ;; ) {
+		printMenu( );
+		cin >> userChoice;
+
+		switch ( userChoice ) {
+		// adds
+		case 'a':
+			addMenu( );
+			break;
+
+		// removes
+		case 'b':
+			removeMenu( );
+			break;
+
+		// shows
+		case 'c':
+			showMenu( );
+			break;
+
+		// display sports games
+		case 'd':
+			displaySportsGames( );
+			break;
+
+		// exit
+		case 'e':
+			exit( );
+			break;
+
+		// display sports played
+		case 'f':
+			displaySportsPlayed( );
+			break;
+
+		case 'g':
+			changeGameLocation( );
+			break;
+
+		case 'h':
+			changeGameTime( );
+			break;
+
+		case 'i':
+			changeSportSeason( );
+			break;
+
+		case 'j':
+			getAllReferees( );
+			break;
+
+			//etc
+		default:
+			cout << "Invalid choice, please try again.\n";
+		}
+	}
+
 }
 
 
 void SportsLeague::showGames( ) {
 	// uses SHOW
+}
+
+
+void SportsLeague::showMenu( ) {
+
 }
 
 

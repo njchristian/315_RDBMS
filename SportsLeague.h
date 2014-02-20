@@ -13,6 +13,8 @@ public:
 	// Member functions
 	void addGame( );
 
+	void addMenu( );
+
 	void addPlayer( );
 
 	void addReferee( );
@@ -33,17 +35,21 @@ public:
 
 	void exit( );
 
+	void getAllReferees( );
+
 	void getNonReferees( );
 
-	void getReferees( );
-
 	void gamesWhenTeamCouldPlay( );
+
+	void listNamesOfSports( );
 
 	void listPlayersOnTeam( );
 
 	void printMenu( );
 
 	void removeGame( );
+
+	void removeMenu( );
 
 	void removePlayer( );
 
@@ -58,6 +64,8 @@ public:
 	void run( );	
 
 	void showGames( );
+
+	void showMenu( );
 
 	void showPlayers( );
 
