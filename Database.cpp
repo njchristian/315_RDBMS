@@ -338,6 +338,16 @@ Relation Database::projection( vector<string> attributeNames,
 	return result;
 }
 
+bool Database::relationExists( string r ){
+
+	for(int i = 0; i < relations.size() ; ++i){
+		if( relations.at(i)->getName() == r ){
+			return true;
+		}
+	}
+
+	return false;
+}
 
 void Database::removeRelationFromDatabase( string relationName ) {
 	Relation* targetRelation = findRelation( relationName );

@@ -88,6 +88,8 @@ public:
 	Relation renameAttributes( vector<string> newNames, Relation targetRelation ) { return renameAttributes( newNames, &targetRelation ); }
 	Relation renameAttributes( vector<string> newNames, string relationName ){ return renameAttributes( newNames, findRelation(relationName)); }
 	
+	bool relationExists( string r );
+	
 	Relation selection( vector<Condition> conditions, Relation* targetRelation);
 	Relation selection( vector<Condition> conditions, Relation targetRelation ) { return selection( conditions, &targetRelation ); }
 	Relation selection( vector<Condition> conditions, string targetRelationName ){ return selection( conditions, findRelation( targetRelationName)); }

@@ -141,17 +141,24 @@ int Parser::closeFile( string name ) {
 
 
 //Gets a relation from views or from database
-Relation Parser::getRelation( string r ) {
+int Parser::getRelation( string r, Relation& rel ) {
 
+	//check views first
 	for ( unsigned i = 0; i < views.size( ); i++ ){
 		if ( views.at( i ).getName( ) == r ){
-			return views.at( i );
+			rel = views.at( i );
+			return SUCCESS;
 		}
 	}
 
-	Relation t = database.accessRelation( r );
+	//if not check database
+	if( !relationExists( r ) ){
+		return INVALID;
+	}
+	
+	rel = database.accessRelation( r );
 
-	return t;
+	return SUCCESS;
 
 }
 
@@ -518,9 +525,9 @@ int Parser::deleteFrom( stringstream& command ) {
 		return INVALID;
 	}
 
-	Relation r = getRelation(relationName);
-
-	if(r.isEmpty()){
+	Relation r;
+	
+	if( getRelation(relationName, r) < 0 ){
 		return INVALID;
 	}
 
@@ -631,13 +638,10 @@ int Parser::insertInto( stringstream& command ) {
 		}
 
 		// Get the target relation
-		Relation whatToReadFrom = parseExpr( command );
-
-		if ( whatToReadFrom.isEmpty( ) ) {
+		Relation whatToReadFrom;
+		if( parseExpr( command, whatToReadFrom ) < 0 ){
 			return INVALID;
 		}
-
-		//Can we not just call union? Does that command do something different? - Cameron
 
 		database.insertIntoFromRelation( database.accessRelationPointer( relationName ), whatToReadFrom );
 	}
@@ -648,42 +652,43 @@ int Parser::insertInto( stringstream& command ) {
 
 
 //DONE
-Relation Parser::projection( stringstream& command ) {
+int Parser::projection( stringstream& command, Relation& rel ) {
 
 	vector<string> attributeNames;
 
 	if ( parseAttributeList( command, attributeNames ) < 0 ) {
-		return Relation( );
+		return INVALID;
 	}
 
-	Relation r = parseExpr( command );
-
-	if ( r.isEmpty( ) ) {
-		return r;
+	Relation r; 
+	if( parseExpr( command, r ) < 0 ){
+		return INVALID;
 	}
 
-	return database.projection( attributeNames, r );
+	rel = database.projection( attributeNames, r );
+	return SUCCESS;
 
 }
 
 //DONE
-Relation Parser::rename( stringstream& command ) {
+int Parser::rename( stringstream& command, Relation& rel ) {
 
 	readWhite( command );
 
 	vector<string> attributeNames;
 
 	if ( parseAttributeList( command, attributeNames ) < 0 ) {
-		return Relation( );
+		return INVALID;
 	}
 
-	Relation r = parseExpr( command );
-
-	if ( r.isEmpty( ) ) {
-		return r;
+	Relation r; 
+	if( parseExpr( command, r ) < 0 ){
+		return INVALID;
 	}
+	
+	rel = database.renameAttributes( attributeNames, r );
 
-	return database.renameAttributes( attributeNames, r );
+	return INVALID;
 
 }
 
@@ -730,11 +735,11 @@ int Parser::parseCommand( stringstream& command ){
 			return INVALID;
 		}
 
-		Relation r = getRelation( relationName );
-
-		if( r.isEmpty() ){
+		Relation r; 
+		if( getRelation( relationName ) < 0 ){
 			return INVALID;
 		}
+
 
 		cout << r;
 
@@ -827,9 +832,8 @@ int Parser::parseQuery( stringstream& command ){
 		return INVALID;
 	}
 
-	Relation targetRelation = parseExpr( command );
-
-	if ( targetRelation.isEmpty( ) ){
+	Relation targetRelation; 
+	if( parseExpr( command, targetRelation ) < 0 ){
 		return INVALID;
 	}
 
@@ -1312,7 +1316,7 @@ int Parser::parseConditions( stringstream& command, vector<Condition>& condition
 }
 
 //DONE - NOT DEBUGGED
-Relation Parser::parseExpr( stringstream& command ){
+int Parser::parseExpr( stringstream& command, Relation& rel ){
 
 	readWhite( command );
 
@@ -1334,47 +1338,59 @@ Relation Parser::parseExpr( stringstream& command ){
 
 	if ( word == "project" ){
 
-		targetRelation = projection( command );
+		if( projection( command, targetRelation ) < 0 ){
+			return INVALID;
+		}
 
 		readWhite( command );
 
 		if ( openParen && command.peek( ) != ')' ){
-			return Relation( );
+			return INVALID;
 		}
 
 		command.get( );
 
-		return targetRelation;
+		rel = targetRelation;
+		
+		return SUCCESS;
 
 	}
 	else if ( word == "select" ){
 
-		targetRelation = selection( command );
+		if( selection( command, targetRelation ) < 0 ){
+			return INVALID;
+		}
 
 		readWhite( command );
 
 		if ( openParen && command.peek( ) != ')' ){
-			return Relation( );
+			return INVALID;
 		}
 
 		command.get( );
 
-		return targetRelation;
+		rel = targetRelation;
+		
+		return SUCCESS;
 
 	}
 	else if ( word == "rename" ){
 
-		targetRelation = rename( command );
+		if( rename( command, targetRelation ) < 0 ){
+			return INVALID;
+		}
 
 		readWhite( command );
 
 		if ( openParen && command.peek( ) != ')' ){
-			return Relation( );
+			return INVALID;
 		}
 
 		command.get( );
 
-		return targetRelation;
+		rel = targetRelation;
+		
+		return SUCCESS;
 
 	}
 	else{
@@ -1386,43 +1402,44 @@ Relation Parser::parseExpr( stringstream& command ){
 
 		if ( peekAndReadAddition( command ) > 0 ){
 
-			Relation relationB = parseExpr( command );
-
-			if( relationB.isEmpty() ){
-				return Relation();
+			Relation relationB; 
+			if( parseExpr( command, relationB ) < 0 ){
+				return INVALID;
 			}
 
-			Relation targetRelationA = getRelation( relationA );
-
-			if( targetRelationA.isEmpty() ){
-				return Relation();
+			Relation targetRelationA; 
+			
+			if( getRelation( relationA, targetRelationA ) < 0 ){
+				return INVALID;
 			}
+
 
 			targetRelation = database.unionTwoRelations( targetRelationA, &relationB );
 
 			readWhite( command );
 
 			if ( openParen && command.peek( ) != ')' ){
-				return Relation( );
+				return INVALID;
 			}
 
 			command.get( );
 
-			return targetRelation;
+			rel = targetRelation;
+			
+			return SUCCESS;
 
 		}
 		else if ( peekAndReadSubtraction( command ) > 0 ){
 
-			Relation relationB = parseExpr( command );
-
-			if( relationB.isEmpty() ){
-				return Relation();
+			Relation relationB; 
+			if( parseExpr( command, relationB ) < 0 ){
+				return INVALID;
 			}
 
-			Relation targetRelationA = getRelation( relationA );
 
-			if( targetRelationA.isEmpty() ){
-				return Relation();
+			Relation targetRelationA;
+			if( getRelation( relationA, targetRelationA ) < 0 ){
+				return INVALID;
 			}
 
 			targetRelation = database.differenceTwoRelation( targetRelationA , relationB );
@@ -1430,26 +1447,26 @@ Relation Parser::parseExpr( stringstream& command ){
 			readWhite( command );
 
 			if ( openParen && command.peek( ) != ')' ){
-				return Relation( );
+				return INVALID;
 			}
 
 			command.get( );
 
-			return targetRelation;
+			rel = targetRelation;
+			
+			return SUCCESS;
 
 		}
 		else if ( peekAndReadMultiplication( command ) > 0 ){
 
-			Relation relationB = parseExpr( command );
-
-			if( relationB.isEmpty() ){
-				return Relation();
+			Relation relationB;
+			if( parseExpr( command, relationB ) < 0 ){
+				return INVALID;
 			}
 
-			Relation targetRelationA = getRelation( relationA );
-
-			if( targetRelationA.isEmpty() ){
-				return Relation();
+			Relation targetRelationA;
+			if( getRelation( relationA, targetRelationA ) < 0 ){
+				return INVALID;
 			}
 
 			targetRelation = database.crossProduct( targetRelationA , relationB );
@@ -1457,12 +1474,14 @@ Relation Parser::parseExpr( stringstream& command ){
 			readWhite( command );
 
 			if ( openParen && command.peek( ) != ')' ){
-				return Relation( );
+				return INVALID;
 			}
 
 			command.get( );
 
-			return targetRelation;
+			rel = targetRelation;
+			
+			return SUCCESS;
 
 		}
 		else{
@@ -1473,7 +1492,11 @@ Relation Parser::parseExpr( stringstream& command ){
 
 			if ( join != "JOIN" ){
 				
-				return getRelation( relationA ); 
+				Relation targetRelationA;
+				if( getRelation( relationA, targetRelationA ) < 0 ){
+					return INVALID;
+				}
+				return targetRelationA;
 
 			}
 
@@ -1485,12 +1508,14 @@ Relation Parser::parseExpr( stringstream& command ){
 			readWhite( command );
 
 			if ( openParen && command.peek( ) != ')' ){
-				return Relation( );
+				SUCCESS;
 			}
 
 			command.get( );
 
-			return targetRelation;
+			rel = targetRelation;
+			
+			return SUCCESS;
 
 		}
 
@@ -1531,26 +1556,25 @@ int Parser::parse( string s ){
 
 
 // DONE - not tested
-Relation Parser::selection( stringstream& command ) {
+int Parser::selection( stringstream& command, Relation& rel ) {
 
 	// Parse and get the conditions
 	vector<Condition> conditions;
 
 	// If no conditions then return empty Relation
 	if ( parseConditions( command, conditions ) < 0 ) {
-		return Relation( );
+		return INVALID;
 	}
 
 	// Get the target relation
-	Relation targetRelation = parseExpr( command );
-
-	// If the relation is empty then return the empty relation
-	if ( targetRelation.isEmpty( ) ) {
-		return targetRelation;
+	Relation targetRelation;
+	if( parseExpr( command, targetRelation ) < 0 ){
+		return INVALID;
 	}
 
+	rel = database.selection( conditions, targetRelation );
 	// return the result of the selection operation
-	return database.selection( conditions, targetRelation );
+	return SUCCESS;
 
 
 }

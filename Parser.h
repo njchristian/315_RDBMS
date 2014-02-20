@@ -83,13 +83,13 @@ class Parser{
 
 
 	//DONE (I think)
-	Relation selection( stringstream& command );
+	int selection( stringstream& command, Relation& rel );
 
 	//DONE
-	Relation projection( stringstream& command );
+	int projection( stringstream& command, Relation& r );
 
 	//DONE
-	Relation rename( stringstream& command );
+	int rename( stringstream& command, Relation& r );
 
 	//GENERAL PARSER FUNCTIONS
 
@@ -159,7 +159,7 @@ class Parser{
 	//takes in a stream which has been identified as a query and returns a relation
 	//Return NULL if error.
 	//OFTEN CALLED RECURSIVELY
-	Relation parseExpr( stringstream& command );
+	int parseExpr( stringstream& command, Relation& rel );
 
 	//DONE
 	//Reads in a query - ie. "relationName" <- expr
@@ -176,7 +176,7 @@ public:
 	int parse( string command );
 
 	//Get a relation from views or database
-	Relation getRelation( string r );
+	int getRelation( string r, Relation& target );
 
 };
 
