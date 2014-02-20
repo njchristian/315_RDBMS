@@ -9,6 +9,40 @@ SportsLeague::SportsLeague( ) {
 
 void SportsLeague::addGame( ) {
 	// InsertInto
+
+	string parserCommand = "INSERT INTO games VALUES FROM";
+
+	cout << "Please enter the location of the new game.\n";
+	string location;
+	cin >> location;
+
+	parserCommand += " (\"" + location + "\", ";
+
+	cout << "Please enter the date of the game.\n";
+	string date;
+	cin >> date;
+
+	parserCommand += "\"" + date + "\", ";
+
+	cout << "Please enter the time of the game.\n";
+	string time;
+	cin >> time;
+
+	parserCommand += "\"" + time + "\", ";
+
+	cout << "Please enter the game's associated sport.\n";
+	string sport;
+	cin >> sport;
+
+	parserCommand += "\"" + sport + "\");";
+
+	if ( database.execute( parserCommand ) == 1 ) {
+		cout << "Game successfully added to the database.\n";
+	}
+	else {
+		cout << "Invalid data entered - Game was not added to the database.\n";
+		cout << "Please try again.\n";
+	}
 }
 
 
@@ -166,6 +200,7 @@ void SportsLeague::run( ) {
 		// exit
 		case 'e':
 			exit( );
+			return;
 			break;
 
 		// display sports played
