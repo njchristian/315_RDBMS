@@ -95,9 +95,9 @@ int Parser::writeFile( string relationName ) {
 	}
 
 	//I'm not sure how this could fail
-	// It's the thought that counts? lol I don't know either -Taylor
 	return SUCCESS;
 }
+
 
 int Parser::openFile( string relationName ) {
 
@@ -127,6 +127,7 @@ int Parser::openFile( string relationName ) {
 	return SUCCESS;
 }
 
+
 int Parser::closeFile( string name ) {
 
 	string filename = name + ".db";
@@ -137,6 +138,7 @@ int Parser::closeFile( string name ) {
 
 	return SUCCESS;
 }
+
 
 //Gets a relation from views or from database
 Relation Parser::getRelation( string r ) {
@@ -161,6 +163,7 @@ bool Parser::isAlphaNum( int c ) {
 
 }
 
+
 bool Parser::isAlpha( int c) {
 
 	int A = 65;
@@ -175,6 +178,7 @@ bool Parser::isAlpha( int c) {
 
 }
 
+
 bool Parser::isNum( int c) {
 
 	int ZERO = 48;
@@ -183,6 +187,7 @@ bool Parser::isNum( int c) {
 	return (c >= ZERO && c <= NINE );
 
 }
+
 
 //DONE - NOT TESTED
 string Parser::readAlphaNumWord( stringstream& command ) {
@@ -204,6 +209,7 @@ string Parser::readAlphaNumWord( stringstream& command ) {
 	return result;
 }
 
+
 //DONE
 void Parser::readWhite( stringstream& command ) {
 
@@ -212,6 +218,7 @@ void Parser::readWhite( stringstream& command ) {
 	}
 
 }
+
 
 //DONE
 int Parser::readSemi( stringstream& command ) {
@@ -230,6 +237,7 @@ int Parser::readSemi( stringstream& command ) {
 	return INVALID;
 
 }
+
 
 //DONE
 int Parser::readArrow( stringstream& command ) {
@@ -253,6 +261,7 @@ int Parser::readArrow( stringstream& command ) {
 	return SUCCESS;
 
 }
+
 
 //DONE
 int Parser::parseAttributeList( stringstream& command, vector<string>& attributeNames ) {
@@ -342,6 +351,8 @@ int Parser::parseTypedAttribute( stringstream& command, vector<Attribute>& attri
 }
 
 
+// Parses a create table command and uses the information
+// to add the new relation to the database.
 int Parser::createTable( stringstream& command ) {
 	// Get the relation's name
 	string relationName = readAlphaNumWord( command );
@@ -420,6 +431,7 @@ int Parser::createTable( stringstream& command ) {
 
 
 // DONE - not tested
+// Parses an update command.
 int Parser::update( stringstream& command ) {
 	// Get the relation's name
 	string relationName = readAlphaNumWord( command );
@@ -486,6 +498,7 @@ int Parser::update( stringstream& command ) {
 
 
 // DONE - not tested
+// Parses a delete from command.
 int Parser::deleteFrom( stringstream& command ) {
 
 	// Get the relation's name
@@ -518,12 +531,15 @@ int Parser::deleteFrom( stringstream& command ) {
 }
 
 
+// Reads a literal into the passed in Entry object.
 int Parser::readLiteral( stringstream& command, Entry& e ) {
 
 	readWhite(command);
 
 	int a;
 
+	// Check for an int, if so then create the literal with that int
+	// otherwise parse a string
 	if ( parseInteger( command, a ) < 0 ){
 
 		char quote;
@@ -556,15 +572,13 @@ int Parser::insertInto( stringstream& command ) {
 	// Get the target Relation name
 	string relationName = readAlphaNumWord( command );
 
-
-
-	// Read and verify the values key word.
+	// Read and verify the VALUES key word.
 	string valuesKeyWord = readAlphaNumWord( command );
 	if ( valuesKeyWord != "VALUES" ) {
 		return INVALID;
 	}
 
-	// Read and verify the from key word.
+	// Read and verify the FROM key word.
 	string fromKeyWord = readAlphaNumWord( command );
 	if ( fromKeyWord != "FROM" ) {
 		return INVALID;
@@ -572,6 +586,7 @@ int Parser::insertInto( stringstream& command ) {
 
 	readWhite( command );
 
+	// Check for the opening parenthesis
 	char parenthesis = command.peek( );
 
 	if ( parenthesis == '(' ) {
@@ -600,11 +615,13 @@ int Parser::insertInto( stringstream& command ) {
 
 		}
 
+		// consume the closing parenthesis
 		char close;
 		command.get( close );
 
 		database.addTupleToRelation( tuple, database.accessRelationPointer( relationName ) );
 	}
+	// If there is no opening parenthesis then it must be dealing with a relation
 	else {
 
 		// Read and verify the relation key word
@@ -621,7 +638,6 @@ int Parser::insertInto( stringstream& command ) {
 		}
 
 		//Can we not just call union? Does that command do something different? - Cameron
-		// We could but we already had this in database so I just used it. - Taylor
 
 		database.insertIntoFromRelation( database.accessRelationPointer( relationName ), whatToReadFrom );
 	}
@@ -650,7 +666,7 @@ Relation Parser::projection( stringstream& command ) {
 
 }
 
-//TODO
+//DONE
 Relation Parser::rename( stringstream& command ) {
 
 	readWhite( command );
