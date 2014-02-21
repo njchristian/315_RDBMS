@@ -152,7 +152,7 @@ int Parser::getRelation( string r, Relation& rel ) {
 	}
 
 	//if not check database
-	if( !relationExists( r ) ){
+	if( !database.relationExists( r ) ){
 		return INVALID;
 	}
 	
@@ -217,7 +217,7 @@ string Parser::readAlphaNumWord( stringstream& command ) {
 }
 
 //DONE - NOT TESTED
-int Parser::readAlphaNumWordStartsAlpha( stringstream& command, string result ) {
+int Parser::readAlphaNumWordStartsAlpha( stringstream& command, string& result ) {
 
 	readWhite( command );
 
@@ -734,7 +734,7 @@ int Parser::rename( stringstream& command, Relation& rel ) {
 	
 	rel = database.renameAttributes( attributeNames, r );
 
-	return INVALID;
+	return SUCCESS;
 
 }
 
@@ -791,7 +791,7 @@ int Parser::parseCommand( stringstream& command ){
 		}
 
 		Relation r; 
-		if( getRelation( relationName ) < 0 ){
+		if( getRelation( relationName, r ) < 0 ){
 			return INVALID;
 		}
 
@@ -1562,12 +1562,14 @@ int Parser::parseExpr( stringstream& command, Relation& rel ){
 				if( getRelation( relationA, targetRelationA ) < 0 ){
 					return INVALID;
 				}
-				return targetRelationA;
+
+				rel = targetRelationA;
+
+				return SUCCESS;
 
 			}
 
 			string relationB = readAlphaNumWord( command );
-
 
 			targetRelation = database.naturalJoin( relationA, relationB );
 

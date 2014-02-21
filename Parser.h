@@ -131,7 +131,7 @@ class Parser{
 	//This function first reads through any whitespace and then stores the word
 	string readAlphaNumWord( stringstream& command );
 	
-	int readAlphaNumWordStartsAlpha( stringstream& command, string result );
+	int readAlphaNumWordStartsAlpha( stringstream& command, string& result );
 
 	//DONE - needs testing
 	// reads and returns an entry for the insert into function, opening parenthesis
