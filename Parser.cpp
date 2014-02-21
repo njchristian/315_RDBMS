@@ -900,9 +900,11 @@ int Parser::parseQuery( stringstream& command ){
 
 	readWhite(command);
 
-	//if( readSemi( command ) < 0 ){
-	//	return INVALID;
-	//}
+	if( readSemi( command ) < 0 ){
+		return INVALID;
+	}
+
+	readWhite(command);
 
 	targetRelation.setName( relationName );
 
@@ -1412,9 +1414,11 @@ int Parser::parseExpr( stringstream& command, Relation& rel ){
 
 		if ( openParen && command.peek( ) != ')' ){
 			return INVALID;
+		}else if( openParen ){
+			command.get( );
 		}
 
-		command.get( );
+		
 
 		rel = targetRelation;
 		
@@ -1431,9 +1435,9 @@ int Parser::parseExpr( stringstream& command, Relation& rel ){
 
 		if ( openParen && command.peek( ) != ')' ){
 			return INVALID;
+		}else if( openParen ){
+			command.get( );
 		}
-
-		command.get( );
 
 		rel = targetRelation;
 		
@@ -1450,9 +1454,11 @@ int Parser::parseExpr( stringstream& command, Relation& rel ){
 
 		if ( openParen && command.peek( ) != ')' ){
 			return INVALID;
+		}else if( openParen ){
+			command.get( );
 		}
 
-		command.get( );
+		
 
 		rel = targetRelation;
 		
@@ -1486,9 +1492,11 @@ int Parser::parseExpr( stringstream& command, Relation& rel ){
 
 			if ( openParen && command.peek( ) != ')' ){
 				return INVALID;
+			}else if( openParen ){
+				command.get( );
 			}
 
-			command.get( );
+			
 
 			rel = targetRelation;
 			
@@ -1514,9 +1522,11 @@ int Parser::parseExpr( stringstream& command, Relation& rel ){
 
 			if ( openParen && command.peek( ) != ')' ){
 				return INVALID;
+			}else if( openParen ){
+				command.get( );
 			}
 
-			command.get( );
+			
 
 			rel = targetRelation;
 			
@@ -1541,9 +1551,11 @@ int Parser::parseExpr( stringstream& command, Relation& rel ){
 
 			if ( openParen && command.peek( ) != ')' ){
 				return INVALID;
+			}else if( openParen ){
+				command.get( );
 			}
 
-			command.get( );
+			
 
 			rel = targetRelation;
 			
@@ -1576,10 +1588,10 @@ int Parser::parseExpr( stringstream& command, Relation& rel ){
 			readWhite( command );
 
 			if ( openParen && command.peek( ) != ')' ){
-				SUCCESS;
+				return INVALID;
+			}else if( openParen ){
+				command.get( );
 			}
-
-			command.get( );
 
 			rel = targetRelation;
 			
