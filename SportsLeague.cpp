@@ -149,10 +149,11 @@ void SportsLeague::addPlayer( ) {
 }
 
 
-void SportsLeague::addReferee( ) {
+void SportsLeague::addReferee( ) { 
 	// InsertInto
 	// first name
 	// last name
+	// netID
 	// sport id
 	for ( ;; ) {
 		string parserCommand = "INSERT INTO referees VALUES FROM";
@@ -168,6 +169,12 @@ void SportsLeague::addReferee( ) {
 		cin >> lastName;
 
 		parserCommand += "\"" + lastName + "\", ";
+
+		cout << "Please enter the Net-ID of the referee.\n";
+		int netID;
+		cin >> netID;
+
+		parserCommand += to_string( netID ) + ", ";
 
 
 		cout << "Please enter the sport ID that the referee refs.\n";
@@ -351,7 +358,28 @@ void SportsLeague::printMenu( ) {
 
 
 void SportsLeague::removeGame( ) {
-	// delete
+	// delete game based on its name
+	for ( ;; ) {
+		string parserCommand = "DELETE FROM games WHERE (name == \"";
+
+		string gameName;
+		cout << "Please enter the name of the game you would like to remove.\n";
+		cin >> gameName;
+
+		parserCommand += gameName;
+		parserCommand += "\");";
+
+		if ( database.execute( parserCommand ) == 1 ) {
+			cout << "Game successfully removed from the database.\n";
+			return;
+		}
+		else {
+			cout << "Invalid data entered - Game was not removed from the database.\n";
+			if ( retry( ) == false ) {
+				return;
+			}
+		}
+	}
 }
 
 
@@ -388,12 +416,61 @@ void SportsLeague::removeMenu( ) {
 
 
 void SportsLeague::removePlayer( ) {
-	// delete
+	// delete player based on netID
+	for ( ;; ) {
+		string parserCommand = "DELETE FROM players WHERE (netID == ";
+
+		// get the net ID
+		int netID;
+		cout << "Please enter the netID of the player you would like to remove.\n";
+		cin >> netID;
+
+		parserCommand += netID;
+		parserCommand += ");";
+
+		// pass the command to the parser; if it fails ask the user if they want
+		// to retry
+		if ( database.execute( parserCommand ) == 1 ) {
+			cout << "Player successfully removed from the database.\n";
+			return;
+		}
+		else {
+			cout << "Invalid data entered - Player was not removed from the database.\n";
+			if ( retry( ) == false ) {
+				return;
+			}
+		}
+	}
 }
 
 
 void SportsLeague::removeReferee( ) {
-	// delete
+	// delete referee based on netID
+
+	for ( ;; ) {
+		string parserCommand = "DELETE FROM referees WHERE (netID == ";
+
+		// get the net ID
+		int netID;
+		cout << "Please enter the netID of the referee you would like to remove.\n";
+		cin >> netID;
+
+		parserCommand += netID;
+		parserCommand += ");";
+
+		// pass the command to the parser; if it fails ask the user if they want
+		// to retry
+		if ( database.execute( parserCommand ) == 1 ) {
+			cout << "Referee successfully removed from the database.\n";
+			return;
+		}
+		else {
+			cout << "Invalid data entered - Referee was not removed from the database.\n";
+			if ( retry( ) == false ) {
+				return;
+			}
+		}
+	}
 }
 
 
