@@ -2,8 +2,9 @@
 
 SportsLeague::SportsLeague( ) {
 	
-	// open file
+	// open files
 	// create the 5 relations
+	// close files
 }
 
 
@@ -41,7 +42,7 @@ void SportsLeague::addGame( ) {
 	}
 	else {
 		cout << "Invalid data entered - Game was not added to the database.\n";
-		cout << "Please try again.\n";
+		cout << "Please try again.\n"; // replace with retry
 	}
 }
 
@@ -176,6 +177,7 @@ void SportsLeague::run( ) {
 		printMenu( );
 		cin >> userChoice;
 
+		// change to numbers
 		switch ( userChoice ) {
 		// adds
 		case 'a':
