@@ -475,12 +475,62 @@ void SportsLeague::removeReferee( ) {
 
 
 void SportsLeague::removeSport( ) {
-	// delete
+	// delete sport based on sport ID
+
+	for ( ;; ) {
+		string parserCommand = "DELETE FROM sports WHERE (Sport ID == ";
+
+		// get the sport ID
+		int sportID;
+		cout << "Please enter the ID of the sport you would like to remove.\n";
+		cin >> sportID;
+
+		parserCommand += sportID;
+		parserCommand += ");";
+
+		// pass the command to the parser; if it fails ask the user if they want
+		// to retry
+		if ( database.execute( parserCommand ) == 1 ) {
+			cout << "Sport successfully removed from the database.\n";
+			return;
+		}
+		else {
+			cout << "Invalid data entered - Sport was not removed from the database.\n";
+			if ( retry( ) == false ) {
+				return;
+			}
+		}
+	}
 }
 
 
 void SportsLeague::removeTeam( ) {
-	// delete
+	// delete based on team ID
+
+	for ( ;; ) {
+		string parserCommand = "DELETE FROM teams WHERE (Team ID == ";
+
+		// get the Team ID
+		int teamID;
+		cout << "Please enter the ID of the team you would like to remove.\n";
+		cin >> teamID;
+
+		parserCommand += teamID;
+		parserCommand += ");";
+
+		// pass the command to the parser; if it fails ask the user if they want
+		// to retry
+		if ( database.execute( parserCommand ) == 1 ) {
+			cout << "Team successfully removed from the database.\n";
+			return;
+		}
+		else {
+			cout << "Invalid data entered - Team was not removed from the database.\n";
+			if ( retry( ) == false ) {
+				return;
+			}
+		}
+	}
 }
 
 
