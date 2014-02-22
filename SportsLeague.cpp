@@ -112,8 +112,10 @@ void SportsLeague::addGame( ) {
 
 
 void SportsLeague::addMenu( ) {
-	char userChoice;
-	for ( ;; ) {
+	int userChoice;
+	bool backToMenu = false;
+	while ( backToMenu == false ) {
+		cout << "Add Menu:\n";
 		cout << "Enter '1' to add to the game relation.\n";
 		cout << "Enter '2' to add to the player relation.\n";
 		cout << "Enter '3' to add to the referee relation.\n";
@@ -122,24 +124,28 @@ void SportsLeague::addMenu( ) {
 		cout << "Enter '6' to go back to main menu.\n";
 		cin >> userChoice;
 		switch ( userChoice ) {
-		case '1':
+		case 1:
 			addGame( );
+			backToMenu = true;
 			break;
-		case '2':
+		case 2:
 			addPlayer( );
+			backToMenu = true;
 			break;
-		case '3':
+		case 3:
 			addReferee( );
+			backToMenu = true;
 			break;
-		case '4':
+		case 4:
 			addSport( );
+			backToMenu = true;
 			break;
-		case '5':
+		case 5:
 			addTeam( );
+			backToMenu = true;
 			break;
-		case '6':
-			run();
-			return;
+		case 6:
+			backToMenu = true;
 			break;
 		default:
 			cin.clear();
@@ -622,7 +628,7 @@ void SportsLeague::listPlayersOnTeam( ) {
 
 
 void SportsLeague::printMenu( ) {
-	cout << "Sports League Manager Menu:\n";
+	cout << "Main Menu:\n";
 	cout << "Enter '1' to add to a relation.\n";
 	cout << "Enter '2' to remove from a relation.\n";
 	cout << "Enter '3' to show information from a relation.\n";
@@ -663,8 +669,10 @@ void SportsLeague::removeGame( ) {
 
 
 void SportsLeague::removeMenu( ) {
-	char userChoice;
-	for ( ;; ) {
+	int userChoice;
+	bool backToMenu = false;
+	while ( backToMenu == false ) {
+		cout << "Remove Menu:\n";
 		cout << "Enter '1' to remove from the game relation.\n";
 		cout << "Enter '2' to remove from the player relation.\n";
 		cout << "Enter '3' to remove from referee relation.\n";
@@ -673,24 +681,28 @@ void SportsLeague::removeMenu( ) {
 		cout << "Enter '6' to go back to main menu.\n";
 		cin >> userChoice;
 		switch ( userChoice ) {
-		case '1':
+		case 1:
 			removeGame( );
+			backToMenu = true;
 			break;
-		case '2':
+		case 2:
 			removePlayer( );
+			backToMenu = true;
 			break;
-		case '3':
+		case 3:
 			removeReferee( );
+			backToMenu = true;
 			break;
-		case '4':
+		case 4:
 			removeSport( );
+			backToMenu = true;
 			break;
-		case '5':
+		case 5:
 			removeTeam( );
+			backToMenu = true;
 			break;
-		case '6':
-			run();
-			return;
+		case 6:
+			backToMenu = true;
 			break;
 		default:
 			cin.clear();
@@ -862,19 +874,19 @@ void SportsLeague::run( ) {
 		// adds
 		case 1:
 			addMenu( );
-			return;
+			//return;
 			break;
 
 		// removes
 		case 2:
 			removeMenu( );
-			return;
+			//return;
 			break;
 
 		// shows
 		case 3:
 			showMenu( );
-			return;
+			//return;
 			break;
 
 		// display sports games
@@ -943,8 +955,10 @@ void SportsLeague::showGames( ) {
 
 
 void SportsLeague::showMenu( ) {
-	char userChoice;
-	for ( ;; ) {
+	int userChoice;
+	bool backToMenu = false;
+	while ( backToMenu == false ) {
+		cout << "Show Menu:\n";
 		cout << "Enter '1' to show the game relation.\n";
 		cout << "Enter '2' to show the player relation.\n";
 		cout << "Enter '3' to show the referee relation.\n";
@@ -957,36 +971,44 @@ void SportsLeague::showMenu( ) {
 		cout << "Enter '10' to go back to main menu.\n";
 		cin >> userChoice;
 		switch ( userChoice ) {
-		case '1':
+		case 1:
 			showGames( );
+			backToMenu = true;
 			break;
-		case '2':
+		case 2:
 			showPlayers( );
+			backToMenu = true;
 			break;
-		case '3':
+		case 3:
 			showReferees( );
+			backToMenu = true;
 			break;
-		case '4':
+		case 4:
 			getAllReferees( );
+			backToMenu = true;
 			break;
-		case '5':
+		case 5:
 			getNonReferees( );
+			backToMenu = true;
 			break;
-		case '6':
+		case 6:
 			showSports( );
+			backToMenu = true;
 			break;
-		case '7':
+		case 7:
 			listNamesOfSports( );
+			backToMenu = true;
 			break;
-		case '8':
+		case 8:
 			showTeams( );
+			backToMenu = true;
 			break;
-		case '9':
+		case 9:
 			listPlayersOnTeam( );
+			backToMenu = true;
 			break;
-		case '10':
-			run( );
-			return;
+		case 10:
+			backToMenu = true;
 			break;
 		default:
 			cin.clear();
