@@ -3,6 +3,11 @@
 // need to add the stuff so that the strings returned by the parser are stored in a vector<string>
 // or whatever the instructions talk about
 
+// possible add an isRef int to players - might need to rethink the getAllRefs and getNonRefs...seems like one of them needs to change
+// waiting on that decision before altering the players relation
+
+// the games relation should hold a sportID, not a sport name so this has been changed
+
 SportsLeague::SportsLeague( ) {
 	// open files
 	// create the 5 relations
@@ -14,7 +19,7 @@ SportsLeague::SportsLeague( ) {
 	}
 	else {
 		database.execute( "OPEN games;" );
-		database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+		database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sportID INTEGER, gameID INTEGER ) PRIMARY KEY (gameID);" );
 	}
 
 	if( ifstream( "players.db" ) ) {
@@ -80,11 +85,11 @@ void SportsLeague::addGame( ) {
 		//how to check a correct time
 		parserCommand += "\"" + time + "\", ";
 
-		cout << "Please enter the game's associated sport.\n";
-		string sport;
-		cin >> sport;
+		cout << "Please enter the game's associated sport ID.\n";
+		int sportID;
+		cin >> sportID;
 
-		parserCommand += "\"" + sport + "\", ";
+		parserCommand += "\"" + to_string( sportID ) + "\", ";
 
 		cout << "Please enter the game's ID.\n";
 		int gameID;
@@ -504,16 +509,60 @@ void SportsLeague::exit( ) {
 
 void SportsLeague::getAllReferees( ) {
 	// union
+
+	// get the player refs in a relation that is union compatible with refs
+	string parserCommand = "playerRefs <- project (firstName, lastName, netID, sportID) (select (isRef == 1) players);";
+	database.execute( parserCommand );
+
+	// get the union of player refs and non player refs
+	parserCommand = "allRefs <- playerRefs + referees;";
+	database.execute( parserCommand );
+
+	// display allRefs
+	parserCommand = "SHOW allRefs;";
+	database.execute( parserCommand );
+
+	// delete the playerRefs relation
+	parserCommand = "DROP TABLE playerRefs;";
+	database.execute( parserCommand );
+
+	// delete the allRefs relation
+	parserCommand = "DROP TABLE allRefs;";
+	database.execute( parserCommand );
 }
 
 
 void SportsLeague::getNonReferees( ) {
 	// difference
+
+	// get the non ref players
+	string parserCommand = "nonRefPlayers <- (project (firstName, lastName, netID, sportID) players) - referees;";
+	database.execute( parserCommand );
+
+	// display the non ref players
+	parserCommand = "SHOW nonRefPlayers;";
+	database.execute( parserCommand );
+
+	// delete the temporary relation
+	parserCommand = "DROP TABLE nonRefPlayers;";
+	database.execute( parserCommand );
 }
 
 
 void SportsLeague::gamesWhenTeamCouldPlay( ) {
 	// cross product
+
+	// get the list of games and teams
+	string parserCommand = "gamesTeamsPlay <- teams * games;";
+	database.execute( parserCommand );
+
+	// show the list
+	parserCommand = "SHOW gamesTeamsPlay;";
+	database.execute( parserCommand );
+
+	// remove the temporary list
+	parserCommand = "DROP TABLE gamesTeamsPlay;";
+	database.execute( parserCommand );
 }
 
 
@@ -532,7 +581,7 @@ void SportsLeague::listNamesOfSports( ) {
 			return;
 		}
 		else {
-			cout << "Invalid data entered - can not display the player's sports.\n\n";
+			cout << "Invalid data entered - can not display the list of sports.\n\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -543,7 +592,32 @@ void SportsLeague::listNamesOfSports( ) {
 
 
 void SportsLeague::listPlayersOnTeam( ) {
-	// select
+	// select based on team ID
+	for ( ;; ) {
+		cout << "Please enter a team ID to display the players on that team.\n";
+		int teamID;
+		cin >> teamID;
+
+		string parserCommand = "playersOnTeam <- select (teamID == ";
+
+		parserCommand += to_string( teamID );
+		parserCommand += ") teams;";
+
+		if ( database.execute( parserCommand ) == 1 ) {
+			parserCommand = "SHOW playersOnTeam;";
+			database.execute( parserCommand );
+
+			parserCommand = "DROP TABLE playersOnTeam;";
+			database.execute( parserCommand );
+			return;
+		}
+		else {
+			cout << "Invalid data entered - can not display the list of players on the team.\n\n";
+			if ( retry( ) == false ) {
+				return;
+			}
+		}
+	}
 }
 
 
@@ -565,14 +639,14 @@ void SportsLeague::printMenu( ) {
 void SportsLeague::removeGame( ) {
 	// delete game based on its name
 	for ( ;; ) {
-		string parserCommand = "DELETE FROM games WHERE (name == \"";
+		string parserCommand = "DELETE FROM games WHERE (gameID == ";
 
 		int gameID;
 		cout << "Please enter the game ID you would like to remove.\n";
 		cin >> gameID;
 
 		parserCommand += to_string( gameID );
-		parserCommand += "\");";
+		parserCommand += ");";
 
 		if ( database.execute( parserCommand ) == 1 ) {
 			cout << "Game successfully removed from the database.\n";
@@ -874,9 +948,13 @@ void SportsLeague::showMenu( ) {
 		cout << "Enter '1' to show the game relation.\n";
 		cout << "Enter '2' to show the player relation.\n";
 		cout << "Enter '3' to show the referee relation.\n";
-		cout << "Enter '4' to show the sports relation.\n";
-		cout << "Enter '5' to show the team relation.\n";
-		cout << "Enter '6' to go back to main menu.\n";
+		cout << "Enter '4' to show referees and player referees.\n";
+		cout << "Enter '5' to show only players who are not referees.\n";
+		cout << "Enter '6' to show the sports relation.\n";
+		cout << "Enter '7' to display just the names of the sports.\n";
+		cout << "Enter '8' to show the team relation.\n";
+		cout << "Enter '9' to list the players on a team.\n";
+		cout << "Enter '10' to go back to main menu.\n";
 		cin >> userChoice;
 		switch ( userChoice ) {
 		case '1':
@@ -889,13 +967,25 @@ void SportsLeague::showMenu( ) {
 			showReferees( );
 			break;
 		case '4':
-			showSports( );
+			getAllReferees( );
 			break;
 		case '5':
-			showTeams( );
+			getNonReferees( );
 			break;
 		case '6':
-			run();
+			showSports( );
+			break;
+		case '7':
+			listNamesOfSports( );
+			break;
+		case '8':
+			showTeams( );
+			break;
+		case '9':
+			listPlayersOnTeam( );
+			break;
+		case '10':
+			run( );
 			return;
 			break;
 		default:

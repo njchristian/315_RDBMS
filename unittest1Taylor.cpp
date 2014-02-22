@@ -7,6 +7,7 @@
 #include "Condition.h"
 #include "Type.h"
 #include "Parser.h"
+#include "SportsLeague.h"
 //#include "../Database/ConditionList.h"
 //#include "../Database/Connector.h"
 #include "DBCell.h"
@@ -26,7 +27,10 @@ namespace UnitTest1
 	{
 	public:
 		
+		SportsLeague league;
 		Database d;
+
+		DBCell database;
 		vector<Relation*> localRelations;
 
 		vector<Attribute> testAtts;
@@ -36,6 +40,13 @@ namespace UnitTest1
 
 		TEST_METHOD_INITIALIZE(init234)
 		{
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);" );
+
+
 			testAtts.push_back(Attribute("Name", VARCHAR));
 			testAtts.push_back(Attribute("Owner", VARCHAR));
 			testAtts.push_back(Attribute("Age", INTEGER));
@@ -676,9 +687,13 @@ namespace UnitTest1
 
 			p.parse( dml );
 
-			Relation relation = p.getRelation( "Many" );
+			Relation relation;
+			p.getRelation( "Many", relation );
 
-			Assert::AreEqual( relation.getNumTuples(), max( p.getRelation("DogsAgain").getNumTuples(), d.accessRelation("Dogs").getNumTuples() )  );
+			Relation relationB;
+			p.getRelation( "DogsAgain", relationB );
+
+			Assert::AreEqual( relation.getNumTuples(), max( relationB.getNumTuples(), d.accessRelation("Dogs").getNumTuples() )  );
 		}
 
 		TEST_METHOD(selectionCommand)
@@ -688,7 +703,8 @@ namespace UnitTest1
 
 			p.parse( dml );
 
-			Relation relation = p.getRelation("puppies");
+			Relation relation;
+			p.getRelation( "puppies", relation );
 
 			Assert::AreEqual( relation.getNumTuples() , 1 );
 		
@@ -696,40 +712,41 @@ namespace UnitTest1
 
 		TEST_METHOD(differenceCommand)
 		{
-			Parser p (d );
-			string dml = "both_dogsA <- Dogs - More_Dogs";
+			Parser p( d );
+			string dml = "both_dogsA <- Dogs - More_Dogs;";
 
 			p.parse( dml );
 
-			dml = "both_dogsB <- More_Dogs - Dogs";
+			dml = "both_dogsB <- More_Dogs - Dogs;";
 			p.parse( dml );
-			Relation relationA = p.getRelation("both_dogsA");
-			//Relation relationB = p.getRelation("both_dogsB");
+			Relation relationA;
+			p.getRelation( "both_dogsA", relationA );
 
-			Relation test("test",testAtts,keys);
+			Relation test( "test", testAtts, keys );
 
-			d.addRelationToDatabase( test) ;
+			d.addRelationToDatabase( test );
 
 			vector<vector<Entry>> testEntries;
-			testEntries.push_back(vector<Entry>());
-			testEntries.push_back(vector<Entry>());
-			testEntries.push_back(vector<Entry>());
+			testEntries.push_back( vector<Entry>( ) );
+			testEntries.push_back( vector<Entry>( ) );
+			testEntries.push_back( vector<Entry>( ) );
 
-			testEntries.at(0).push_back(Entry("Zipper"));
-			testEntries.at(0).push_back(Entry("Melodie"));
-			testEntries.at(0).push_back(Entry(14));
+			testEntries.at( 0 ).push_back( Entry( "Zipper" ) );
+			testEntries.at( 0 ).push_back( Entry( "Melodie" ) );
+			testEntries.at( 0 ).push_back( Entry( 14 ) );
 
-			testEntries.at(1).push_back(Entry("Bailey"));
-			testEntries.at(1).push_back(Entry("Davin"));
-			testEntries.at(1).push_back(Entry(6));
+			testEntries.at( 1 ).push_back( Entry( "Bailey" ) );
+			testEntries.at( 1 ).push_back( Entry( "Davin" ) );
+			testEntries.at( 1 ).push_back( Entry( 6 ) );
 
-			d.addTupleToRelation(testEntries.at(0), "test");
-			d.addTupleToRelation(testEntries.at(1), "test");
+			d.addTupleToRelation( testEntries.at( 0 ), "test" );
+			d.addTupleToRelation( testEntries.at( 1 ), "test" );
 
-			test = p.getRelation("test");
+			p.getRelation( "test", test );
 
-			Assert::AreEqual( relationA.getEntry(0,0)->getEntryVC(), test.getEntry(0,0)->getEntryVC());
-			Assert::AreEqual( relationA.getEntry(1,0)->getEntryVC(), test.getEntry(1,0)->getEntryVC());
+			Assert::AreEqual( relationA.getEntry( 0, 0 )->getEntryVC( ), test.getEntry( 0, 0 )->getEntryVC( ) );
+			Assert::AreEqual( relationA.getEntry( 1, 0 )->getEntryVC( ), test.getEntry( 1, 0 )->getEntryVC( ) );
+
 		}
 
 		TEST_METHOD(projectionCommand)
@@ -739,7 +756,8 @@ namespace UnitTest1
 
 			p.parse( dml );
 
-			Relation relation = p.getRelation("a");
+			Relation relation;
+			p.getRelation( "a", relation );
 
 			vector<string> attributes;
 			attributes.push_back("Name");
@@ -757,7 +775,8 @@ namespace UnitTest1
 
 			p.parse( dml );
 
-			Relation relation = p.getRelation("a");
+			Relation relation;
+			p.getRelation( "a", relation );
 
 			vector<string> attributes;
 			attributes.push_back("AName");
@@ -801,8 +820,10 @@ namespace UnitTest1
 
 			dml = "both_dogsB <- More_Dogs * Dogs";
 			p.parse( dml );
-			Relation relationA = p.getRelation("both_dogsA");
-			Relation relationB = p.getRelation("both_dogsB");
+			Relation relationA;
+			p.getRelation( "both_dogsA", relationA );
+			Relation relationB;
+			p.getRelation( "both_dogsB", relationB );
 
 
 			Assert::AreEqual( relationA.getNumTuples(), relationB.getNumTuples() );
@@ -822,24 +843,38 @@ namespace UnitTest1
 			Assert::AreEqual( d.accessRelation( "animals" ).getName(), name );
 		}
 
-		TEST_METHOD(writeFileCommand)
-		{
+		TEST_METHOD( writeFileCommand ) {
+			Parser p( d );
+			string dml = "OPEN Dogs;";
+			p.parse( dml );
+			dml = "WRITE Dogs;";
 
+			Assert::AreEqual( p.parse( dml ), 1 );
 		}
 
-		TEST_METHOD(closeFileCommand)
-		{
+		TEST_METHOD( closeFileCommand ) {
+			Parser p( d );
+			string dml = "OPEN Dogs;";
+			p.parse( dml );
+			dml = "WRITE Dogs;";
+			p.parse( dml );
+			dml = "CLOSE Dogs;";
 
+			Assert::AreEqual( p.parse( dml ), 1 );
 		}
 
-		TEST_METHOD(openFileCommand)
-		{
+		TEST_METHOD( openFileCommand ) {
+			Parser p( d );
+			string dml = "WRITE Dogs;";
 
+			Assert::AreEqual( p.parse( dml ), 1 );
 		}
 
-		TEST_METHOD(showCommand)
-		{
+		TEST_METHOD( showCommand ) {
+			Parser p( d );
+			string dml = "SHOW Dogs;";
 
+			Assert::AreEqual( p.parse( dml ), 1 );
 		}
 
 		TEST_METHOD(updateCommand)
@@ -850,7 +885,8 @@ namespace UnitTest1
 			p.parse(dml);
 			//Assert::AreEqual( p.parse( dml ), 1 );
 
-			Relation relation = p.getRelation("Dogs");
+			Relation relation;
+			p.getRelation( "Dogs", relation );
 
 			vector<Entry> test;
 
@@ -996,6 +1032,115 @@ namespace UnitTest1
 
 			Assert::AreEqual( p.parse( dml ), -1 );
 
+		}
+		TEST_METHOD( addGame ) {
+			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"1/13/2014\", \"2:30\", \"soccer\", 1234 );";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+
+		}
+
+		TEST_METHOD( addPlayer ) {
+			string parserCommand = "INSERT INTO players VALUES FROM (\"Jimmy\", \"Johns\", 52015875, 1234 );";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD( addReferee ) {
+			string parserCommand = "INSERT INTO referees VALUES FROM (\"Zebra\", \"boy\", 78154564, 1234 );";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD( addSport ) {
+			string parserCommand = "INSERT INTO sports VALUES FROM (\"soccer\", 1234, \"spring\" );";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD( addTeam ) {
+			string parserCommand = "INSERT INTO teams VALUES FROM (\"Firecrakers\", 5678 );";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD( changeGameLocation ) {
+
+			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"12014\", \"230\", \"soccer\", 1234 );";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+
+			parserCommand = "UPDATE games SET location = \"REC\" WHERE (gameID == 1234);";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD( changeGameTime ) {
+			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"12014\", \"230\", \"soccer\", 1234 );";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+
+			parserCommand = "UPDATE games SET time = \"130\" WHERE (gameID == 1234);";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD( changeSportSeason ) {
+			string parserCommand = "INSERT INTO sports VALUES FROM (\"soccer\", 1234, \"spring\" );";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+
+			parserCommand = "UPDATE sports SET season = \"fall\" WHERE (sportID == 1234);";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD( displaySportGame ) {
+			string parserCommand = "newView <- select (sport == \"soccer\") games;";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD( displaySportsPlayed ) {
+			string parserCommand = "playerPlays <- select (netID == 858386873) players;";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD( listNamesOfSports ) {
+			string parserCommand = "sportName <- project (name) sports;";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD( removeGame ) {
+			string parserCommand = "DELETE FROM games WHERE (gameID == 796 );";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD( removePlayer ) {
+			string parserCommand = "DELETE FROM players WHERE (netID == 858386873);";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD( removeReferee ) {
+			string parserCommand = "DELETE FROM referees WHERE (netID == 4785693);";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD( removeSport ) {
+			string parserCommand = "DELETE FROM sports WHERE (sportID == 1234);";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD( removeTeam ) {
+			string parserCommand = "DELETE FROM teams WHERE (teamID == 6846);";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
 	};
