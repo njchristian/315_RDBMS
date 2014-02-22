@@ -873,6 +873,22 @@ int Parser::parseCommand( stringstream& command ){
 		return SUCCESS;
 
 	}
+	
+	else if ( word == "DROP" ) {
+		string table = readAlphaNumWord( command );
+
+		if ( table != "TABLE" ) {
+			return INVALID;
+		}
+		string relationName;
+		if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
+			return INVALID;
+		}
+		//need to delete from views not database
+		database.removeRelationFromDatabase(relationName);
+
+		return SUCCESS;
+	}
 	else {
 
 		return INVALID;

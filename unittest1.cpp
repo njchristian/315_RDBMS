@@ -785,6 +785,18 @@ namespace UnitTest1
 			Assert::IsTrue( relation.hasTuple( entryPointers ) );
 		}
 
+		TEST_METHOD(dropTableCommand)
+		{
+			Parser p (d );
+			string dml = "DROP TABLE Dogs";
+
+			p.parse(dml);
+
+			Relation relation;
+
+			Assert::AreEqual( p.getRelation("Dogs", relation), -1 );
+		}
+
 		TEST_METHOD(crossProductCommand)
 		{
 			Parser p (d );
@@ -1056,34 +1068,60 @@ namespace UnitTest1
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD(removeGame)
+		TEST_METHOD(displaySportGame)
 		{
+			string parserCommand = "newView <- select (sport == \"soccer\") games;";
 
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD(removeMenu)
+		TEST_METHOD(displaySportsPlayed)
 		{
+			string parserCommand = "playerPlays <- select (netID == 858386873) players;";
 
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD(listNamesOfSports)
+		{
+			string parserCommand = "sportName <- project (name) sports;";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD(removeGame)
+		{
+			string parserCommand = "DELETE FROM games WHERE (gameID == 796 );";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
 		TEST_METHOD(removePlayer)
 		{
+			string parserCommand = "DELETE FROM players WHERE (netID == 858386873);";
 
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
 		TEST_METHOD(removeReferee)
 		{
+			string parserCommand = "DELETE FROM referees WHERE (netID == 4785693);";
 
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
 		TEST_METHOD(removeSport)
 		{
+			string parserCommand = "DELETE FROM sports WHERE (sportID == 1234);";
 
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
 		TEST_METHOD(removeTeam)
 		{
+			string parserCommand = "DELETE FROM teams WHERE (teamID == 6846);";
 
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
 
