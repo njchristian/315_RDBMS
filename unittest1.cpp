@@ -10,6 +10,7 @@
 //#include "../Database/ConditionList.h"
 //#include "../Database/Connector.h"
 #include "../Database/DBCell.h"
+#include "../Database/SportsLeague.h"
 //#include "../Database/Operation.h"
 #include <vector>
 #include <iostream>
@@ -26,7 +27,10 @@ namespace UnitTest1
 	{
 	public:
 		
+		SportsLeague league;
 		Database d;
+		
+		DBCell database;
 		vector<Relation*> localRelations;
 
 		vector<Attribute> testAtts;
@@ -36,6 +40,13 @@ namespace UnitTest1
 
 		TEST_METHOD_INITIALIZE(init234)
 		{
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
+
 			testAtts.push_back(Attribute("Name", VARCHAR));
 			testAtts.push_back(Attribute("Owner", VARCHAR));
 			testAtts.push_back(Attribute("Age", INTEGER));
@@ -975,75 +986,107 @@ namespace UnitTest1
 
 		}
 
-		TEST_METHOD(creatingGAMES)
+		TEST_METHOD(addGame)
 		{
-			Parser p(d);
-			string dml = "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);";
+			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"1/13/2014\", \"2:30\", \"soccer\", 1234 );";
 
-			p.parse(dml);
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
 
-			Relation relation = d.accessRelation( "games" );
-
-			string name = "games";
-
-			Assert::AreEqual( d.accessRelation( "games" ).getName(), name );
 		}
 
-		TEST_METHOD(creatingPlayers)
+		TEST_METHOD(addPlayer)
 		{
-			Parser p(d);
-			string dml = "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);";
+			string parserCommand = "INSERT INTO players VALUES FROM (\"Jimmy\", \"Johns\", 52015875, 1234 );";
 
-			p.parse(dml);
-
-			Relation relation = d.accessRelation( "players" );
-
-			string name = "players";
-
-			Assert::AreEqual( d.accessRelation( "players" ).getName(), name );
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD(creatingReferees)
+		TEST_METHOD(addReferee)
 		{
-			Parser p(d);
-			string dml = "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);";
+			string parserCommand = "INSERT INTO referees VALUES FROM (\"Zebra\", \"boy\", 78154564, 1234 );";
 
-			p.parse(dml);
-
-			Relation relation = d.accessRelation( "referees" );
-
-			string name = "referees";
-
-			Assert::AreEqual( d.accessRelation( "referees" ).getName(), name );
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD(creatingSports)
+		TEST_METHOD(addSport)
 		{
-			Parser p(d);
-			string dml = "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);";
+			string parserCommand = "INSERT INTO sports VALUES FROM (\"soccer\", 1234, \"spring\" );";
 
-			p.parse(dml);
-
-			Relation relation = d.accessRelation( "sports" );
-
-			string name = "sports";
-
-			Assert::AreEqual( d.accessRelation( "sports" ).getName(), name );
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD(creatingTeams)
+		TEST_METHOD(addTeam)
 		{
-			Parser p(d);
-			string dml = "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);";
+			string parserCommand = "INSERT INTO teams VALUES FROM (\"Firecrakers\", 5678 );";
 
-			p.parse(dml);
-
-			Relation relation = d.accessRelation( "teams" );
-
-			string name = "teams";
-
-			Assert::AreEqual( d.accessRelation( "teams" ).getName(), name );
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
+
+		TEST_METHOD(changeGameLocation)
+		{
+
+			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"12014\", \"230\", \"soccer\", 1234 );";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+
+			parserCommand = "UPDATE games SET location = \"REC\" WHERE (gameID == 1234);";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD(changeGameTime)
+		{
+			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"12014\", \"230\", \"soccer\", 1234 );";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+
+			parserCommand = "UPDATE games SET time = \"130\" WHERE (gameID == 1234);";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD(changeSportSeason)
+		{
+			string parserCommand = "INSERT INTO sports VALUES FROM (\"soccer\", 1234, \"spring\" );";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+
+			parserCommand = "UPDATE sports SET season = \"fall\" WHERE (sportID == 1234);";
+
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
+		}
+
+		TEST_METHOD(removeGame)
+		{
+
+		}
+
+		TEST_METHOD(removeMenu)
+		{
+
+		}
+
+		TEST_METHOD(removePlayer)
+		{
+
+		}
+
+		TEST_METHOD(removeReferee)
+		{
+
+		}
+
+		TEST_METHOD(removeSport)
+		{
+
+		}
+
+		TEST_METHOD(removeTeam)
+		{
+
+		}
+
+
 
 	};
 }

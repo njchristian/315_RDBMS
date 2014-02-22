@@ -71,20 +71,26 @@ void SportsLeague::addGame( ) {
 		cout << "Please enter the date of the game.\n";
 		string date;
 		cin >> date;
-
+		//how to check a correct date
 		parserCommand += "\"" + date + "\", ";
 
 		cout << "Please enter the time of the game.\n";
 		string time;
 		cin >> time;
-
+		//how to check a correct time
 		parserCommand += "\"" + time + "\", ";
 
 		cout << "Please enter the game's associated sport.\n";
 		string sport;
 		cin >> sport;
 
-		parserCommand += "\"" + sport + "\");";
+		parserCommand += "\"" + sport + "\", ";
+
+		cout << "Please enter the game's ID.\n";
+		int gameID;
+		cin >> gameID;
+
+		parserCommand += "\"" + to_string( gameID ) + "\");";
 
 		if ( database.execute( parserCommand ) == 1 ) {
 			cout << "Game successfully added to the database.\n";
@@ -101,7 +107,7 @@ void SportsLeague::addGame( ) {
 
 
 void SportsLeague::addMenu( ) {
-	int userChoice;
+	char userChoice;
 	for ( ;; ) {
 		cout << "Enter '1' to add to the game relation.\n";
 		cout << "Enter '2' to add to the player relation.\n";
@@ -154,10 +160,10 @@ void SportsLeague::addPlayer( ) {
 		parserCommand += "\"" + lastName + "\", ";
 
 		cout << "Please enter the Net-ID of the player.\n";
-		string netID; // should this be of type int??
+		int netID;
 		cin >> netID;
 
-		parserCommand += "\"" + netID + "\", ";
+		parserCommand += "\"" + to_string( netID ) + "\", ";
 
 		cout << "Please enter the sport ID that the player plays.\n";
 		int sportID; 
@@ -308,20 +314,18 @@ void SportsLeague::changeGameLocation( ) {
 	//change location
 
 	for ( ;; ) {
-		//string parserCommand = "UPDATE games SET Age = 40 WHERE (Owner == \"Melodie\");";
-		string parserCommand = "UPDATE games SET Location = ";
+		string parserCommand = "UPDATE games SET location = ";
 
-		cout << "Please enter in the game \n";
-		string name;
-		cin >> name;
+		cout << "Please enter in the gameID \n";
+		int gameID;
+		cin >> gameID;
 
-		parserCommand += " (\"" + name + "\", ";
+		cout<< "Please enter the game's new location\n";
+		string newLocation;
+		cin >> newLocation;
 
-		cout << "Please enter the ID of the team.\n";
-		int teamID;
-		cin >> teamID;
+		parserCommand += "\"" + newLocation + "\" WHERE (gameID == " + to_string( gameID ) + ");";
 
-		parserCommand += "\"" + to_string( teamID ) + "\");";
 
 		if ( database.execute( parserCommand ) == 1 ) {
 			cout << "Team successfully added to the database.\n";
@@ -338,10 +342,66 @@ void SportsLeague::changeGameLocation( ) {
 
 void SportsLeague::changeGameTime( ) {
 	// update
+	//find game
+	//find time 
+	//change time
+
+	for ( ;; ) {
+		string parserCommand = "UPDATE games SET time = ";
+
+		cout << "Please enter in the gameID \n";
+		int gameID;
+		cin >> gameID;
+
+		cout<< "Please enter the game's new time\n";
+		string newTime;
+		cin >> newTime;
+
+		parserCommand += "\"" + newTime + "\" WHERE (gameID == " + to_string( gameID ) + ");";
+
+		if ( database.execute( parserCommand ) == 1 ) {
+			cout << "Team successfully added to the database.\n";
+			return;
+		}
+		else {
+			cout << "Invalid data entered - Team was not added to the database.\n";
+			if ( retry( ) == false ) {
+				return;
+			}
+		}
+	}
 }
 
 void SportsLeague::changeSportSeason( ) {
 	// update
+	//find sport
+	//find season
+	//change season
+	for ( ;; ) {
+
+		string parserCommand = "UPDATE sports SET season = ";
+
+		cout << "Please enter in the sportID \n";
+		int sportID;
+		cin >> sportID;
+
+		cout<< "Please enter the sport's new season\n";
+		string newSeason;
+		cin >> newSeason;
+
+		parserCommand += "\"" + newSeason + "\" WHERE (gameID == " + to_string( sportID ) + ");";
+
+		if ( database.execute( parserCommand ) == 1 ) {
+			cout << "Team successfully added to the database.\n";
+			return;
+		}
+		else {
+			cout << "Invalid data entered - Team was not added to the database.\n";
+			if ( retry( ) == false ) {
+				return;
+			}
+		}
+	}
 }
 
 void SportsLeague::displaySportsGames( ) {
