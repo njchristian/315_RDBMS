@@ -165,7 +165,8 @@ namespace UnitTest1
 			entryPointers.push_back( &test[1] );
 			entryPointers.push_back( &test[2] );
 
-			Relation relation = p.getRelation("Dogs");
+			Relation relation;
+			p.getRelation("Dogs", relation);
 
 			Assert::IsFalse( relation.hasTuple( entryPointers ) );
 		}
@@ -649,7 +650,8 @@ namespace UnitTest1
 
 			p.parse( dml );
 
-			Relation relation = p.getRelation("puppies");
+			Relation relation;
+			p.getRelation("puppies",relation);
 
 			Assert::AreEqual( relation.getNumTuples() , 1 );
 		
@@ -658,13 +660,14 @@ namespace UnitTest1
 		TEST_METHOD(differenceCommand)
 		{
 			Parser p (d );
-			string dml = "both_dogsA <- Dogs - More_Dogs";
+			string dml = "both_dogsA <- Dogs - More_Dogs;";
 
 			p.parse( dml );
 
-			dml = "both_dogsB <- More_Dogs - Dogs";
+			dml = "both_dogsB <- More_Dogs - Dogs;";
 			p.parse( dml );
-			Relation relationA = p.getRelation("both_dogsA");
+			Relation relationA;
+			p.getRelation("both_dogsA",relationA);
 
 			Relation test("test",testAtts,keys);
 
@@ -686,7 +689,7 @@ namespace UnitTest1
 			d.addTupleToRelation(testEntries.at(0), "test");
 			d.addTupleToRelation(testEntries.at(1), "test");
 
-			test = p.getRelation("test");
+			p.getRelation("test",test);
 
 			Assert::AreEqual( relationA.getEntry(0,0)->getEntryVC(), test.getEntry(0,0)->getEntryVC());
 			Assert::AreEqual( relationA.getEntry(1,0)->getEntryVC(), test.getEntry(1,0)->getEntryVC());
@@ -699,7 +702,8 @@ namespace UnitTest1
 
 			p.parse( dml );
 
-			Relation relation = p.getRelation("a");
+			Relation relation;
+			p.getRelation("a",relation);
 
 			vector<string> attributes;
 			attributes.push_back("Name");
@@ -719,8 +723,10 @@ namespace UnitTest1
 			dml = "both_dogsB <- More_Dogs + Dogs;";
 			p.parse( dml );
 
-			Relation relationA = p.getRelation("both_dogsA");
-			Relation relationB = p.getRelation("both_dogsB");
+			Relation relationA;
+			p.getRelation("both_dogsA",relationA);
+			Relation relationB;
+			p.getRelation("both_dogsB",relationB);
 
 			Assert::AreEqual( relationA.getNumTuples() , relationB.getNumTuples() );
 		}
@@ -732,7 +738,8 @@ namespace UnitTest1
 
 			p.parse( dml );
 
-			Relation relation = p.getRelation("a");
+			Relation relation;
+			p.getRelation("a",relation);
 
 			vector<string> attributes;
 			attributes.push_back("AName");
@@ -776,8 +783,10 @@ namespace UnitTest1
 
 			dml = "both_dogsB <- More_Dogs * Dogs";
 			p.parse( dml );
-			Relation relationA = p.getRelation("both_dogsA");
-			Relation relationB = p.getRelation("both_dogsB");
+			Relation relationA;
+			p.getRelation("both_dogsA",relationA);
+			Relation relationB;
+			p.getRelation("both_dogsB",relationB);
 
 
 			Assert::AreEqual( relationA.getNumTuples(), relationB.getNumTuples() );
@@ -842,7 +851,8 @@ namespace UnitTest1
 
 			p.parse(dml);
 
-			Relation relation = p.getRelation("Dogs");
+			Relation relation;
+			p.getRelation("Dogs",relation);
 
 			vector<Entry> test;
 
@@ -965,8 +975,75 @@ namespace UnitTest1
 
 		}
 
+		TEST_METHOD(creatingGAMES)
+		{
+			Parser p(d);
+			string dml = "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);";
 
+			p.parse(dml);
 
+			Relation relation = d.accessRelation( "games" );
+
+			string name = "games";
+
+			Assert::AreEqual( d.accessRelation( "games" ).getName(), name );
+		}
+
+		TEST_METHOD(creatingPlayers)
+		{
+			Parser p(d);
+			string dml = "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);";
+
+			p.parse(dml);
+
+			Relation relation = d.accessRelation( "players" );
+
+			string name = "players";
+
+			Assert::AreEqual( d.accessRelation( "players" ).getName(), name );
+		}
+
+		TEST_METHOD(creatingReferees)
+		{
+			Parser p(d);
+			string dml = "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);";
+
+			p.parse(dml);
+
+			Relation relation = d.accessRelation( "referees" );
+
+			string name = "referees";
+
+			Assert::AreEqual( d.accessRelation( "referees" ).getName(), name );
+		}
+
+		TEST_METHOD(creatingSports)
+		{
+			Parser p(d);
+			string dml = "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);";
+
+			p.parse(dml);
+
+			Relation relation = d.accessRelation( "sports" );
+
+			string name = "sports";
+
+			Assert::AreEqual( d.accessRelation( "sports" ).getName(), name );
+		}
+
+		TEST_METHOD(creatingTeams)
+		{
+			Parser p(d);
+			string dml = "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);";
+
+			p.parse(dml);
+
+			Relation relation = d.accessRelation( "teams" );
+
+			string name = "teams";
+
+			Assert::AreEqual( d.accessRelation( "teams" ).getName(), name );
+		}
 
 	};
 }

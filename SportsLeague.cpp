@@ -8,21 +8,51 @@ SportsLeague::SportsLeague( ) {
 	// create the 5 relations
 
 	// somehow check if files exist bc if they don't then the relations need to be created
-	// ifstream gamesFile( "games.db" );
-	// ifstream playersFile( "players.db" );
-	// ifstream refereesFile( "referees.db" );
-	// ifstream sportsFile( "sports.db" );
-	// ifstream teamsFile( "teams.db" );
-	
-	// maybe change open file so it returns something if the file is empty
+	if( ifstream( "games.db" ) ) {
+		//file exists
+		database.execute( "OPEN games;" );
+	}
+	else {
+		database.execute( "OPEN games;" );
+		database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+	}
 
-	// if empty then create the relation
+	if( ifstream( "players.db" ) ) {
+		//file exists
+		database.execute( "OPEN players;" );
+	}
+	else {
+		database.execute( "OPEN players;" );
+		database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+	}
 
-	database.execute( "OPEN games" );
-	database.execute( "OPEN players" );
-	database.execute( "OPEN referees" );
-	database.execute( "OPEN sports" );
-	database.execute( "OPEN teams" );
+	if( ifstream( "referees.db" ) ) {
+		//file exists
+		database.execute( "OPEN referees;" );
+	}
+	else {
+		database.execute( "OPEN referees;" );
+		database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+	}
+
+	if( ifstream( "sports.db" ) ) {
+		//file exists
+		database.execute( "OPEN sports;" );
+	}
+	else {
+		database.execute( "OPEN sports;" );
+		database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);");
+	}
+
+	if( ifstream( "teams.db" ) ) {
+		//file exists
+		database.execute( "OPEN teams;" );
+	}
+	else {
+		database.execute( "OPEN teams;" );
+		database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);" );
+	}
+
 }
 
 
@@ -273,6 +303,37 @@ void SportsLeague::addTeam( ) {
 
 void SportsLeague::changeGameLocation( ) {
 	// update
+	//find game
+	//find location 
+	//change location
+
+	for ( ;; ) {
+		//string parserCommand = "UPDATE games SET Age = 40 WHERE (Owner == \"Melodie\");";
+		string parserCommand = "UPDATE games SET Location = ";
+
+		cout << "Please enter in the game \n";
+		string name;
+		cin >> name;
+
+		parserCommand += " (\"" + name + "\", ";
+
+		cout << "Please enter the ID of the team.\n";
+		int teamID;
+		cin >> teamID;
+
+		parserCommand += "\"" + to_string( teamID ) + "\");";
+
+		if ( database.execute( parserCommand ) == 1 ) {
+			cout << "Team successfully added to the database.\n";
+			return;
+		}
+		else {
+			cout << "Invalid data entered - Team was not added to the database.\n";
+			if ( retry( ) == false ) {
+				return;
+			}
+		}
+	}
 }
 
 void SportsLeague::changeGameTime( ) {
