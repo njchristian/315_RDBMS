@@ -150,6 +150,7 @@ void SportsLeague::addMenu( ) {
 			backToMenu = true;
 			break;
 		default:
+			cin.ignore( 1024, '\n' );
 			cin.clear();
 			cin.sync();
 			"Invalid choice. Please try again.\n";
@@ -629,7 +630,7 @@ void SportsLeague::listPlayersOnTeam( ) {
 
 
 void SportsLeague::printMenu( ) {
-	cout << "Main Menu:\n";
+	cout << "\nMain Menu:\n";
 	cout << "Enter '1' to add to a relation.\n";
 	cout << "Enter '2' to remove from a relation.\n";
 	cout << "Enter '3' to show information from a relation.\n";
@@ -706,9 +707,10 @@ void SportsLeague::removeMenu( ) {
 			backToMenu = true;
 			break;
 		default:
+			cin.ignore( 1024, '\n' );
 			cin.clear();
 			cin.sync();
-			"Invalid choice. Please try again.\n";
+			cout << "Invalid choice. Please try again.\n";
 			break;
 		}
 	}
@@ -928,9 +930,11 @@ void SportsLeague::run( ) {
 
 			//etc
 		default:
+			cin.ignore( 1024, '\n' );
 			cin.clear();
 			cin.sync();
-			"Invalid choice. Please try again.\n";
+			
+			cout << "Invalid choice. Please try again.\n";
 			break;
 		}
 	}
@@ -1016,6 +1020,7 @@ void SportsLeague::showMenu( ) {
 			backToMenu = true;
 			break;
 		default:
+			cin.ignore( 1024, '\n' );
 			cin.clear();
 			cin.sync();
 			"Invalid choice. Please try again.\n";
