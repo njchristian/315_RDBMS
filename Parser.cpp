@@ -98,19 +98,6 @@ int Parser::writeFile( string relationName ) {
 	return SUCCESS;
 }
 
-void Parser::deleteView( string relationName){
-	
-	vector<Relation>::iterator it;
-	
-	for( it = views.begin(); it!= views.end(); ++it ) {
-		if( it->getName() == relationName ) {
-			views.erase( it );
-			break;
-		}
-	}
-}
-
-
 
 int Parser::openFile( string relationName ) {
 
@@ -938,7 +925,7 @@ int Parser::parseCommand( stringstream& command ){
 
 	}
 	
-	else if ( word == "DROP" ) { //currently only works for view
+	else if ( word == "DROP" ) {
 		string table = readAlphaNumWord( command );
 
 		if ( table != "TABLE" ) {
@@ -948,10 +935,8 @@ int Parser::parseCommand( stringstream& command ){
 		if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
 			return INVALID;
 		}
-
-		deleteView( relationName );
-		//need to delete from view not database
-
+		//need to delete from views not database
+		database.removeRelationFromDatabase(relationName);
 
 		return SUCCESS;
 	}
@@ -985,6 +970,8 @@ int Parser::parseQuery( stringstream& command ){
 	if( readSemi( command ) < 0 ){
 		return INVALID;
 	}
+
+	result = database.getResultMatrix();
 
 	readWhite(command);
 
