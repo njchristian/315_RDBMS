@@ -408,10 +408,10 @@ void SportsLeague::changeSportSeason( ) {
 		string newSeason;
 		cin >> newSeason;
 
-		parserCommand += "\"" + newSeason + "\" WHERE (gameID == " + to_string( sportID ) + ");";
+		parserCommand += "\"" + newSeason + "\" WHERE (sportID == " + to_string( sportID ) + ");";
 
 		if ( database.execute( parserCommand ) == 1 ) {
-			cout << "Changed sport's season successdully.\n\n";
+			cout << "Changed sport's season successfully.\n\n";
 			return;
 		}
 		else {
@@ -852,7 +852,11 @@ bool SportsLeague::retry( ) {
 		else if ( answer == "n" ) {
 			return false;
 		}
-		cout << "Invalid choice.\n";
+		else {
+			cout << "Invalid choice.\n";
+			cin.clear( );
+			cin.sync( );
+		}
 	}
 
 }
