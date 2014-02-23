@@ -98,18 +98,6 @@ int Parser::writeFile( string relationName ) {
 	return SUCCESS;
 }
 
-void Parser::deleteView( string relationName){
-
-	vector<Relation>::iterator it;
-
-	for( it = views.begin(); it!= views.end(); ++it ) {
-		if( it->getName() == relationName ) {
-			views.erase( it );
-			break;
-		}
-	}
-}
-
 
 int Parser::openFile( string relationName ) {
 
@@ -205,6 +193,26 @@ bool Parser::isNum( int c) {
 
 	return (c >= ZERO && c <= NINE );
 
+}
+
+//DONE - NOT TESTED
+string Parser::readWord( stringstream& command ) {
+
+	readWhite( command );
+
+	string result = "";
+	char next;
+
+	while ( command.peek( ) != '"' ) {
+
+		command.get( next );
+		result.push_back( next );
+
+	}
+
+	readWhite( command );
+
+	return result;
 }
 
 
@@ -491,6 +499,11 @@ int Parser::update( stringstream& command ) {
 		return INVALID;
 	}
 
+	Relation targetRelation;
+	if( getRelation( relationName, targetRelation) < 0 ){
+		return INVALID;
+	}
+
 	string setKeyWord = readAlphaNumWord( command );
 
 	if ( setKeyWord != "SET" ) {
@@ -499,6 +512,8 @@ int Parser::update( stringstream& command ) {
 
 	vector<string> attributeNames;
 	vector<Entry> newValues;
+
+	int index = 0;
 
 	// is this list of stuff suppose to be enclosed in parentheses or not?
 	// maybe need a better condition for this loop
@@ -529,6 +544,11 @@ int Parser::update( stringstream& command ) {
 
 		// Parse the literal
 		Entry newVal;
+
+		if( targetRelation.getAttributeAt(index).hasSize ){
+			newVal.setL(targetRelation.getAttributeAt(index).vcSize); 
+		}
+
 		if( readLiteral( command, newVal ) < 0 ){
 			return INVALID;
 		}
@@ -540,6 +560,7 @@ int Parser::update( stringstream& command ) {
 			command.get( );
 		}
 
+		++index;
 	}
 
 	// Get the conditions that will be used by the delete function
@@ -611,7 +632,7 @@ int Parser::readLiteral( stringstream& command, Entry& e ) {
 			return INVALID;
 		}
 
-		e = Entry( readAlphaNumWord( command ) );
+		e.setVC( readWord( command ) );
 
 		command.get(quote);
 		if(quote != '"'){
@@ -620,7 +641,8 @@ int Parser::readLiteral( stringstream& command, Entry& e ) {
 
 	}
 	else {
-		e = Entry(a);
+
+		e.setInt( a );
 
 	}
 
@@ -634,6 +656,11 @@ int Parser::insertInto( stringstream& command ) {
 	// Get the target Relation name
 	string relationName; 
 	if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
+		return INVALID;
+	}
+
+	Relation targetRelation;
+	if( getRelation( relationName, targetRelation ) < 0 ){
 		return INVALID;
 	}
 
@@ -660,8 +687,19 @@ int Parser::insertInto( stringstream& command ) {
 		vector<Entry> tuple;
 		Entry helperEntry;
 		
+		
+		
+		int index = 0;
 		// keep reading literals until there is a ')'
 		while ( command.peek( ) != ')' ) {
+
+			Entry helperEntry;
+
+			if( targetRelation.getAttributeAt(index).hasSize ){
+				helperEntry.setL( targetRelation.getAttributeAt(index).vcSize );
+			}
+
+
 			if( readLiteral( command, helperEntry ) < 0 ){
 				return INVALID;
 			}
@@ -678,6 +716,7 @@ int Parser::insertInto( stringstream& command ) {
 				return INVALID;
 			}
 
+			++index;
 		}
 
 		// consume the closing parenthesis
@@ -886,7 +925,7 @@ int Parser::parseCommand( stringstream& command ){
 
 	}
 	
-	else if ( word == "DROP" ) { //currently only works for view
+	else if ( word == "DROP" ) {
 		string table = readAlphaNumWord( command );
 
 		if ( table != "TABLE" ) {
@@ -896,9 +935,8 @@ int Parser::parseCommand( stringstream& command ){
 		if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
 			return INVALID;
 		}
-
-		deleteView( relationName );
-		//need to delete from view not database
+		//need to delete from views not database
+		database.removeRelationFromDatabase(relationName);
 
 		return SUCCESS;
 	}

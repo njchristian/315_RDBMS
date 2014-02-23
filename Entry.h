@@ -13,6 +13,26 @@ class Entry{
 	Type t;
 	int intEntry;
 	string vcEntry;
+	int vcLength;
+
+	void storeStr( string s ){
+
+		if( s.size() <= vcLength ){
+			vcEntry = s;
+			return;
+		}
+		
+		string result = "";
+
+		for(int i = 0; i < vcLength; ++i){
+
+			result.push_back(s.at(i));
+
+		}
+
+		vcEntry = result;
+
+	}
 
 public:
 
@@ -23,7 +43,8 @@ public:
 		t = INTEGER;
 	}
 
-	Entry(string givenVC) : vcEntry(givenVC) {
+	Entry(string givenVC, int len) : vcLength(len) {
+		storeStr(givenVC);
 		t = VARCHAR;
 	}
 
@@ -33,8 +54,12 @@ public:
 	}
 
 	void setVC( string str ){
-		vcEntry = str;
+		storeStr(str);
 		t = VARCHAR;
+	}
+
+	void setL( int length ){
+		vcLength = length;
 	}
 
 	// Public Functions
@@ -53,6 +78,10 @@ public:
 	string getEntryVC(){
 		return vcEntry;
 	}
+
+	int getVCLength(){
+		return vcLength;
+	} 
 
 };
 

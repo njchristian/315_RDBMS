@@ -203,7 +203,7 @@ bool operator==(Relation& relationA, Relation& relationB){
 // Output operator
 ostream& operator<<(ostream& os, Relation& a){
 
-	int WIDTH = 10;
+	int WIDTH = 15;
 
 	os<<"\n\nRelation Name: "<<a.getName()<<"\n\n";
 

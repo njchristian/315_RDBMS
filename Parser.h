@@ -28,8 +28,8 @@ class Parser{
 		views.push_back( r );
 	}
 
-	void deleteView( string relationName);
 	
+
 	//Is c alpha numeric or '_'?
 	bool isAlphaNum( int c );
 
@@ -132,6 +132,8 @@ class Parser{
 	string readAlphaNumWord( stringstream& command );
 	
 	int readAlphaNumWordStartsAlpha( stringstream& command, string& result );
+
+	string readWord( stringstream& command );
 
 	//DONE - needs testing
 	// reads and returns an entry for the insert into function, opening parenthesis
