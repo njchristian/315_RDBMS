@@ -73,6 +73,8 @@ public:
 
 	int findTuple( );
 
+	vector<vector<string>> getResultMatrix();
+
 	Relation naturalJoin( Relation* targetRelationA, Relation* targetRelationB);
 	Relation naturalJoin( Relation* targetRelationA, string relationB ){ return naturalJoin(targetRelationA, findRelation(relationB)); }
 	Relation naturalJoin( string relationA, Relation* targetRelationB ){ return naturalJoin(findRelation(relationA), targetRelationB); }

@@ -20,6 +20,7 @@
 class Parser{
 
 	Database& database;
+	vector<vector<string>>& result;
 
 	//"views" are the temporary relations created by a program
 	vector<Relation> views;
@@ -28,7 +29,6 @@ class Parser{
 		views.push_back( r );
 	}
 
-	void deleteView( string relationName);
 	
 
 	//Is c alpha numeric or '_'?
@@ -176,7 +176,7 @@ class Parser{
 
 public:
 
-	Parser( Database& d ) : database( d ) {}
+	Parser( Database& d, vector<vector<string>>& r ) : database( d ), result(r) {}
 
 	int parse( string command );
 
