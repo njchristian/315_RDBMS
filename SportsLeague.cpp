@@ -463,7 +463,7 @@ void SportsLeague::displaySportsPlayed( ) {
 	for ( ;; ) {
 		string parserCommand = "DROP TABLE playerPlays;"; //if playerPlays exists delete it
 		database.execute( parserCommand );
-		string parserCommand = "playerPlays <- select";
+		parserCommand = "playerPlays <- select";
 
 		cout << "Please enter the player's netID \n";
 		int netID;
