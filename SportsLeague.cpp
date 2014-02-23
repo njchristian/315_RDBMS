@@ -12,50 +12,52 @@ SportsLeague::SportsLeague( ) {
 	// open files
 	// create the 5 relations
 
+	database = new DBCell( results );
+
 	// somehow check if files exist bc if they don't then the relations need to be created
 	if( ifstream( "games.db" ) ) {
 		//file exists
-		database.execute( "OPEN games;" );
+		database->execute( "OPEN games;" );
 	}
 	else {
-		database.execute( "OPEN games;" );
-		database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sportID INTEGER, gameID INTEGER ) PRIMARY KEY (gameID);" );
+		database->execute( "OPEN games;" );
+		database->execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sportID INTEGER, gameID INTEGER ) PRIMARY KEY (gameID);" );
 	}
 
 	if( ifstream( "players.db" ) ) {
 		//file exists
-		database.execute( "OPEN players;" );
+		database->execute( "OPEN players;" );
 	}
 	else {
-		database.execute( "OPEN players;" );
-		database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+		database->execute( "OPEN players;" );
+		database->execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
 	}
 
 	if( ifstream( "referees.db" ) ) {
 		//file exists
-		database.execute( "OPEN referees;" );
+		database->execute( "OPEN referees;" );
 	}
 	else {
-		database.execute( "OPEN referees;" );
-		database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+		database->execute( "OPEN referees;" );
+		database->execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
 	}
 
 	if( ifstream( "sports.db" ) ) {
 		//file exists
-		database.execute( "OPEN sports;" );
+		database->execute( "OPEN sports;" );
 	}
 	else {
-		database.execute( "OPEN sports;" );
-		database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);");
+		database->execute( "OPEN sports;" );
+		database->execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);");
 	}
 
 	if( ifstream( "teams.db" ) ) {
 		//file exists
-		database.execute( "OPEN teams;" );
+		database->execute( "OPEN teams;" );
 	}
 	else {
-		database.execute( "OPEN teams;" );
-		database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);" );
+		database->execute( "OPEN teams;" );
+		database->execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);" );
 	}
 
 }
@@ -97,12 +99,12 @@ void SportsLeague::addGame( ) {
 
 		parserCommand += "\"" + to_string( gameID ) + "\");";
 
-		if ( database.execute( parserCommand ) == 1 ) {
-			cout << "Game successfully added to the database.\n\n";
+		if ( database->execute( parserCommand ) == 1 ) {
+			cout << "Game successfully added to the database->\n\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Game was not added to the database.\n\n";
+			cout << "Invalid data entered - Game was not added to the database->\n\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -190,12 +192,12 @@ void SportsLeague::addPlayer( ) {
 
 		parserCommand += "\"" + to_string( sportID ) + "\");";
 
-		if ( database.execute( parserCommand ) == 1 ) {
-			cout << "Player successfully added to the database.\n\n";
+		if ( database->execute( parserCommand ) == 1 ) {
+			cout << "Player successfully added to the database->\n\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Player was not added to the database.\n\n";
+			cout << "Invalid data entered - Player was not added to the database->\n\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -238,12 +240,12 @@ void SportsLeague::addReferee( ) {
 
 		parserCommand += "\"" + to_string( sportID ) + "\");";
 
-		if ( database.execute( parserCommand ) == 1 ) {
-			cout << "Referee successfully added to the database.\n\n";
+		if ( database->execute( parserCommand ) == 1 ) {
+			cout << "Referee successfully added to the database->\n\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Referee was not added to the database.\n\n";
+			cout << "Invalid data entered - Referee was not added to the database->\n\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -279,12 +281,12 @@ void SportsLeague::addSport( ) {
 
 		parserCommand += "\"" + season + "\");";
 
-		if ( database.execute( parserCommand ) == 1 ) {
-			cout << "Sport successfully added to the database.\n\n";
+		if ( database->execute( parserCommand ) == 1 ) {
+			cout << "Sport successfully added to the database->\n\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Sport was not added to the database.\n\n";
+			cout << "Invalid data entered - Sport was not added to the database->\n\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -312,12 +314,12 @@ void SportsLeague::addTeam( ) {
 
 		parserCommand += "\"" + to_string( teamID ) + "\");";
 
-		if ( database.execute( parserCommand ) == 1 ) {
-			cout << "Team successfully added to the database.\n\n";
+		if ( database->execute( parserCommand ) == 1 ) {
+			cout << "Team successfully added to the database->\n\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Team was not added to the database.\n\n";
+			cout << "Invalid data entered - Team was not added to the database->\n\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -346,7 +348,7 @@ void SportsLeague::changeGameLocation( ) {
 		parserCommand += "\"" + newLocation + "\" WHERE (gameID == " + to_string( gameID ) + ");";
 
 
-		if ( database.execute( parserCommand ) == 1 ) {
+		if ( database->execute( parserCommand ) == 1 ) {
 			cout << "Changed game's location successfully.\n\n";
 			return;
 		}
@@ -378,7 +380,7 @@ void SportsLeague::changeGameTime( ) {
 
 		parserCommand += "\"" + newTime + "\" WHERE (gameID == " + to_string( gameID ) + ");";
 
-		if ( database.execute( parserCommand ) == 1 ) {
+		if ( database->execute( parserCommand ) == 1 ) {
 			cout << "Changed game's time successfully.\n\n";
 			return;
 		}
@@ -410,7 +412,7 @@ void SportsLeague::changeSportSeason( ) {
 
 		parserCommand += "\"" + newSeason + "\" WHERE (sportID == " + to_string( sportID ) + ");";
 
-		if ( database.execute( parserCommand ) == 1 ) {
+		if ( database->execute( parserCommand ) == 1 ) {
 			cout << "Changed sport's season successfully.\n\n";
 			return;
 		}
@@ -431,7 +433,7 @@ void SportsLeague::displaySportsGames( ) {
 
 	for ( ;; ) {
 	 	string parserCommand = "DROP TABLE newView;"; //if newView exists delete it
-		database.execute( parserCommand );
+		database->execute( parserCommand );
 
 		parserCommand = "newView <- select";
 
@@ -441,9 +443,9 @@ void SportsLeague::displaySportsGames( ) {
 
 		parserCommand += " (sportID == " + sport + ") games;";
 
-		if ( database.execute( parserCommand ) == 1 ) {
+		if ( database->execute( parserCommand ) == 1 ) {
 			parserCommand = "SHOW newView;";
-			database.execute( parserCommand );
+			database->execute( parserCommand );
 			return;
 		}
 		else {
@@ -462,7 +464,7 @@ void SportsLeague::displaySportsPlayed( ) {
 	//print relation
 	for ( ;; ) {
 		string parserCommand = "DROP TABLE playerPlays;"; //if playerPlays exists delete it
-		database.execute( parserCommand );
+		database->execute( parserCommand );
 		parserCommand = "playerPlays <- select";
 
 		cout << "Please enter the player's netID \n";
@@ -471,9 +473,9 @@ void SportsLeague::displaySportsPlayed( ) {
 
 		parserCommand += " (netID == " + to_string(netID) +") players;";
 
-		if ( database.execute( parserCommand ) == 1 ) {
+		if ( database->execute( parserCommand ) == 1 ) {
 			parserCommand = "SHOW playerPlays;";
-			database.execute( parserCommand );
+			database->execute( parserCommand );
 			return;
 		}
 		else {
@@ -488,21 +490,21 @@ void SportsLeague::displaySportsPlayed( ) {
 
 void SportsLeague::exit( ) {
 	// write files
-	database.execute( "WRITE games;" );
-	database.execute( "WRITE players;" );
-	database.execute( "WRITE referees;" );
-	database.execute( "WRITE sports;" );
-	database.execute( "WRITE teams;" );
+	database->execute( "WRITE games;" );
+	database->execute( "WRITE players;" );
+	database->execute( "WRITE referees;" );
+	database->execute( "WRITE sports;" );
+	database->execute( "WRITE teams;" );
 
 	// close file
-	database.execute( "CLOSE games;" );
-	database.execute( "CLOSE players;" );
-	database.execute( "CLOSE referees;" );
-	database.execute( "CLOSE sports;" );
-	database.execute( "CLOSE teams;" );
+	database->execute( "CLOSE games;" );
+	database->execute( "CLOSE players;" );
+	database->execute( "CLOSE referees;" );
+	database->execute( "CLOSE sports;" );
+	database->execute( "CLOSE teams;" );
 	
 	// exit
-	database.execute( "EXIT;" );
+	database->execute( "EXIT;" );
 
 	cout << "Thank you for using the Sports League management program.\n";
 	cout << "Have a nice day.\n";
@@ -515,23 +517,23 @@ void SportsLeague::getAllReferees( ) {
 
 	// delete the playerRefs relation
 	string parserCommand = "DROP TABLE playerRefs;";
-	database.execute( parserCommand );
+	database->execute( parserCommand );
 
 	// delete the allRefs relation
 	parserCommand = "DROP TABLE allRefs;";
-	database.execute( parserCommand );
+	database->execute( parserCommand );
 
 	// get the player refs in a relation that is union compatible with refs
 	parserCommand = "playerRefs <- project (firstName, lastName, netID, sportID) (select (isRef == 1) players);";
-	database.execute( parserCommand );
+	database->execute( parserCommand );
 
 	// get the union of player refs and non player refs
 	parserCommand = "allRefs <- playerRefs + referees;";
-	database.execute( parserCommand );
+	database->execute( parserCommand );
 
 	// display allRefs
 	parserCommand = "SHOW allRefs;";
-	database.execute( parserCommand );
+	database->execute( parserCommand );
 }
 
 
@@ -540,15 +542,15 @@ void SportsLeague::getNonReferees( ) {
 
 	// delete the temporary relation
 	string parserCommand = "DROP TABLE nonRefPlayers;";
-	database.execute( parserCommand );
+	database->execute( parserCommand );
 
 	// get the non ref players
 	parserCommand = "nonRefPlayers <- (project (firstName, lastName, netID, sportID) players) - referees;";
-	database.execute( parserCommand );
+	database->execute( parserCommand );
 
 	// display the non ref players
 	parserCommand = "SHOW nonRefPlayers;";
-	database.execute( parserCommand );
+	database->execute( parserCommand );
 
 	
 }
@@ -559,15 +561,15 @@ void SportsLeague::gamesWhenTeamCouldPlay( ) {
 
 	// remove the temporary list
 	string parserCommand = "DROP TABLE gamesTeamsPlay;";
-	database.execute( parserCommand );
+	database->execute( parserCommand );
 
 	// get the list of games and teams
 	parserCommand = "gamesTeamsPlay <- teams * games;";
-	database.execute( parserCommand );
+	database->execute( parserCommand );
 
 	// show the list
 	parserCommand = "SHOW gamesTeamsPlay;";
-	database.execute( parserCommand );
+	database->execute( parserCommand );
 
 }
 
@@ -576,13 +578,13 @@ void SportsLeague::listNamesOfSports( ) {
 	// project
 	for ( ;; ) {
 		string parserCommand = "DROP TABLE sportNames;"; //if sportNames exists delete it
-		database.execute( parserCommand );
+		database->execute( parserCommand );
 
 		parserCommand = "sportNames <- project (name) sports;";
 
-		if ( database.execute( parserCommand ) == 1 ) {
+		if ( database->execute( parserCommand ) == 1 ) {
 			parserCommand = "SHOW sportNames;";
-			database.execute( parserCommand );
+			database->execute( parserCommand );
 			return;
 		}
 		else {
@@ -604,16 +606,16 @@ void SportsLeague::listPlayersOnTeam( ) {
 		cin >> teamID;
 
 		string parserCommand = "DROP TABLE playersOnTeam;"; //if playersOnTeam exists delete it
-		database.execute( parserCommand );
+		database->execute( parserCommand );
 
 		parserCommand = "playersOnTeam <- select (teamID == ";
 
 		parserCommand += to_string( teamID );
 		parserCommand += ") teams;";
 
-		if ( database.execute( parserCommand ) == 1 ) {
+		if ( database->execute( parserCommand ) == 1 ) {
 			parserCommand = "SHOW playersOnTeam;";
-			database.execute( parserCommand );
+			database->execute( parserCommand );
 			return;
 		}
 		else {
@@ -653,12 +655,12 @@ void SportsLeague::removeGame( ) {
 		parserCommand += to_string( gameID );
 		parserCommand += ");";
 
-		if ( database.execute( parserCommand ) == 1 ) {
-			cout << "Game successfully removed from the database.\n";
+		if ( database->execute( parserCommand ) == 1 ) {
+			cout << "Game successfully removed from the database->\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Game was not removed from the database.\n";
+			cout << "Invalid data entered - Game was not removed from the database->\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -728,12 +730,12 @@ void SportsLeague::removePlayer( ) {
 
 		// pass the command to the parser; if it fails ask the user if they want
 		// to retry
-		if ( database.execute( parserCommand ) == 1 ) {
-			cout << "Player successfully removed from the database.\n";
+		if ( database->execute( parserCommand ) == 1 ) {
+			cout << "Player successfully removed from the database->\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Player was not removed from the database.\n";
+			cout << "Invalid data entered - Player was not removed from the database->\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -758,12 +760,12 @@ void SportsLeague::removeReferee( ) {
 
 		// pass the command to the parser; if it fails ask the user if they want
 		// to retry
-		if ( database.execute( parserCommand ) == 1 ) {
-			cout << "Referee successfully removed from the database.\n";
+		if ( database->execute( parserCommand ) == 1 ) {
+			cout << "Referee successfully removed from the database->\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Referee was not removed from the database.\n";
+			cout << "Invalid data entered - Referee was not removed from the database->\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -788,12 +790,12 @@ void SportsLeague::removeSport( ) {
 
 		// pass the command to the parser; if it fails ask the user if they want
 		// to retry
-		if ( database.execute( parserCommand ) == 1 ) {
-			cout << "Sport successfully removed from the database.\n";
+		if ( database->execute( parserCommand ) == 1 ) {
+			cout << "Sport successfully removed from the database->\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Sport was not removed from the database.\n";
+			cout << "Invalid data entered - Sport was not removed from the database->\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -818,12 +820,12 @@ void SportsLeague::removeTeam( ) {
 
 		// pass the command to the parser; if it fails ask the user if they want
 		// to retry
-		if ( database.execute( parserCommand ) == 1 ) {
-			cout << "Team successfully removed from the database.\n";
+		if ( database->execute( parserCommand ) == 1 ) {
+			cout << "Team successfully removed from the database->\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Team was not removed from the database.\n";
+			cout << "Invalid data entered - Team was not removed from the database->\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -951,7 +953,7 @@ void SportsLeague::run( ) {
 
 void SportsLeague::showGames( ) {
 	string command = "SHOW games;";
-	if ( database.execute( command ) < 0 ) {
+	if ( database->execute( command ) < 0 ) {
 		cout << "An error occurred.\n";
 	}
 }
@@ -1025,7 +1027,7 @@ void SportsLeague::showMenu( ) {
 
 void SportsLeague::showPlayers( ) {
 	string command = "SHOW players;";
-	if ( database.execute( command ) < 0 ) {
+	if ( database->execute( command ) < 0 ) {
 		cout << "An error occurred.\n";
 	}
 }
@@ -1033,7 +1035,7 @@ void SportsLeague::showPlayers( ) {
 
 void SportsLeague::showReferees( ) {
 	string command = "SHOW referees;";
-	if ( database.execute( command ) < 0 ) {
+	if ( database->execute( command ) < 0 ) {
 		cout << "An error occurred.\n";
 	}
 }
@@ -1041,7 +1043,7 @@ void SportsLeague::showReferees( ) {
 
 void SportsLeague::showSports( ) {
 	string command = "SHOW sports;";
-	if ( database.execute( command ) < 0 ) {
+	if ( database->execute( command ) < 0 ) {
 		cout << "An error occurred.\n";
 	}
 }
@@ -1049,7 +1051,7 @@ void SportsLeague::showSports( ) {
 
 void SportsLeague::showTeams( ) {
 	string command = "SHOW teams;";
-	if ( database.execute( command ) < 0 ) {
+	if ( database->execute( command ) < 0 ) {
 		cout << "An error occurred.\n";
 	}
 }

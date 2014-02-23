@@ -3,7 +3,9 @@
 class SportsLeague {
 
 	// Data members
-	DBCell database;
+	vector<vector<string>> results;
+
+	DBCell* database;
 
 public:
 
