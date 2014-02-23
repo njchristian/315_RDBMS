@@ -788,13 +788,17 @@ namespace UnitTest1
 		TEST_METHOD(dropTableCommand)
 		{
 			Parser p (d );
-			string dml = "DROP TABLE Dogs";
+			string dml = "both_dogsA <- Dogs * More_Dogs";
+
+			p.parse( dml );
+
+			dml = "DROP TABLE both_dogsA";
 
 			p.parse(dml);
 
 			Relation relation;
 
-			Assert::AreEqual( p.getRelation("Dogs", relation), -1 );
+			Assert::AreEqual( p.getRelation("both_dogsA", relation), -1 );
 		}
 
 		TEST_METHOD(crossProductCommand)
