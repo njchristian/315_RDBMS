@@ -28,8 +28,8 @@ class Parser{
 		views.push_back( r );
 	}
 
+	void deleteView( string relationName);
 	
-
 	//Is c alpha numeric or '_'?
 	bool isAlphaNum( int c );
 

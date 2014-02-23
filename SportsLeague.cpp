@@ -430,20 +430,19 @@ void SportsLeague::displaySportsGames( ) {
 	//print that relation
 
 	for ( ;; ) {
-		
-		string parserCommand = "newView <- select";
+	 	string parserCommand = "DROP TABLE newView;"; //if newView exists delete it
+		database.execute( parserCommand );
 
-		cout << "Please enter in the sports name \n";
+		parserCommand = "newView <- select";
+
+		cout << "Please enter in the sports ID number \n";
 		string sport;
 		cin >> sport;
 
-		parserCommand += " (sport == \"" + sport +"\") games;";
+		parserCommand += " (sportID == " + sport + ") games;";
 
 		if ( database.execute( parserCommand ) == 1 ) {
 			parserCommand = "SHOW newView;";
-			database.execute( parserCommand );
-			//should we remove newView or have a way to overwrite newView
-			parserCommand = "DROP TABLE newView;";
 			database.execute( parserCommand );
 			return;
 		}
@@ -462,7 +461,8 @@ void SportsLeague::displaySportsPlayed( ) {
 	//find the sports
 	//print relation
 	for ( ;; ) {
-		
+		string parserCommand = "DROP TABLE playerPlays;"; //if playerPlays exists delete it
+		database.execute( parserCommand );
 		string parserCommand = "playerPlays <- select";
 
 		cout << "Please enter the player's netID \n";
@@ -473,9 +473,6 @@ void SportsLeague::displaySportsPlayed( ) {
 
 		if ( database.execute( parserCommand ) == 1 ) {
 			parserCommand = "SHOW playerPlays;";
-			database.execute( parserCommand );
-			//should we remove playerPlays or have a way to overwrite playerPlays
-			parserCommand = "DROP TABLE playerPlays;";
 			database.execute( parserCommand );
 			return;
 		}
@@ -516,8 +513,16 @@ void SportsLeague::exit( ) {
 void SportsLeague::getAllReferees( ) {
 	// union
 
+	// delete the playerRefs relation
+	string parserCommand = "DROP TABLE playerRefs;";
+	database.execute( parserCommand );
+
+	// delete the allRefs relation
+	parserCommand = "DROP TABLE allRefs;";
+	database.execute( parserCommand );
+
 	// get the player refs in a relation that is union compatible with refs
-	string parserCommand = "playerRefs <- project (firstName, lastName, netID, sportID) (select (isRef == 1) players);";
+	parserCommand = "playerRefs <- project (firstName, lastName, netID, sportID) (select (isRef == 1) players);";
 	database.execute( parserCommand );
 
 	// get the union of player refs and non player refs
@@ -527,62 +532,56 @@ void SportsLeague::getAllReferees( ) {
 	// display allRefs
 	parserCommand = "SHOW allRefs;";
 	database.execute( parserCommand );
-
-	// delete the playerRefs relation
-	parserCommand = "DROP TABLE playerRefs;";
-	database.execute( parserCommand );
-
-	// delete the allRefs relation
-	parserCommand = "DROP TABLE allRefs;";
-	database.execute( parserCommand );
 }
 
 
 void SportsLeague::getNonReferees( ) {
 	// difference
 
+	// delete the temporary relation
+	string parserCommand = "DROP TABLE nonRefPlayers;";
+	database.execute( parserCommand );
+
 	// get the non ref players
-	string parserCommand = "nonRefPlayers <- (project (firstName, lastName, netID, sportID) players) - referees;";
+	parserCommand = "nonRefPlayers <- (project (firstName, lastName, netID, sportID) players) - referees;";
 	database.execute( parserCommand );
 
 	// display the non ref players
 	parserCommand = "SHOW nonRefPlayers;";
 	database.execute( parserCommand );
 
-	// delete the temporary relation
-	parserCommand = "DROP TABLE nonRefPlayers;";
-	database.execute( parserCommand );
+	
 }
 
 
 void SportsLeague::gamesWhenTeamCouldPlay( ) {
 	// cross product
 
+	// remove the temporary list
+	string parserCommand = "DROP TABLE gamesTeamsPlay;";
+	database.execute( parserCommand );
+
 	// get the list of games and teams
-	string parserCommand = "gamesTeamsPlay <- teams * games;";
+	parserCommand = "gamesTeamsPlay <- teams * games;";
 	database.execute( parserCommand );
 
 	// show the list
 	parserCommand = "SHOW gamesTeamsPlay;";
 	database.execute( parserCommand );
 
-	// remove the temporary list
-	parserCommand = "DROP TABLE gamesTeamsPlay;";
-	database.execute( parserCommand );
 }
 
 
 void SportsLeague::listNamesOfSports( ) {
 	// project
 	for ( ;; ) {
-		
-		string parserCommand = "sportNames <- project (name) sports;";
+		string parserCommand = "DROP TABLE sportNames;"; //if sportNames exists delete it
+		database.execute( parserCommand );
+
+		parserCommand = "sportNames <- project (name) sports;";
 
 		if ( database.execute( parserCommand ) == 1 ) {
 			parserCommand = "SHOW sportNames;";
-			database.execute( parserCommand );
-			//should we remove sportNames or have a way to overwrite sportNames
-			parserCommand = "DROP TABLE sportNames;";
 			database.execute( parserCommand );
 			return;
 		}
@@ -604,16 +603,16 @@ void SportsLeague::listPlayersOnTeam( ) {
 		int teamID;
 		cin >> teamID;
 
-		string parserCommand = "playersOnTeam <- select (teamID == ";
+		string parserCommand = "DROP TABLE playersOnTeam;"; //if playersOnTeam exists delete it
+		database.execute( parserCommand );
+
+		parserCommand = "playersOnTeam <- select (teamID == ";
 
 		parserCommand += to_string( teamID );
 		parserCommand += ") teams;";
 
 		if ( database.execute( parserCommand ) == 1 ) {
 			parserCommand = "SHOW playersOnTeam;";
-			database.execute( parserCommand );
-
-			parserCommand = "DROP TABLE playersOnTeam;";
 			database.execute( parserCommand );
 			return;
 		}
