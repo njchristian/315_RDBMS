@@ -671,7 +671,8 @@ namespace UnitTest1
 
 		TEST_METHOD(naturalJoinCommand)
 		{
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 
 			string dml = "CREATE TABLE DogsAgain (Name VARCHAR(20), Owner VARCHAR(20), Age INTEGER) PRIMARY KEY (Name, Age);";
 			p.parse(dml);
@@ -701,7 +702,8 @@ namespace UnitTest1
 
 		TEST_METHOD(selectionCommand)
 		{
-			Parser p (d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "puppies <- select (Age == 1) Dogs;";
 
 			p.parse( dml );
@@ -715,7 +717,8 @@ namespace UnitTest1
 
 		TEST_METHOD(differenceCommand)
 		{
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "both_dogsA <- Dogs - More_Dogs;";
 
 			p.parse( dml );
@@ -754,7 +757,8 @@ namespace UnitTest1
 
 		TEST_METHOD(projectionCommand)
 		{
-			Parser p (d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "a <- project (Name, Age) Dogs;";
 
 			p.parse( dml );
@@ -773,7 +777,8 @@ namespace UnitTest1
 
 		TEST_METHOD(renameCommand)
 		{
-			Parser p (d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "a <- rename (AName, AAge) (project (Name, Age) Dogs);";
 
 			p.parse( dml );
@@ -792,7 +797,8 @@ namespace UnitTest1
 
 		TEST_METHOD(insertIntoCommand)
 		{
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "INSERT INTO Dogs VALUES FROM (\"Spot\", \"Timmy\", 4);";
 
 			p.parse( dml );
@@ -816,7 +822,8 @@ namespace UnitTest1
 
 		TEST_METHOD(crossProductCommand)
 		{
-			Parser p (d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "both_dogsA <- Dogs * More_Dogs";
 
 			p.parse( dml );
@@ -834,7 +841,8 @@ namespace UnitTest1
 
 		TEST_METHOD(createTableCommand)
 		{
-			Parser p(d);
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);";
 
 			p.parse(dml);
@@ -847,7 +855,8 @@ namespace UnitTest1
 		}
 
 		TEST_METHOD( writeFileCommand ) {
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "OPEN Dogs;";
 			p.parse( dml );
 			dml = "WRITE Dogs;";
@@ -856,7 +865,8 @@ namespace UnitTest1
 		}
 
 		TEST_METHOD( closeFileCommand ) {
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "OPEN Dogs;";
 			p.parse( dml );
 			dml = "WRITE Dogs;";
@@ -867,14 +877,16 @@ namespace UnitTest1
 		}
 
 		TEST_METHOD( openFileCommand ) {
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "WRITE Dogs;";
 
 			Assert::AreEqual( p.parse( dml ), 1 );
 		}
 
 		TEST_METHOD( showCommand ) {
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "SHOW Dogs;";
 
 			Assert::AreEqual( p.parse( dml ), 1 );
@@ -882,7 +894,8 @@ namespace UnitTest1
 
 		TEST_METHOD(updateCommand)
 		{
-			Parser p(d);
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "UPDATE Dogs SET Age = 40 WHERE (Owner == \"Melodie\");";
 
 			Relation oldDogs;
@@ -915,7 +928,8 @@ namespace UnitTest1
 
 		TEST_METHOD( parseExit )
 		{
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "EXIT;";
 
 			Assert::AreEqual( p.parse( dml ), -2 );
@@ -923,7 +937,8 @@ namespace UnitTest1
 
 		TEST_METHOD( naturalJoinCommandBad )
 		{
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 
 			string dml = "CREATE TABLE DogsAgain (Name VARCHAR(20), Owner VARCHAR(20), Age INTEGER) PRIMARY KEY (Name, Age);";
 			p.parse( dml );
@@ -947,7 +962,8 @@ namespace UnitTest1
 
 		TEST_METHOD( selectionCommandBad )
 		{
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "puppies <- select Age == 1) Dogs;"; // missing opening (
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -956,7 +972,8 @@ namespace UnitTest1
 
 		TEST_METHOD( differenceCommandBad )
 		{
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "both_dogsA <- Dogs - More_Dogsjffjgfjghf";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -964,7 +981,8 @@ namespace UnitTest1
 
 		TEST_METHOD( projectionCommandBad )
 		{
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 		
 			string dml = "a <- project Name, Age Dogs;";
 
@@ -974,7 +992,8 @@ namespace UnitTest1
 
 		TEST_METHOD( renameCommandBad )
 		{
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "a <- rename AName, AAge (project (Name, Age) Dogs);";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -987,7 +1006,8 @@ namespace UnitTest1
 
 		TEST_METHOD( insertIntoCommandBad )
 		{
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "INSERT INTO Dogs VALUES FORM (\"Spot\", \"Timmy\", 4);";
 
 			Assert::AreEqual( p.parse( dml ), -1 );			
@@ -995,7 +1015,8 @@ namespace UnitTest1
 
 		TEST_METHOD( crossProductCommandBad )
 		{
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "both_dogsA <- Dogs ** More_Dogs;";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -1003,7 +1024,8 @@ namespace UnitTest1
 
 		TEST_METHOD( createTableCommandBad )
 		{
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "CREATE TABLE animals name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -1015,7 +1037,8 @@ namespace UnitTest1
 
 		TEST_METHOD( deleteCommand )
 		{
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "DELETE FROM Dogs WHERE (Age == 14);";
 
 			p.parse( dml );
@@ -1027,7 +1050,8 @@ namespace UnitTest1
 		}
 		TEST_METHOD( deleteCommandBad )
 		{
-			Parser p( d );
+			vector<vector<string>> results;
+			Parser p( d, results );
 			string dml = "DELETE FROM Dogs WHREE (Age == 14);";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -1075,7 +1099,8 @@ namespace UnitTest1
 		TEST_METHOD( changeGameLocation ) {
 
 			Database data;
-			Parser p( data );
+			vector<vector<string>> results;
+			Parser p( data, results );
 
 			p.parse( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
 
@@ -1130,7 +1155,8 @@ namespace UnitTest1
 
 		TEST_METHOD( displaySportGame ) {
 			Database data;
-			Parser p( data );
+			vector<vector<string>> results;
+			Parser p( data, results );
 
 			p.parse( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
 
