@@ -585,6 +585,8 @@ namespace UnitTest1
 	
 			c2.push_back(Condition("Owner", EQUALS, Entry("Melodie"), NONE, 1));
 
+			int oldNumTups = d.accessRelation( "Dogs" ).getNumTuples( );
+
 			d.update( dogs.getName(), aa, age, c2 );
 
 			vector<Entry> test;
@@ -600,6 +602,7 @@ namespace UnitTest1
 			entryPointers.push_back( &test[2] );
 
 			Assert::IsTrue( d.accessRelation( "Dogs" ).hasTuple( entryPointers ) );
+			Assert::AreEqual( d.accessRelation( "Dogs" ).getNumTuples( ), oldNumTups );
 		}
 
 		TEST_METHOD(naturalJoin)
@@ -882,6 +885,10 @@ namespace UnitTest1
 			Parser p(d);
 			string dml = "UPDATE Dogs SET Age = 40 WHERE (Owner == \"Melodie\");";
 
+			Relation oldDogs;
+
+			p.getRelation( "Dogs", oldDogs );
+
 			p.parse(dml);
 			//Assert::AreEqual( p.parse( dml ), 1 );
 
@@ -903,6 +910,7 @@ namespace UnitTest1
 			
 			Assert::IsTrue( relation.hasTuple( entryPointers ) );
 
+			Assert::AreEqual( relation.getNumTuples( ), oldDogs.getNumTuples( ) );
 		}
 
 		TEST_METHOD( parseExit )
@@ -1066,13 +1074,38 @@ namespace UnitTest1
 
 		TEST_METHOD( changeGameLocation ) {
 
+			Database data;
+			Parser p( data );
+
+			p.parse( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+
 			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"12014\", \"230\", \"soccer\", 1234 );";
+
+			Assert::AreEqual( p.parse( parserCommand ), 1 );
+
+			Relation original;
+			p.getRelation( "games", original );
+			
+			parserCommand = "UPDATE games SET location = \"REC\" WHERE (gameID == 1234);";
+
+			Assert::AreEqual( p.parse( parserCommand ), 1 );
+
+			Relation newR;
+
+			p.getRelation( "games", newR );
+
+			Assert::AreEqual( 1, newR.getNumTuples( ) );
+
+
+
+			/*string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"12014\", \"230\", \"soccer\", 1234 );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 
 			parserCommand = "UPDATE games SET location = \"REC\" WHERE (gameID == 1234);";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
+			*/
 		}
 
 		TEST_METHOD( changeGameTime ) {
@@ -1096,9 +1129,31 @@ namespace UnitTest1
 		}
 
 		TEST_METHOD( displaySportGame ) {
-			string parserCommand = "newView <- select (sport == \"soccer\") games;";
+			Database data;
+			Parser p( data );
 
-			Assert::AreEqual( database.execute( parserCommand ), 1 );
+			p.parse( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+
+			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"12014\", \"230\", \"soccer\", 1234 );";
+
+			Assert::AreEqual( p.parse( parserCommand ), 1 );
+
+			Relation original;
+			p.getRelation( "games", original );
+
+			parserCommand = "newView <- select (sport == \"soccer\") games;";
+
+			Assert::AreEqual( p.parse( parserCommand ), 1 );
+
+			Relation newR;
+
+			p.getRelation( "newView", newR );
+
+			Assert::AreEqual( 1, newR.getNumTuples( ) );
+
+			//string parserCommand = "newView <- select (sport == \"soccer\") games;";
+
+			//Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
 		TEST_METHOD( displaySportsPlayed ) {
