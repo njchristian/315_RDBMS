@@ -59,17 +59,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby"));
-			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry("Abby", 4));
+			entries.at(0).push_back(Entry("Amy", 3));
 			entries.at(0).push_back(Entry(1));
 
 
-			entries.at(1).push_back(Entry("Zipper"));
-			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry("Zipper", 6));
+			entries.at(1).push_back(Entry("Melodie", 7));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey"));
-			entries.at(2).push_back(Entry("Davin"));
+			entries.at(2).push_back(Entry("Bailey", 6));
+			entries.at(2).push_back(Entry("Davin", 5));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -83,16 +83,16 @@ namespace UnitTest1
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
 
-			e2.at(0).push_back(Entry("Tyler"));
-			e2.at(0).push_back(Entry("Garren"));
+			e2.at(0).push_back(Entry("Tyler", 5));
+			e2.at(0).push_back(Entry("Garren", 6));
 			e2.at(0).push_back(Entry(5));
 
-			e2.at(1).push_back(Entry("Abby"));
-			e2.at(1).push_back(Entry("Amy"));
+			e2.at(1).push_back(Entry("Abby", 4));
+			e2.at(1).push_back(Entry("Amy", 3));
 			e2.at(1).push_back(Entry(1));
 
-			e2.at(2).push_back(Entry("Dusty"));
-			e2.at(2).push_back(Entry("Rodger"));
+			e2.at(2).push_back(Entry("Dusty", 5));
+			e2.at(2).push_back(Entry("Rodger", 6));
 			e2.at(2).push_back(Entry(11));
 
 			d.addRelationToDatabase("More_Dogs", testAtts, keys);
@@ -119,17 +119,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby"));
-			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry("Abby", 4));
+			entries.at(0).push_back(Entry("Amy", 3));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper"));
-			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry("Zipper", 6));
+			entries.at(1).push_back(Entry("Melodie", 7));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey"));
-			entries.at(2).push_back(Entry("Davin"));
+			entries.at(2).push_back(Entry("Bailey", 6));
+			entries.at(2).push_back(Entry("Davin", 5));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -171,8 +171,8 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby"));
-			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry("Abby", 4));
+			entries.at(0).push_back(Entry("Amy", 3));
 			entries.at(0).push_back(Entry(3));
 
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -181,8 +181,8 @@ namespace UnitTest1
 
 			vector<Entry> newTuple1;
 
-			newTuple1.push_back(Entry("Rockie"));
-			newTuple1.push_back(Entry("Brain"));
+			newTuple1.push_back(Entry("Rockie", 6));
+			newTuple1.push_back(Entry("Brain", 5));
 			newTuple1.push_back(Entry(7));
 
 			d.addTupleToRelation( newTuple1 , "Dogs");
@@ -213,12 +213,12 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby"));
-			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry("Abby", 4));
+			entries.at(0).push_back(Entry("Amy", 3));
 			entries.at(0).push_back(Entry(3));
 
-			entries.at(1).push_back(Entry("Zipper"));
-			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry("Zipper", 6));
+			entries.at(1).push_back(Entry("Melodie", 7));
 			entries.at(1).push_back(Entry(14));
 
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -228,14 +228,14 @@ namespace UnitTest1
 
 			vector<Condition> c3;
 	
-			c3.push_back(Condition("Owner", EQUALS, Entry("Melodie"), NONE, 1));
+			c3.push_back(Condition("Owner", EQUALS, Entry("Melodie", 7), NONE, 1));
 
 			Relation dogs = d.deleteFromRelation("Dogs", c3);
 
 			vector<Entry> test;
 
-			test.push_back(Entry("Zipper"));
-			test.push_back(Entry("Melodie"));
+			test.push_back(Entry("Zipper", 6));
+			test.push_back(Entry("Melodie", 7));
 			test.push_back(Entry(14));
 
 			vector<Entry*> entryPointers;
@@ -275,17 +275,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby"));
-			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry("Abby", 4));
+			entries.at(0).push_back(Entry("Amy", 3));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper"));
-			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry("Zipper", 6));
+			entries.at(1).push_back(Entry("Melodie", 7));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey"));
-			entries.at(2).push_back(Entry("Davin"));
+			entries.at(2).push_back(Entry("Bailey", 6));
+			entries.at(2).push_back(Entry("Davin", 5));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -299,16 +299,16 @@ namespace UnitTest1
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
 
-			e2.at(0).push_back(Entry("Tyler"));
-			e2.at(0).push_back(Entry("Garren"));
+			e2.at(0).push_back(Entry("Tyler", 5));
+			e2.at(0).push_back(Entry("Garren", 6));
 			e2.at(0).push_back(Entry(5));
 
-			e2.at(1).push_back(Entry("Abby"));
-			e2.at(1).push_back(Entry("Amy"));
+			e2.at(1).push_back(Entry("Abby", 4));
+			e2.at(1).push_back(Entry("Amy", 3));
 			e2.at(1).push_back(Entry(3));
 
-			e2.at(2).push_back(Entry("Dusty"));
-			e2.at(2).push_back(Entry("Rodger"));
+			e2.at(2).push_back(Entry("Dusty", 5));
+			e2.at(2).push_back(Entry("Rodger", 6));
 			e2.at(2).push_back(Entry(11));
 
 			d.addRelationToDatabase("More_Dogs", testAtts, keys);
@@ -337,17 +337,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby"));
-			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry("Abby", 4));
+			entries.at(0).push_back(Entry("Amy", 3));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper"));
-			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry("Zipper", 6));
+			entries.at(1).push_back(Entry("Melodie", 7));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey"));
-			entries.at(2).push_back(Entry("Davin"));
+			entries.at(2).push_back(Entry("Bailey", 6));
+			entries.at(2).push_back(Entry("Davin", 5));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -378,17 +378,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby"));
-			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry("Abby", 4));
+			entries.at(0).push_back(Entry("Amy", 3));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper"));
-			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry("Zipper", 6));
+			entries.at(1).push_back(Entry("Melodie", 7));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey"));
-			entries.at(2).push_back(Entry("Davin"));
+			entries.at(2).push_back(Entry("Bailey", 6));
+			entries.at(2).push_back(Entry("Davin", 5));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -401,16 +401,16 @@ namespace UnitTest1
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
 
-			e2.at(0).push_back(Entry("Tyler"));
-			e2.at(0).push_back(Entry("Garren"));
+			e2.at(0).push_back(Entry("Tyler", 5));
+			e2.at(0).push_back(Entry("Garren", 6));
 			e2.at(0).push_back(Entry(5));
 
-			e2.at(1).push_back(Entry("Abby"));
-			e2.at(1).push_back(Entry("Amy"));
+			e2.at(1).push_back(Entry("Abby", 4));
+			e2.at(1).push_back(Entry("Amy", 3));
 			e2.at(1).push_back(Entry(3));
 
-			e2.at(2).push_back(Entry("Dusty"));
-			e2.at(2).push_back(Entry("Rodger"));
+			e2.at(2).push_back(Entry("Dusty", 5));
+			e2.at(2).push_back(Entry("Rodger", 6));
 			e2.at(2).push_back(Entry(11));
 
 			d.addRelationToDatabase("More_Dogs", testAtts, keys);
@@ -440,17 +440,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby"));
-			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry("Abby", 4));
+			entries.at(0).push_back(Entry("Amy", 3));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper"));
-			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry("Zipper", 6));
+			entries.at(1).push_back(Entry("Melodie", 7));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey"));
-			entries.at(2).push_back(Entry("Davin"));
+			entries.at(2).push_back(Entry("Bailey", 6));
+			entries.at(2).push_back(Entry("Davin", 5));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -464,16 +464,16 @@ namespace UnitTest1
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
 
-			e2.at(0).push_back(Entry("Tyler"));
-			e2.at(0).push_back(Entry("Garren"));
+			e2.at(0).push_back(Entry("Tyler", 5));
+			e2.at(0).push_back(Entry("Garren", 6));
 			e2.at(0).push_back(Entry(5));
 
-			e2.at(1).push_back(Entry("Abby"));
-			e2.at(1).push_back(Entry("Amy"));
+			e2.at(1).push_back(Entry("Abby", 4));
+			e2.at(1).push_back(Entry("Amy", 3));
 			e2.at(1).push_back(Entry(3));
 
-			e2.at(2).push_back(Entry("Dusty"));
-			e2.at(2).push_back(Entry("Rodger"));
+			e2.at(2).push_back(Entry("Dusty", 5));
+			e2.at(2).push_back(Entry("Rodger", 6));
 			e2.at(2).push_back(Entry(11));
 
 			d.addRelationToDatabase("More_Dogs", testAtts, keys);
@@ -506,17 +506,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby"));
-			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry("Abby", 4));
+			entries.at(0).push_back(Entry("Amy", 3));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper"));
-			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry("Zipper", 6));
+			entries.at(1).push_back(Entry("Melodie", 7));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey"));
-			entries.at(2).push_back(Entry("Davin"));
+			entries.at(2).push_back(Entry("Bailey", 6));
+			entries.at(2).push_back(Entry("Davin", 5));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -553,17 +553,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby"));
-			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry("Abby", 4));
+			entries.at(0).push_back(Entry("Amy", 3));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper"));
-			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry("Zipper", 6));
+			entries.at(1).push_back(Entry("Melodie", 7));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey"));
-			entries.at(2).push_back(Entry("Davin"));
+			entries.at(2).push_back(Entry("Bailey", 6));
+			entries.at(2).push_back(Entry("Davin", 5));
 			entries.at(2).push_back(Entry(6));
 
 	
@@ -583,7 +583,7 @@ namespace UnitTest1
 
 			vector<Condition> c2;
 	
-			c2.push_back(Condition("Owner", EQUALS, Entry("Melodie"), NONE, 1));
+			c2.push_back(Condition("Owner", EQUALS, Entry("Melodie", 7), NONE, 1));
 
 			int oldNumTups = d.accessRelation( "Dogs" ).getNumTuples( );
 
@@ -591,8 +591,8 @@ namespace UnitTest1
 
 			vector<Entry> test;
 
-			test.push_back(Entry("Zipper"));
-			test.push_back(Entry("Melodie"));
+			test.push_back(Entry("Zipper", 6));
+			test.push_back(Entry("Melodie", 7));
 			test.push_back(Entry(40));
 
 			vector<Entry*> entryPointers;
@@ -619,17 +619,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby"));
-			entries.at(0).push_back(Entry("Amy"));
+			entries.at(0).push_back(Entry("Abby", 4));
+			entries.at(0).push_back(Entry("Amy", 3));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper"));
-			entries.at(1).push_back(Entry("Melodie"));
+			entries.at(1).push_back(Entry("Zipper", 6));
+			entries.at(1).push_back(Entry("Melodie", 7));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey"));
-			entries.at(2).push_back(Entry("Davin"));
+			entries.at(2).push_back(Entry("Bailey", 6));
+			entries.at(2).push_back(Entry("Davin", 5));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -643,16 +643,16 @@ namespace UnitTest1
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
 
-			e2.at(0).push_back(Entry("Tyler"));
-			e2.at(0).push_back(Entry("Garren"));
+			e2.at(0).push_back(Entry("Tyler", 5));
+			e2.at(0).push_back(Entry("Garren", 6));
 			e2.at(0).push_back(Entry(5));
 
-			e2.at(1).push_back(Entry("Abby"));
-			e2.at(1).push_back(Entry("Amy"));
+			e2.at(1).push_back(Entry("Abby", 4));
+			e2.at(1).push_back(Entry("Amy", 3));
 			e2.at(1).push_back(Entry(3));
 
-			e2.at(2).push_back(Entry("Dusty"));
-			e2.at(2).push_back(Entry("Rodger"));
+			e2.at(2).push_back(Entry("Dusty", 5));
+			e2.at(2).push_back(Entry("Rodger", 6));
 			e2.at(2).push_back(Entry(11));
 
 			d.addRelationToDatabase("More_Dogs", testAtts, keys);
@@ -734,12 +734,12 @@ namespace UnitTest1
 			testEntries.push_back( vector<Entry>( ) );
 			testEntries.push_back( vector<Entry>( ) );
 
-			testEntries.at( 0 ).push_back( Entry( "Zipper" ) );
-			testEntries.at( 0 ).push_back( Entry( "Melodie" ) );
+			testEntries.at( 0 ).push_back( Entry( "Zipper", 6 ) );
+			testEntries.at( 0 ).push_back( Entry( "Melodie", 7 ) );
 			testEntries.at( 0 ).push_back( Entry( 14 ) );
 
-			testEntries.at( 1 ).push_back( Entry( "Bailey" ) );
-			testEntries.at( 1 ).push_back( Entry( "Davin" ) );
+			testEntries.at( 1 ).push_back( Entry( "Bailey", 6 ) );
+			testEntries.at( 1 ).push_back( Entry( "Davin", 5 ) );
 			testEntries.at( 1 ).push_back( Entry( 6 ) );
 
 			d.addTupleToRelation( testEntries.at( 0 ), "test" );
@@ -801,8 +801,8 @@ namespace UnitTest1
 
 			vector<Entry> newTuple1;
 
-			newTuple1.push_back(Entry("Spot"));
-			newTuple1.push_back(Entry("Timmy"));
+			newTuple1.push_back(Entry("Spot", 4));
+			newTuple1.push_back(Entry("Timmy", 5));
 			newTuple1.push_back(Entry(4));
 
 			vector<Entry*> entryPointers;
@@ -897,8 +897,8 @@ namespace UnitTest1
 
 			vector<Entry> test;
 
-			test.push_back(Entry("Zipper"));
-			test.push_back(Entry("Melodie"));
+			test.push_back(Entry("Zipper", 6));
+			test.push_back(Entry("Melodie", 7));
 			test.push_back(Entry(40));
 
 			vector<Entry*> entryPointers;
