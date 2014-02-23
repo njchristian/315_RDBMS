@@ -7,11 +7,8 @@
 #include "Condition.h"
 #include "Type.h"
 #include "Parser.h"
-#include "SportsLeague.h"
-//#include "../Database/ConditionList.h"
-//#include "../Database/Connector.h"
 #include "DBCell.h"
-//#include "../Database/Operation.h"
+#include "SportsLeague.h"
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -29,26 +26,20 @@ namespace UnitTest1
 		
 		SportsLeague league;
 		Database d;
-
-		DBCell database;
+		vector<vector<string>> r;
+		
 		vector<Relation*> localRelations;
 
 		vector<Attribute> testAtts;
 		vector<int> keys;
 		vector<vector<Entry>> entries;
 		vector<vector<Entry>> e2;
+		
 
 		TEST_METHOD_INITIALIZE(init234)
 		{
-			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
-			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
-			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
-			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
-			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);" );
-
-
-			testAtts.push_back(Attribute("Name", VARCHAR));
-			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Name", VARCHAR, 10));
+			testAtts.push_back(Attribute("Owner", VARCHAR, 10));
 			testAtts.push_back(Attribute("Age", INTEGER));
 
 	
@@ -59,17 +50,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby", 4));
-			entries.at(0).push_back(Entry("Amy", 3));
+			entries.at(0).push_back(Entry("Abby", 10));
+			entries.at(0).push_back(Entry("Amy", 10));
 			entries.at(0).push_back(Entry(1));
 
 
-			entries.at(1).push_back(Entry("Zipper", 6));
-			entries.at(1).push_back(Entry("Melodie", 7));
+			entries.at(1).push_back(Entry("Zipper", 10));
+			entries.at(1).push_back(Entry("Melodie", 10));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey", 6));
-			entries.at(2).push_back(Entry("Davin", 5));
+			entries.at(2).push_back(Entry("Bailey", 10));
+			entries.at(2).push_back(Entry("Davin", 10));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -83,16 +74,16 @@ namespace UnitTest1
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
 
-			e2.at(0).push_back(Entry("Tyler", 5));
-			e2.at(0).push_back(Entry("Garren", 6));
+			e2.at(0).push_back(Entry("Tyler", 10));
+			e2.at(0).push_back(Entry("Garren", 10));
 			e2.at(0).push_back(Entry(5));
 
-			e2.at(1).push_back(Entry("Abby", 4));
-			e2.at(1).push_back(Entry("Amy", 3));
+			e2.at(1).push_back(Entry("Abby", 10));
+			e2.at(1).push_back(Entry("Amy", 10));
 			e2.at(1).push_back(Entry(1));
 
-			e2.at(2).push_back(Entry("Dusty", 5));
-			e2.at(2).push_back(Entry("Rodger", 6));
+			e2.at(2).push_back(Entry("Dusty", 10));
+			e2.at(2).push_back(Entry("Rodger", 10));
 			e2.at(2).push_back(Entry(11));
 
 			d.addRelationToDatabase("More_Dogs", testAtts, keys);
@@ -107,8 +98,8 @@ namespace UnitTest1
 		TEST_METHOD(create)
 		{
 		
-			testAtts.push_back(Attribute("Name", VARCHAR));
-			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Name", VARCHAR, 10));
+			testAtts.push_back(Attribute("Owner", VARCHAR, 10));
 			testAtts.push_back(Attribute("Age", INTEGER));
 
 	
@@ -119,17 +110,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby", 4));
-			entries.at(0).push_back(Entry("Amy", 3));
+			entries.at(0).push_back(Entry("Abby", 10));
+			entries.at(0).push_back(Entry("Amy", 10));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper", 6));
-			entries.at(1).push_back(Entry("Melodie", 7));
+			entries.at(1).push_back(Entry("Zipper", 10));
+			entries.at(1).push_back(Entry("Melodie", 10));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey", 6));
-			entries.at(2).push_back(Entry("Davin", 5));
+			entries.at(2).push_back(Entry("Bailey", 10));
+			entries.at(2).push_back(Entry("Davin", 10));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -158,10 +149,34 @@ namespace UnitTest1
 
 		}
 
+		TEST_METHOD(deleteFromTableCommand)
+		{
+			Parser p( d , r );
+			string dml = "DELETE FROM Dogs WHERE (Owner == \"Melodie\");";
+			p.parse(dml);
+
+			vector<Entry> test;
+
+			test.push_back(Entry("Zipper", 10));
+			test.push_back(Entry("Melodie", 10));
+			test.push_back(Entry(14));
+
+			vector<Entry*> entryPointers;
+
+			entryPointers.push_back( &test[0] );
+			entryPointers.push_back( &test[1] );
+			entryPointers.push_back( &test[2] );
+
+			Relation relation;
+			p.getRelation("Dogs", relation);
+
+			Assert::IsFalse( relation.hasTuple( entryPointers ) );
+		}
+
 		TEST_METHOD(insert)
 		{
-			testAtts.push_back(Attribute("Name", VARCHAR));
-			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Name", VARCHAR, 10));
+			testAtts.push_back(Attribute("Owner", VARCHAR, 10));
 			testAtts.push_back(Attribute("Age", INTEGER));
 
 			keys.push_back(0);
@@ -171,8 +186,8 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby", 4));
-			entries.at(0).push_back(Entry("Amy", 3));
+			entries.at(0).push_back(Entry("Abby", 10));
+			entries.at(0).push_back(Entry("Amy", 10));
 			entries.at(0).push_back(Entry(3));
 
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -181,8 +196,8 @@ namespace UnitTest1
 
 			vector<Entry> newTuple1;
 
-			newTuple1.push_back(Entry("Rockie", 6));
-			newTuple1.push_back(Entry("Brain", 5));
+			newTuple1.push_back(Entry("Rockie", 10));
+			newTuple1.push_back(Entry("Brain", 10));
 			newTuple1.push_back(Entry(7));
 
 			d.addTupleToRelation( newTuple1 , "Dogs");
@@ -201,8 +216,8 @@ namespace UnitTest1
 		TEST_METHOD(deleteFromTable)
 		{
 			
-			testAtts.push_back(Attribute("Name", VARCHAR));
-			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Name", VARCHAR, 10));
+			testAtts.push_back(Attribute("Owner", VARCHAR, 10));
 			testAtts.push_back(Attribute("Age", INTEGER));
 
 	
@@ -213,12 +228,12 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby", 4));
-			entries.at(0).push_back(Entry("Amy", 3));
+			entries.at(0).push_back(Entry("Abby", 10));
+			entries.at(0).push_back(Entry("Amy", 10));
 			entries.at(0).push_back(Entry(3));
 
-			entries.at(1).push_back(Entry("Zipper", 6));
-			entries.at(1).push_back(Entry("Melodie", 7));
+			entries.at(1).push_back(Entry("Zipper", 10));
+			entries.at(1).push_back(Entry("Melodie", 10));
 			entries.at(1).push_back(Entry(14));
 
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -228,14 +243,14 @@ namespace UnitTest1
 
 			vector<Condition> c3;
 	
-			c3.push_back(Condition("Owner", EQUALS, Entry("Melodie", 7), NONE, 1));
+			c3.push_back(Condition("Owner", EQUALS, Entry("Melodie", 10), NONE, 1));
 
 			Relation dogs = d.deleteFromRelation("Dogs", c3);
 
 			vector<Entry> test;
 
-			test.push_back(Entry("Zipper", 6));
-			test.push_back(Entry("Melodie", 7));
+			test.push_back(Entry("Zipper", 10));
+			test.push_back(Entry("Melodie", 10));
 			test.push_back(Entry(14));
 
 			vector<Entry*> entryPointers;
@@ -262,71 +277,37 @@ namespace UnitTest1
 
 		TEST_METHOD(difference)
 		{
-
-			testAtts.push_back(Attribute("Name", VARCHAR));
-			testAtts.push_back(Attribute("Owner", VARCHAR));
-			testAtts.push_back(Attribute("Age", INTEGER));
-
-	
-			keys.push_back(0);
-			keys.push_back(2);
-
-			entries.push_back(vector<Entry>());
-			entries.push_back(vector<Entry>());
-			entries.push_back(vector<Entry>());
-
-			entries.at(0).push_back(Entry("Abby", 4));
-			entries.at(0).push_back(Entry("Amy", 3));
-			entries.at(0).push_back(Entry(3));
-
-
-			entries.at(1).push_back(Entry("Zipper", 6));
-			entries.at(1).push_back(Entry("Melodie", 7));
-			entries.at(1).push_back(Entry(14));
-
-			entries.at(2).push_back(Entry("Bailey", 6));
-			entries.at(2).push_back(Entry("Davin", 5));
-			entries.at(2).push_back(Entry(6));
-	
-			d.addRelationToDatabase("Dogs", testAtts, keys);
-
-			d.addTupleToRelation(entries.at(0), "Dogs");
-			d.addTupleToRelation(entries.at(1), "Dogs");
-			d.addTupleToRelation(entries.at(2), "Dogs");
-
-			//relation More_Dogs
-			e2.push_back(vector<Entry>());
-			e2.push_back(vector<Entry>());
-			e2.push_back(vector<Entry>());
-
-			e2.at(0).push_back(Entry("Tyler", 5));
-			e2.at(0).push_back(Entry("Garren", 6));
-			e2.at(0).push_back(Entry(5));
-
-			e2.at(1).push_back(Entry("Abby", 4));
-			e2.at(1).push_back(Entry("Amy", 3));
-			e2.at(1).push_back(Entry(3));
-
-			e2.at(2).push_back(Entry("Dusty", 5));
-			e2.at(2).push_back(Entry("Rodger", 6));
-			e2.at(2).push_back(Entry(11));
-
-			d.addRelationToDatabase("More_Dogs", testAtts, keys);
-
-			d.addTupleToRelation(e2.at(0), "More_Dogs");
-			d.addTupleToRelation(e2.at(1), "More_Dogs");
-			d.addTupleToRelation(e2.at(2), "More_Dogs");
-
-			Relation relationA = d.differenceTwoRelation( "More_Dogs", "Dogs" );
 			Relation relationB = d.differenceTwoRelation( "Dogs", "More_Dogs" );
+			Relation test("test",testAtts,keys);
 
-			Assert::AreEqual( relationA.getNumTuples(), relationB.getNumTuples() );
+			d.addRelationToDatabase( test) ;
+
+			vector<vector<Entry>> testEntries;
+			testEntries.push_back(vector<Entry>());
+			testEntries.push_back(vector<Entry>());
+			testEntries.push_back(vector<Entry>());
+
+			testEntries.at(0).push_back(Entry("Zipper", 10));
+			testEntries.at(0).push_back(Entry("Melodie", 10));
+			testEntries.at(0).push_back(Entry(14));
+
+			testEntries.at(1).push_back(Entry("Bailey", 10));
+			testEntries.at(1).push_back(Entry("Davin", 10));
+			testEntries.at(1).push_back(Entry(6));
+
+			d.addTupleToRelation(testEntries.at(0), "test");
+			d.addTupleToRelation(testEntries.at(1), "test");
+
+			test = d.accessRelation("test");
+
+			Assert::AreEqual( relationB.getEntry(0,0)->getEntryVC(), test.getEntry(0,0)->getEntryVC());
+			Assert::AreEqual( relationB.getEntry(1,0)->getEntryVC(), test.getEntry(1,0)->getEntryVC());
 		}
 
 		TEST_METHOD(accessAttribute)
 		{
-			testAtts.push_back(Attribute("Name", VARCHAR));
-			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Name", VARCHAR, 10));
+			testAtts.push_back(Attribute("Owner", VARCHAR, 10));
 			testAtts.push_back(Attribute("Age", INTEGER));
 
 	
@@ -337,17 +318,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby", 4));
-			entries.at(0).push_back(Entry("Amy", 3));
+			entries.at(0).push_back(Entry("Abby", 10));
+			entries.at(0).push_back(Entry("Amy", 10));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper", 6));
-			entries.at(1).push_back(Entry("Melodie", 7));
+			entries.at(1).push_back(Entry("Zipper", 10));
+			entries.at(1).push_back(Entry("Melodie", 10));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey", 6));
-			entries.at(2).push_back(Entry("Davin", 5));
+			entries.at(2).push_back(Entry("Bailey", 10));
+			entries.at(2).push_back(Entry("Davin", 10));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -366,8 +347,8 @@ namespace UnitTest1
 		TEST_METHOD(unionRelations)
 		{
 
-			testAtts.push_back(Attribute("Name", VARCHAR));
-			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Name", VARCHAR, 10));
+			testAtts.push_back(Attribute("Owner", VARCHAR, 10));
 			testAtts.push_back(Attribute("Age", INTEGER));
 
 	
@@ -378,17 +359,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby", 4));
-			entries.at(0).push_back(Entry("Amy", 3));
+			entries.at(0).push_back(Entry("Abby", 10));
+			entries.at(0).push_back(Entry("Amy", 10));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper", 6));
-			entries.at(1).push_back(Entry("Melodie", 7));
+			entries.at(1).push_back(Entry("Zipper", 10));
+			entries.at(1).push_back(Entry("Melodie", 10));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey", 6));
-			entries.at(2).push_back(Entry("Davin", 5));
+			entries.at(2).push_back(Entry("Bailey", 10));
+			entries.at(2).push_back(Entry("Davin", 10));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -401,16 +382,16 @@ namespace UnitTest1
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
 
-			e2.at(0).push_back(Entry("Tyler", 5));
-			e2.at(0).push_back(Entry("Garren", 6));
+			e2.at(0).push_back(Entry("Tyler", 10));
+			e2.at(0).push_back(Entry("Garren", 10));
 			e2.at(0).push_back(Entry(5));
 
-			e2.at(1).push_back(Entry("Abby", 4));
-			e2.at(1).push_back(Entry("Amy", 3));
+			e2.at(1).push_back(Entry("Abby", 10));
+			e2.at(1).push_back(Entry("Amy", 10));
 			e2.at(1).push_back(Entry(3));
 
-			e2.at(2).push_back(Entry("Dusty", 5));
-			e2.at(2).push_back(Entry("Rodger", 6));
+			e2.at(2).push_back(Entry("Dusty", 10));
+			e2.at(2).push_back(Entry("Rodger", 10));
 			e2.at(2).push_back(Entry(11));
 
 			d.addRelationToDatabase("More_Dogs", testAtts, keys);
@@ -428,8 +409,8 @@ namespace UnitTest1
 		TEST_METHOD(crossproduct)
 		{
 
-			testAtts.push_back(Attribute("Name", VARCHAR));
-			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Name", VARCHAR, 10));
+			testAtts.push_back(Attribute("Owner", VARCHAR, 10));
 			testAtts.push_back(Attribute("Age", INTEGER));
 
 	
@@ -440,17 +421,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby", 4));
-			entries.at(0).push_back(Entry("Amy", 3));
+			entries.at(0).push_back(Entry("Abby", 10));
+			entries.at(0).push_back(Entry("Amy", 10));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper", 6));
-			entries.at(1).push_back(Entry("Melodie", 7));
+			entries.at(1).push_back(Entry("Zipper", 10));
+			entries.at(1).push_back(Entry("Melodie", 10));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey", 6));
-			entries.at(2).push_back(Entry("Davin", 5));
+			entries.at(2).push_back(Entry("Bailey", 10));
+			entries.at(2).push_back(Entry("Davin", 10));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -464,16 +445,16 @@ namespace UnitTest1
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
 
-			e2.at(0).push_back(Entry("Tyler", 5));
-			e2.at(0).push_back(Entry("Garren", 6));
+			e2.at(0).push_back(Entry("Tyler", 10));
+			e2.at(0).push_back(Entry("Garren", 10));
 			e2.at(0).push_back(Entry(5));
 
-			e2.at(1).push_back(Entry("Abby", 4));
-			e2.at(1).push_back(Entry("Amy", 3));
+			e2.at(1).push_back(Entry("Abby", 10));
+			e2.at(1).push_back(Entry("Amy", 10));
 			e2.at(1).push_back(Entry(3));
 
-			e2.at(2).push_back(Entry("Dusty", 5));
-			e2.at(2).push_back(Entry("Rodger", 6));
+			e2.at(2).push_back(Entry("Dusty", 10));
+			e2.at(2).push_back(Entry("Rodger", 10));
 			e2.at(2).push_back(Entry(11));
 
 			d.addRelationToDatabase("More_Dogs", testAtts, keys);
@@ -494,8 +475,8 @@ namespace UnitTest1
 		TEST_METHOD(rename)
 		{
 
-			testAtts.push_back(Attribute("Name", VARCHAR));
-			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Name", VARCHAR, 10));
+			testAtts.push_back(Attribute("Owner", VARCHAR, 10));
 			testAtts.push_back(Attribute("Age", INTEGER));
 
 	
@@ -506,17 +487,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby", 4));
-			entries.at(0).push_back(Entry("Amy", 3));
+			entries.at(0).push_back(Entry("Abby", 10));
+			entries.at(0).push_back(Entry("Amy", 10));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper", 6));
-			entries.at(1).push_back(Entry("Melodie", 7));
+			entries.at(1).push_back(Entry("Zipper", 10));
+			entries.at(1).push_back(Entry("Melodie", 10));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey", 6));
-			entries.at(2).push_back(Entry("Davin", 5));
+			entries.at(2).push_back(Entry("Bailey", 10));
+			entries.at(2).push_back(Entry("Davin", 10));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -541,8 +522,8 @@ namespace UnitTest1
 
 		TEST_METHOD(update)
 		{
-			testAtts.push_back(Attribute("Name", VARCHAR));
-			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Name", VARCHAR, 10));
+			testAtts.push_back(Attribute("Owner", VARCHAR, 10));
 			testAtts.push_back(Attribute("Age", INTEGER));
 
 	
@@ -553,17 +534,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby", 4));
-			entries.at(0).push_back(Entry("Amy", 3));
+			entries.at(0).push_back(Entry("Abby", 10));
+			entries.at(0).push_back(Entry("Amy", 10));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper", 6));
-			entries.at(1).push_back(Entry("Melodie", 7));
+			entries.at(1).push_back(Entry("Zipper", 10));
+			entries.at(1).push_back(Entry("Melodie", 10));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey", 6));
-			entries.at(2).push_back(Entry("Davin", 5));
+			entries.at(2).push_back(Entry("Bailey", 10));
+			entries.at(2).push_back(Entry("Davin", 10));
 			entries.at(2).push_back(Entry(6));
 
 	
@@ -583,16 +564,14 @@ namespace UnitTest1
 
 			vector<Condition> c2;
 	
-			c2.push_back(Condition("Owner", EQUALS, Entry("Melodie", 7), NONE, 1));
-
-			int oldNumTups = d.accessRelation( "Dogs" ).getNumTuples( );
+			c2.push_back(Condition("Owner", EQUALS, Entry("Melodie", 10), NONE, 1));
 
 			d.update( dogs.getName(), aa, age, c2 );
 
 			vector<Entry> test;
 
-			test.push_back(Entry("Zipper", 6));
-			test.push_back(Entry("Melodie", 7));
+			test.push_back(Entry("Zipper", 10));
+			test.push_back(Entry("Melodie", 10));
 			test.push_back(Entry(40));
 
 			vector<Entry*> entryPointers;
@@ -602,13 +581,12 @@ namespace UnitTest1
 			entryPointers.push_back( &test[2] );
 
 			Assert::IsTrue( d.accessRelation( "Dogs" ).hasTuple( entryPointers ) );
-			Assert::AreEqual( d.accessRelation( "Dogs" ).getNumTuples( ), oldNumTups );
 		}
 
 		TEST_METHOD(naturalJoin)
 		{
-			testAtts.push_back(Attribute("Name", VARCHAR));
-			testAtts.push_back(Attribute("Owner", VARCHAR));
+			testAtts.push_back(Attribute("Name", VARCHAR, 10));
+			testAtts.push_back(Attribute("Owner", VARCHAR, 10));
 			testAtts.push_back(Attribute("Age", INTEGER));
 
 	
@@ -619,17 +597,17 @@ namespace UnitTest1
 			entries.push_back(vector<Entry>());
 			entries.push_back(vector<Entry>());
 
-			entries.at(0).push_back(Entry("Abby", 4));
-			entries.at(0).push_back(Entry("Amy", 3));
+			entries.at(0).push_back(Entry("Abby", 10));
+			entries.at(0).push_back(Entry("Amy", 10));
 			entries.at(0).push_back(Entry(3));
 
 
-			entries.at(1).push_back(Entry("Zipper", 6));
-			entries.at(1).push_back(Entry("Melodie", 7));
+			entries.at(1).push_back(Entry("Zipper", 10));
+			entries.at(1).push_back(Entry("Melodie", 10));
 			entries.at(1).push_back(Entry(14));
 
-			entries.at(2).push_back(Entry("Bailey", 6));
-			entries.at(2).push_back(Entry("Davin", 5));
+			entries.at(2).push_back(Entry("Bailey", 10));
+			entries.at(2).push_back(Entry("Davin", 10));
 			entries.at(2).push_back(Entry(6));
 	
 			d.addRelationToDatabase("Dogs", testAtts, keys);
@@ -643,16 +621,16 @@ namespace UnitTest1
 			e2.push_back(vector<Entry>());
 			e2.push_back(vector<Entry>());
 
-			e2.at(0).push_back(Entry("Tyler", 5));
-			e2.at(0).push_back(Entry("Garren", 6));
+			e2.at(0).push_back(Entry("Tyler", 10));
+			e2.at(0).push_back(Entry("Garren", 10));
 			e2.at(0).push_back(Entry(5));
 
-			e2.at(1).push_back(Entry("Abby", 4));
-			e2.at(1).push_back(Entry("Amy", 3));
+			e2.at(1).push_back(Entry("Abby", 10));
+			e2.at(1).push_back(Entry("Amy", 10));
 			e2.at(1).push_back(Entry(3));
 
-			e2.at(2).push_back(Entry("Dusty", 5));
-			e2.at(2).push_back(Entry("Rodger", 6));
+			e2.at(2).push_back(Entry("Dusty", 10));
+			e2.at(2).push_back(Entry("Rodger", 10));
 			e2.at(2).push_back(Entry(11));
 
 			d.addRelationToDatabase("More_Dogs", testAtts, keys);
@@ -667,49 +645,15 @@ namespace UnitTest1
 			 
 		}
 
-		
-
-		TEST_METHOD(naturalJoinCommand)
-		{
-			vector<vector<string>> results;
-			Parser p( d, results );
-
-			string dml = "CREATE TABLE DogsAgain (Name VARCHAR(20), Owner VARCHAR(20), Age INTEGER) PRIMARY KEY (Name, Age);";
-			p.parse(dml);
-
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Abby\", \"Amy\", 3);";
-			p.parse(dml);
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Dusty\", \"Rodger\", 11);";
-			p.parse(dml);
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Tyler\", \"Gerren\", 5);";
-			p.parse(dml);
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Tweety\", \"Some Girl\", 1);";
-			p.parse(dml);
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Joe\", \"ADude\", 2);";
-			p.parse(dml);
-			dml = "Many <- DogsAgain JOIN Dogs;";
-
-			p.parse( dml );
-
-			Relation relation;
-			p.getRelation( "Many", relation );
-
-			Relation relationB;
-			p.getRelation( "DogsAgain", relationB );
-
-			Assert::AreEqual( relation.getNumTuples(), max( relationB.getNumTuples(), d.accessRelation("Dogs").getNumTuples() )  );
-		}
-
 		TEST_METHOD(selectionCommand)
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "puppies <- select (Age == 1) Dogs;";
 
 			p.parse( dml );
 
 			Relation relation;
-			p.getRelation( "puppies", relation );
+			p.getRelation("puppies",relation);
 
 			Assert::AreEqual( relation.getNumTuples() , 1 );
 		
@@ -717,8 +661,7 @@ namespace UnitTest1
 
 		TEST_METHOD(differenceCommand)
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "both_dogsA <- Dogs - More_Dogs;";
 
 			p.parse( dml );
@@ -726,45 +669,43 @@ namespace UnitTest1
 			dml = "both_dogsB <- More_Dogs - Dogs;";
 			p.parse( dml );
 			Relation relationA;
-			p.getRelation( "both_dogsA", relationA );
+			p.getRelation("both_dogsA",relationA);
 
-			Relation test( "test", testAtts, keys );
+			Relation test("test",testAtts,keys);
 
-			d.addRelationToDatabase( test );
+			d.addRelationToDatabase( test) ;
 
 			vector<vector<Entry>> testEntries;
-			testEntries.push_back( vector<Entry>( ) );
-			testEntries.push_back( vector<Entry>( ) );
-			testEntries.push_back( vector<Entry>( ) );
+			testEntries.push_back(vector<Entry>());
+			testEntries.push_back(vector<Entry>());
+			testEntries.push_back(vector<Entry>());
 
-			testEntries.at( 0 ).push_back( Entry( "Zipper", 6 ) );
-			testEntries.at( 0 ).push_back( Entry( "Melodie", 7 ) );
-			testEntries.at( 0 ).push_back( Entry( 14 ) );
+			testEntries.at(0).push_back(Entry("Zipper", 10));
+			testEntries.at(0).push_back(Entry("Melodie", 10));
+			testEntries.at(0).push_back(Entry(14));
 
-			testEntries.at( 1 ).push_back( Entry( "Bailey", 6 ) );
-			testEntries.at( 1 ).push_back( Entry( "Davin", 5 ) );
-			testEntries.at( 1 ).push_back( Entry( 6 ) );
+			testEntries.at(1).push_back(Entry("Bailey", 10));
+			testEntries.at(1).push_back(Entry("Davin", 10));
+			testEntries.at(1).push_back(Entry(6));
 
-			d.addTupleToRelation( testEntries.at( 0 ), "test" );
-			d.addTupleToRelation( testEntries.at( 1 ), "test" );
+			d.addTupleToRelation(testEntries.at(0), "test");
+			d.addTupleToRelation(testEntries.at(1), "test");
 
-			p.getRelation( "test", test );
+			p.getRelation("test",test);
 
-			Assert::AreEqual( relationA.getEntry( 0, 0 )->getEntryVC( ), test.getEntry( 0, 0 )->getEntryVC( ) );
-			Assert::AreEqual( relationA.getEntry( 1, 0 )->getEntryVC( ), test.getEntry( 1, 0 )->getEntryVC( ) );
-
+			Assert::AreEqual( relationA.getEntry(0,0)->getEntryVC(), test.getEntry(0,0)->getEntryVC());
+			Assert::AreEqual( relationA.getEntry(1,0)->getEntryVC(), test.getEntry(1,0)->getEntryVC());
 		}
 
 		TEST_METHOD(projectionCommand)
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "a <- project (Name, Age) Dogs;";
 
 			p.parse( dml );
 
 			Relation relation;
-			p.getRelation( "a", relation );
+			p.getRelation("a",relation);
 
 			vector<string> attributes;
 			attributes.push_back("Name");
@@ -775,16 +716,32 @@ namespace UnitTest1
 
 		}
 
+		TEST_METHOD(unionCommand)
+		{
+			Parser p( d , r );
+			string dml = "both_dogsA <- Dogs + More_Dogs;";
+			p.parse( dml );
+
+			dml = "both_dogsB <- More_Dogs + Dogs;";
+			p.parse( dml );
+
+			Relation relationA;
+			p.getRelation("both_dogsA",relationA);
+			Relation relationB;
+			p.getRelation("both_dogsB",relationB);
+
+			Assert::AreEqual( relationA.getNumTuples() , relationB.getNumTuples() );
+		}
+
 		TEST_METHOD(renameCommand)
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "a <- rename (AName, AAge) (project (Name, Age) Dogs);";
 
 			p.parse( dml );
 
 			Relation relation;
-			p.getRelation( "a", relation );
+			p.getRelation("a",relation);
 
 			vector<string> attributes;
 			attributes.push_back("AName");
@@ -797,8 +754,7 @@ namespace UnitTest1
 
 		TEST_METHOD(insertIntoCommand)
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "INSERT INTO Dogs VALUES FROM (\"Spot\", \"Timmy\", 4);";
 
 			p.parse( dml );
@@ -807,8 +763,8 @@ namespace UnitTest1
 
 			vector<Entry> newTuple1;
 
-			newTuple1.push_back(Entry("Spot", 4));
-			newTuple1.push_back(Entry("Timmy", 5));
+			newTuple1.push_back(Entry("Spot", 10));
+			newTuple1.push_back(Entry("Timmy", 10));
 			newTuple1.push_back(Entry(4));
 
 			vector<Entry*> entryPointers;
@@ -820,10 +776,25 @@ namespace UnitTest1
 			Assert::IsTrue( relation.hasTuple( entryPointers ) );
 		}
 
+		TEST_METHOD(dropTableCommand)
+		{
+			Parser p( d , r );
+			string dml = "both_dogsA <- Dogs * More_Dogs";
+
+			p.parse( dml );
+
+			dml = "DROP TABLE both_dogsA";
+
+			p.parse(dml);
+
+			Relation relation;
+
+			Assert::AreEqual( p.getRelation("both_dogsA", relation), -1 );
+		}
+
 		TEST_METHOD(crossProductCommand)
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "both_dogsA <- Dogs * More_Dogs";
 
 			p.parse( dml );
@@ -831,9 +802,9 @@ namespace UnitTest1
 			dml = "both_dogsB <- More_Dogs * Dogs";
 			p.parse( dml );
 			Relation relationA;
-			p.getRelation( "both_dogsA", relationA );
+			p.getRelation("both_dogsA",relationA);
 			Relation relationB;
-			p.getRelation( "both_dogsB", relationB );
+			p.getRelation("both_dogsB",relationB);
 
 
 			Assert::AreEqual( relationA.getNumTuples(), relationB.getNumTuples() );
@@ -841,8 +812,7 @@ namespace UnitTest1
 
 		TEST_METHOD(createTableCommand)
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);";
 
 			p.parse(dml);
@@ -854,64 +824,58 @@ namespace UnitTest1
 			Assert::AreEqual( d.accessRelation( "animals" ).getName(), name );
 		}
 
-		TEST_METHOD( writeFileCommand ) {
-			vector<vector<string>> results;
-			Parser p( d, results );
+		TEST_METHOD(writeFileCommand)
+		{
+			Parser p( d , r );
 			string dml = "OPEN Dogs;";
-			p.parse( dml );
+			p.parse(dml);
 			dml = "WRITE Dogs;";
 
-			Assert::AreEqual( p.parse( dml ), 1 );
+			Assert::AreEqual( p.parse(dml), 1);
 		}
 
-		TEST_METHOD( closeFileCommand ) {
-			vector<vector<string>> results;
-			Parser p( d, results );
+		TEST_METHOD(closeFileCommand)
+		{
+			Parser p( d , r );
 			string dml = "OPEN Dogs;";
-			p.parse( dml );
+			p.parse(dml);
 			dml = "WRITE Dogs;";
-			p.parse( dml );
+			p.parse(dml);
 			dml = "CLOSE Dogs;";
 
-			Assert::AreEqual( p.parse( dml ), 1 );
+			Assert::AreEqual( p.parse(dml), 1);
 		}
 
-		TEST_METHOD( openFileCommand ) {
-			vector<vector<string>> results;
-			Parser p( d, results );
+		TEST_METHOD(openFileCommand)
+		{
+			Parser p( d , r );
 			string dml = "WRITE Dogs;";
 
-			Assert::AreEqual( p.parse( dml ), 1 );
+			Assert::AreEqual( p.parse(dml), 1);
 		}
 
-		TEST_METHOD( showCommand ) {
-			vector<vector<string>> results;
-			Parser p( d, results );
+		TEST_METHOD(showCommand)
+		{
+			Parser p( d , r );
 			string dml = "SHOW Dogs;";
 
-			Assert::AreEqual( p.parse( dml ), 1 );
+			Assert::AreEqual( p.parse(dml), 1);
 		}
 
 		TEST_METHOD(updateCommand)
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "UPDATE Dogs SET Age = 40 WHERE (Owner == \"Melodie\");";
 
-			Relation oldDogs;
-
-			p.getRelation( "Dogs", oldDogs );
-
 			p.parse(dml);
-			//Assert::AreEqual( p.parse( dml ), 1 );
 
 			Relation relation;
-			p.getRelation( "Dogs", relation );
+			p.getRelation("Dogs",relation);
 
 			vector<Entry> test;
 
-			test.push_back(Entry("Zipper", 6));
-			test.push_back(Entry("Melodie", 7));
+			test.push_back(Entry("Zipper", 10));
+			test.push_back(Entry("Melodie", 10));
 			test.push_back(Entry(40));
 
 			vector<Entry*> entryPointers;
@@ -920,50 +884,21 @@ namespace UnitTest1
 			entryPointers.push_back( &test[1] );
 			entryPointers.push_back( &test[2] );
 
-			
 			Assert::IsTrue( relation.hasTuple( entryPointers ) );
 
-			Assert::AreEqual( relation.getNumTuples( ), oldDogs.getNumTuples( ) );
 		}
 
 		TEST_METHOD( parseExit )
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "EXIT;";
 
 			Assert::AreEqual( p.parse( dml ), -2 );
 		}
 
-		TEST_METHOD( naturalJoinCommandBad )
-		{
-			vector<vector<string>> results;
-			Parser p( d, results );
-
-			string dml = "CREATE TABLE DogsAgain (Name VARCHAR(20), Owner VARCHAR(20), Age INTEGER) PRIMARY KEY (Name, Age);";
-			p.parse( dml );
-
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Abby\", \"Amy\", 3);";
-			p.parse( dml );
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Dusty\", \"Rodger\", 11);";
-			p.parse( dml );
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Tyler\", \"Gerren\", 5);";
-			p.parse( dml );
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Tweety\", \"Some Girl\", 1);";
-			p.parse( dml );
-			dml = "INSERT INTO DogsAgain VALUES FROM (\"Joe\", \"ADude\", 2);";
-			p.parse( dml );
-			dml = "Many <- DogsAgain JONI Dogs;"; // spelled join wrong to test invalid check
-
-
-
-			Assert::AreEqual( p.parse( dml ), -1 );
-		}
-
 		TEST_METHOD( selectionCommandBad )
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "puppies <- select Age == 1) Dogs;"; // missing opening (
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -972,8 +907,7 @@ namespace UnitTest1
 
 		TEST_METHOD( differenceCommandBad )
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "both_dogsA <- Dogs - More_Dogsjffjgfjghf";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -981,8 +915,7 @@ namespace UnitTest1
 
 		TEST_METHOD( projectionCommandBad )
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 		
 			string dml = "a <- project Name, Age Dogs;";
 
@@ -992,8 +925,7 @@ namespace UnitTest1
 
 		TEST_METHOD( renameCommandBad )
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "a <- rename AName, AAge (project (Name, Age) Dogs);";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -1006,8 +938,7 @@ namespace UnitTest1
 
 		TEST_METHOD( insertIntoCommandBad )
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "INSERT INTO Dogs VALUES FORM (\"Spot\", \"Timmy\", 4);";
 
 			Assert::AreEqual( p.parse( dml ), -1 );			
@@ -1015,17 +946,15 @@ namespace UnitTest1
 
 		TEST_METHOD( crossProductCommandBad )
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
-			string dml = "both_dogsA <- Dogs ** More_Dogs;";
+			Parser p( d , r );
+			string dml = "both_dogsA <- Dogs ** More_Dogs";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
 		}
 
 		TEST_METHOD( createTableCommandBad )
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "CREATE TABLE animals name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -1037,8 +966,7 @@ namespace UnitTest1
 
 		TEST_METHOD( deleteCommand )
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "DELETE FROM Dogs WHERE (Age == 14);";
 
 			p.parse( dml );
@@ -1050,8 +978,7 @@ namespace UnitTest1
 		}
 		TEST_METHOD( deleteCommandBad )
 		{
-			vector<vector<string>> results;
-			Parser p( d, results );
+			Parser p( d , r );
 			string dml = "DELETE FROM Dogs WHREE (Age == 14);";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -1065,75 +992,106 @@ namespace UnitTest1
 			Assert::AreEqual( p.parse( dml ), -1 );
 
 		}
-		TEST_METHOD( addGame ) {
+
+		TEST_METHOD(addGame)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"1/13/2014\", \"2:30\", \"soccer\", 1234 );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 
 		}
 
-		TEST_METHOD( addPlayer ) {
+		TEST_METHOD(addPlayer)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "INSERT INTO players VALUES FROM (\"Jimmy\", \"Johns\", 52015875, 1234 );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD( addReferee ) {
+		TEST_METHOD(addReferee)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "INSERT INTO referees VALUES FROM (\"Zebra\", \"boy\", 78154564, 1234 );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD( addSport ) {
+		TEST_METHOD(addSport)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "INSERT INTO sports VALUES FROM (\"soccer\", 1234, \"spring\" );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD( addTeam ) {
+		TEST_METHOD(addTeam)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "INSERT INTO teams VALUES FROM (\"Firecrakers\", 5678 );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD( changeGameLocation ) {
+		TEST_METHOD(changeGameLocation)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
 
-			Database data;
-			vector<vector<string>> results;
-			Parser p( data, results );
-
-			p.parse( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
 
 			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"12014\", \"230\", \"soccer\", 1234 );";
 
-			Assert::AreEqual( p.parse( parserCommand ), 1 );
-
-			Relation original;
-			p.getRelation( "games", original );
-			
-			parserCommand = "UPDATE games SET location = \"REC\" WHERE (gameID == 1234);";
-
-			Assert::AreEqual( p.parse( parserCommand ), 1 );
-
-			Relation newR;
-
-			p.getRelation( "games", newR );
-
-			Assert::AreEqual( 1, newR.getNumTuples( ) );
-
-
-
-			/*string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"12014\", \"230\", \"soccer\", 1234 );";
-
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 
 			parserCommand = "UPDATE games SET location = \"REC\" WHERE (gameID == 1234);";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
-			*/
 		}
 
-		TEST_METHOD( changeGameTime ) {
+		TEST_METHOD(changeGameTime)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"12014\", \"230\", \"soccer\", 1234 );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1143,7 +1101,15 @@ namespace UnitTest1
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD( changeSportSeason ) {
+		TEST_METHOD(changeSportSeason)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "INSERT INTO sports VALUES FROM (\"soccer\", 1234, \"spring\" );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1153,76 +1119,119 @@ namespace UnitTest1
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD( displaySportGame ) {
-			Database data;
-			vector<vector<string>> results;
-			Parser p( data, results );
+		TEST_METHOD(displaySportGame)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
 
-			p.parse( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			string parserCommand = "newView <- select (sport == \"soccer\") games;";
 
-			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"12014\", \"230\", \"soccer\", 1234 );";
-
-			Assert::AreEqual( p.parse( parserCommand ), 1 );
-
-			Relation original;
-			p.getRelation( "games", original );
-
-			parserCommand = "newView <- select (sport == \"soccer\") games;";
-
-			Assert::AreEqual( p.parse( parserCommand ), 1 );
-
-			Relation newR;
-
-			p.getRelation( "newView", newR );
-
-			Assert::AreEqual( 1, newR.getNumTuples( ) );
-
-			//string parserCommand = "newView <- select (sport == \"soccer\") games;";
-
-			//Assert::AreEqual( database.execute( parserCommand ), 1 );
+			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD( displaySportsPlayed ) {
+		TEST_METHOD(displaySportsPlayed)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "playerPlays <- select (netID == 858386873) players;";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD( listNamesOfSports ) {
+		TEST_METHOD(listNamesOfSports)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "sportName <- project (name) sports;";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD( removeGame ) {
+		TEST_METHOD(removeGame)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "DELETE FROM games WHERE (gameID == 796 );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD( removePlayer ) {
+		TEST_METHOD(removePlayer)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "DELETE FROM players WHERE (netID == 858386873);";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD( removeReferee ) {
+		TEST_METHOD(removeReferee)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "DELETE FROM referees WHERE (netID == 4785693);";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD( removeSport ) {
+		TEST_METHOD(removeSport)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "DELETE FROM sports WHERE (sportID == 1234);";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
 
-		TEST_METHOD( removeTeam ) {
+		TEST_METHOD(removeTeam)
+		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "DELETE FROM teams WHERE (teamID == 6846);";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
 		}
+
+
 
 	};
 }
