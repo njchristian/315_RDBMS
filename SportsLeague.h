@@ -49,6 +49,8 @@ public:
 
 	void printMenu( );
 
+	string readString( );
+
 	void removeGame( );
 
 	void removeMenu( );

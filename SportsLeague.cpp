@@ -62,49 +62,98 @@ SportsLeague::SportsLeague( ) {
 
 }
 
+string SportsLeague::readString( ) {
+	string input;
+	bool validInput = false;
+
+	cin.clear( );
+	cin.sync( );
+
+	// read in a line of input until it is a correctly formatted string 
+	// enclosed by quotes
+	while ( !validInput ) {
+		getline( cin, input );
+		
+		if ( !cin.fail( ) && input[ 0 ] == '\"' && input[ input.size( ) - 1 ] == '\"' ) {
+			validInput = true;
+		}
+		else {
+			cin.clear( );
+			cin.sync( );
+			cout << "Invalid string format. Please make sure your string input is in quotes.\n";
+		}
+	}
+	return input;
+}
+
 
 void SportsLeague::addGame( ) {
 	// InsertInto
+	bool validInput = false;
 
 	for ( ;; ) {
 		string parserCommand = "INSERT INTO games VALUES FROM";
 
 		cout << "Please enter the location of the new game.\n";
-		string location;
-		cin >> location;
+		string location = readString( );
+		//cin >> location;
 
-		parserCommand += " (\"" + location + "\", ";
+		parserCommand += " (" + location + ", ";
 
 		cout << "Please enter the date of the game.\n";
-		string date;
-		cin >> date;
-		//how to check a correct date
-		parserCommand += "\"" + date + "\", ";
+		string date = readString( );
+		//cin >> date;
+		
+		parserCommand += "" + date + ", ";
 
 		cout << "Please enter the time of the game.\n";
-		string time;
-		cin >> time;
-		//how to check a correct time
-		parserCommand += "\"" + time + "\", ";
+		string time = readString( );
+		//cin >> time;
+		
+		parserCommand += "" + time + ", ";
 
 		cout << "Please enter the game's associated sport ID.\n";
 		int sportID;
-		cin >> sportID;
+		while ( !validInput ) {
+			cin >> sportID;
+			if ( !cin.fail( ) ) {
+				validInput = true;
+			}
+			else {
+				cin.ignore( 1024, '\n' );
+				cin.clear( );
+				cin.sync( );
+				cout << "Invalid input, please try again.\n";
+			}
+		}
 
 		parserCommand += "\"" + to_string( sportID ) + "\", ";
 
 		cout << "Please enter the game's ID.\n";
 		int gameID;
-		cin >> gameID;
+		validInput = false;
+		while ( !validInput ) {
+			cin >> gameID;
+			if ( !cin.fail( ) ) {
+				validInput = true;
+			}
+			else {
+				cin.ignore( 1024, '\n' );
+				cin.clear( );
+				cin.sync( );
+				cout << "Invalid input, please try again.\n";
+			}
+		}
 
 		parserCommand += "\"" + to_string( gameID ) + "\");";
 
 		if ( database->execute( parserCommand ) == 1 ) {
-			cout << "Game successfully added to the database->\n\n";
+			cout << "Command: " << parserCommand << endl;
+			cout << "Game successfully added to the database.\n\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Game was not added to the database->\n\n";
+			cout << "Invalid data entered - Game was not added to the database.\n\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -153,7 +202,7 @@ void SportsLeague::addMenu( ) {
 			cin.ignore( 1024, '\n' );
 			cin.clear();
 			cin.sync();
-			"Invalid choice. Please try again.\n";
+			cout << "Invalid choice. Please try again.\n";
 			break;
 		}
 	}
@@ -166,39 +215,64 @@ void SportsLeague::addPlayer( ) {
 	// Lastname
 	// Net-ID
 	// Sport ID
+	bool validInput = false;
+
 	for ( ;; ) {
 		string parserCommand = "INSERT INTO players VALUES FROM";
 
 		cout << "Please enter the first name of the player.\n";
-		string firstName;
-		cin >> firstName;
+		string firstName = readString( );
+		//cin >> firstName;
 
-		parserCommand += " (\"" + firstName + "\", ";
+		parserCommand += " (" + firstName + ", ";
 
 		cout << "Please enter the last name of the player.\n";
-		string lastName;
-		cin >> lastName;
+		string lastName = readString( );
+		//cin >> lastName;
 
-		parserCommand += "\"" + lastName + "\", ";
+		parserCommand += "" + lastName + ", ";
 
 		cout << "Please enter the Net-ID of the player.\n";
 		int netID;
-		cin >> netID;
+		while ( !validInput ) {
+			cin >> netID;
+			if ( !cin.fail( ) ) {
+				validInput = true;
+			}
+			else {
+				cin.ignore( 1024, '\n' );
+				cin.clear( );
+				cin.sync( );
+				cout << "Invalid input, please try again.\n";
+			}
+		}
 
 		parserCommand += "\"" + to_string( netID ) + "\", ";
 
 		cout << "Please enter the sport ID that the player plays.\n";
 		int sportID; 
-		cin >> sportID;
-
+		validInput = false;
+		while ( !validInput ) {
+			cin >> sportID;
+			if ( !cin.fail( ) ) {
+				validInput = true;
+			}
+			else {
+				cin.ignore( 1024, '\n' );
+				cin.clear( );
+				cin.sync( );
+				cout << "Invalid input, please try again.\n";
+			}
+		}
+		
 		parserCommand += "\"" + to_string( sportID ) + "\");";
 
 		if ( database->execute( parserCommand ) == 1 ) {
-			cout << "Player successfully added to the database->\n\n";
+			cout << "Player successfully added to the database.\n\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Player was not added to the database->\n\n";
+			cout << "Invalid data entered - Player was not added to the database.\n\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -213,40 +287,65 @@ void SportsLeague::addReferee( ) {
 	// last name
 	// netID
 	// sport id
+	bool validInput = false;
+
 	for ( ;; ) {
 		string parserCommand = "INSERT INTO referees VALUES FROM";
 
 		cout << "Please enter the first name of the referee.\n";
-		string firstName;
-		cin >> firstName;
+		string firstName = readString( );
+		//cin >> firstName;
 
-		parserCommand += " (\"" + firstName + "\", ";
+		parserCommand += " (" + firstName + ", ";
 
 		cout << "Please enter the last name of the referee.\n";
-		string lastName;
-		cin >> lastName;
+		string lastName = readString( );
+		//cin >> lastName;
 
-		parserCommand += "\"" + lastName + "\", ";
+		parserCommand += "" + lastName + ", ";
 
 		cout << "Please enter the Net-ID of the referee.\n";
 		int netID;
-		cin >> netID;
+		while ( !validInput ) {
+			cin >> netID;
+			if ( !cin.fail( ) ) {
+				validInput = true;
+			}
+			else {
+				cin.ignore( 1024, '\n' );
+				cin.clear( );
+				cin.sync( );
+				cout << "Invalid input, please try again.\n";
+			}
+		}
 
 		parserCommand += to_string( netID ) + ", ";
 
 
 		cout << "Please enter the sport ID that the referee refs.\n";
 		int sportID; 
-		cin >> sportID;
+		validInput = false;
+		while ( !validInput ) {
+			cin >> sportID;
+			if ( !cin.fail( ) ) {
+				validInput = true;
+			}
+			else {
+				cin.ignore( 1024, '\n' );
+				cin.clear( );
+				cin.sync( );
+				cout << "Invalid input, please try again.\n";
+			}
+		}
 
 		parserCommand += "\"" + to_string( sportID ) + "\");";
 
 		if ( database->execute( parserCommand ) == 1 ) {
-			cout << "Referee successfully added to the database->\n\n";
+			cout << "Referee successfully added to the database.\n\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Referee was not added to the database->\n\n";
+			cout << "Invalid data entered - Referee was not added to the database.\n\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -260,34 +359,47 @@ void SportsLeague::addSport( ) {
 	// name
 	// sport id
 	// season
+	bool validInput = false;
+
 	for ( ;; ) {
 		string parserCommand = "INSERT INTO sports VALUES FROM";
 
 		cout << "Please enter the name of the sport.\n";
-		string name;
-		cin >> name;
+		string name = readString( );
+		//cin >> name;
 
-		parserCommand += " (\"" + name + "\", ";
+		parserCommand += " (" + name + ", ";
 
 		cout << "Please enter the ID of the sport.\n";
 		int sportID;
-		cin >> sportID;
+		while ( !validInput ) {
+			cin >> sportID;
+			if ( !cin.fail( ) ) {
+				validInput = true;
+			}
+			else {
+				cin.ignore( 1024, '\n' );
+				cin.clear( );
+				cin.sync( );
+				cout << "Invalid input, please try again.\n";
+			}
+		}
 
 		parserCommand += "\"" + to_string( sportID ) + "\", ";
 
 
 		cout << "Please enter the season associated with the sport.\n";
-		string season;
-		cin >> season;
+		string season = readString( );
+		//cin >> season;
 
-		parserCommand += "\"" + season + "\");";
+		parserCommand += "" + season + ");";
 
 		if ( database->execute( parserCommand ) == 1 ) {
-			cout << "Sport successfully added to the database->\n\n";
+			cout << "Sport successfully added to the database.\n\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Sport was not added to the database->\n\n";
+			cout << "Invalid data entered - Sport was not added to the database.\n\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -300,27 +412,40 @@ void SportsLeague::addTeam( ) {
 	// InsertInto
 	// name
 	// id
+	bool validInput = false;
+
 	for ( ;; ) {
 		string parserCommand = "INSERT INTO teams VALUES FROM";
 
 		cout << "Please enter the name of the team.\n";
-		string name;
-		cin >> name;
+		string name = readString( );
+		//cin >> name;
 
-		parserCommand += " (\"" + name + "\", ";
+		parserCommand += " (" + name + ", ";
 
 		cout << "Please enter the ID of the team.\n";
 		int teamID;
-		cin >> teamID;
+		while ( !validInput ) {
+			cin >> teamID;
+			if ( !cin.fail( ) ) {
+				validInput = true;
+			}
+			else {
+				cin.ignore( 1024, '\n' );
+				cin.clear( );
+				cin.sync( );
+				cout << "Invalid input, please try again.\n";
+			}
+		}
 
 		parserCommand += "\"" + to_string( teamID ) + "\");";
 
 		if ( database->execute( parserCommand ) == 1 ) {
-			cout << "Team successfully added to the database->\n\n";
+			cout << "Team successfully added to the database.\n\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Team was not added to the database->\n\n";
+			cout << "Invalid data entered - Team was not added to the database.\n\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -657,11 +782,11 @@ void SportsLeague::removeGame( ) {
 		parserCommand += ");";
 
 		if ( database->execute( parserCommand ) == 1 ) {
-			cout << "Game successfully removed from the database->\n";
+			cout << "Game successfully removed from the database.\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Game was not removed from the database->\n";
+			cout << "Invalid data entered - Game was not removed from the database.\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -733,11 +858,11 @@ void SportsLeague::removePlayer( ) {
 		// pass the command to the parser; if it fails ask the user if they want
 		// to retry
 		if ( database->execute( parserCommand ) == 1 ) {
-			cout << "Player successfully removed from the database->\n";
+			cout << "Player successfully removed from the database.\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Player was not removed from the database->\n";
+			cout << "Invalid data entered - Player was not removed from the database.\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -763,11 +888,11 @@ void SportsLeague::removeReferee( ) {
 		// pass the command to the parser; if it fails ask the user if they want
 		// to retry
 		if ( database->execute( parserCommand ) == 1 ) {
-			cout << "Referee successfully removed from the database->\n";
+			cout << "Referee successfully removed from the database.\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Referee was not removed from the database->\n";
+			cout << "Invalid data entered - Referee was not removed from the database.\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -793,11 +918,11 @@ void SportsLeague::removeSport( ) {
 		// pass the command to the parser; if it fails ask the user if they want
 		// to retry
 		if ( database->execute( parserCommand ) == 1 ) {
-			cout << "Sport successfully removed from the database->\n";
+			cout << "Sport successfully removed from the database.\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Sport was not removed from the database->\n";
+			cout << "Invalid data entered - Sport was not removed from the database.\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -823,11 +948,11 @@ void SportsLeague::removeTeam( ) {
 		// pass the command to the parser; if it fails ask the user if they want
 		// to retry
 		if ( database->execute( parserCommand ) == 1 ) {
-			cout << "Team successfully removed from the database->\n";
+			cout << "Team successfully removed from the database.\n";
 			return;
 		}
 		else {
-			cout << "Invalid data entered - Team was not removed from the database->\n";
+			cout << "Invalid data entered - Team was not removed from the database.\n";
 			if ( retry( ) == false ) {
 				return;
 			}
@@ -1023,7 +1148,7 @@ void SportsLeague::showMenu( ) {
 			cin.ignore( 1024, '\n' );
 			cin.clear();
 			cin.sync();
-			"Invalid choice. Please try again.\n";
+			cout << "Invalid choice. Please try again.\n";
 			break;
 		}
 	}
