@@ -353,6 +353,36 @@ bool Database::relationExists( string r ){
 	return false;
 }
 
+vector<vector<string>> Database::getResultMatrix(){
+
+	vector<vector<string>> matrix;
+	for(int i = 0; i < result.getNumTuples(); ++i){
+		matrix.push_back(vector<string>());
+
+		for(int j = 0; j < result.attributeSize(); ++j){
+
+			string additionString = "";
+			Entry* e = result.getEntry(i, j);
+
+			if( e->isInt() ){
+				int integerEntry = e->getEntryI();
+				stringstream ss;
+				ss << integerEntry;
+				additionString = ss.str();
+			}else{
+				additionString = e->getEntryVC();
+			}
+
+			matrix.at(i).push_back(additionString);
+
+		}
+
+	}
+
+	return matrix;
+
+}
+
 void Database::removeRelationFromDatabase( string relationName ) {
 	Relation* targetRelation = findRelation( relationName );
 

@@ -13,14 +13,15 @@ class DBCell{
 	// Data Members
 	Parser* parser;
 	Database database;
-	
+	vector<vector<string>>& result;
+
 	//user defined relations
 	vector<Relation> localRelations;
 
 public:
 
-	DBCell(){
-		parser = new Parser(database);
+	DBCell(vector<vector<string>>& r) : result(r) {
+		parser = new Parser(database, result);
 	}
 
 	// Public Functions
