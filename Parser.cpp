@@ -195,6 +195,26 @@ bool Parser::isNum( int c) {
 
 }
 
+//DONE - NOT TESTED
+string Parser::readWord( stringstream& command ) {
+
+	readWhite( command );
+
+	string result = "";
+	char next;
+
+	while ( command.peek( ) != '"' ) {
+
+		command.get( next );
+		result.push_back( next );
+
+	}
+
+	readWhite( command );
+
+	return result;
+}
+
 
 //DONE - NOT TESTED
 string Parser::readAlphaNumWord( stringstream& command ) {
@@ -479,6 +499,11 @@ int Parser::update( stringstream& command ) {
 		return INVALID;
 	}
 
+	Relation targetRelation;
+	if( getRelation( relationName, targetRelation) < 0 ){
+		return INVALID;
+	}
+
 	string setKeyWord = readAlphaNumWord( command );
 
 	if ( setKeyWord != "SET" ) {
@@ -487,6 +512,8 @@ int Parser::update( stringstream& command ) {
 
 	vector<string> attributeNames;
 	vector<Entry> newValues;
+
+	int index = 0;
 
 	// is this list of stuff suppose to be enclosed in parentheses or not?
 	// maybe need a better condition for this loop
@@ -517,6 +544,11 @@ int Parser::update( stringstream& command ) {
 
 		// Parse the literal
 		Entry newVal;
+
+		if( targetRelation.getAttributeAt(index).hasSize ){
+			newVal.setL(targetRelation.getAttributeAt(index).vcSize); 
+		}
+
 		if( readLiteral( command, newVal ) < 0 ){
 			return INVALID;
 		}
@@ -528,6 +560,7 @@ int Parser::update( stringstream& command ) {
 			command.get( );
 		}
 
+		++index;
 	}
 
 	// Get the conditions that will be used by the delete function
@@ -599,7 +632,7 @@ int Parser::readLiteral( stringstream& command, Entry& e ) {
 			return INVALID;
 		}
 
-		e = Entry( readAlphaNumWord( command ) );
+		e.setVC( readWord( command ) );
 
 		command.get(quote);
 		if(quote != '"'){
@@ -608,7 +641,8 @@ int Parser::readLiteral( stringstream& command, Entry& e ) {
 
 	}
 	else {
-		e = Entry(a);
+
+		e.setInt( a );
 
 	}
 
@@ -622,6 +656,11 @@ int Parser::insertInto( stringstream& command ) {
 	// Get the target Relation name
 	string relationName; 
 	if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
+		return INVALID;
+	}
+
+	Relation targetRelation;
+	if( getRelation( relationName, targetRelation ) < 0 ){
 		return INVALID;
 	}
 
@@ -648,8 +687,19 @@ int Parser::insertInto( stringstream& command ) {
 		vector<Entry> tuple;
 		Entry helperEntry;
 		
+		
+		
+		int index = 0;
 		// keep reading literals until there is a ')'
 		while ( command.peek( ) != ')' ) {
+
+			Entry helperEntry;
+
+			if( targetRelation.getAttributeAt(index).hasSize ){
+				helperEntry.setL( targetRelation.getAttributeAt(index).vcSize );
+			}
+
+
 			if( readLiteral( command, helperEntry ) < 0 ){
 				return INVALID;
 			}
@@ -666,6 +716,7 @@ int Parser::insertInto( stringstream& command ) {
 				return INVALID;
 			}
 
+			++index;
 		}
 
 		// consume the closing parenthesis

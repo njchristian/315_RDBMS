@@ -277,7 +277,11 @@ Relation* Database::insertIntoFromRelation( Relation* relationA, Relation* relat
 
 		vector<Entry*> newRow = relationB->getRow( i );
 
-		relationA->addRow( newRow );
+		if( !relationA ->hasTuple( newRow ) ){
+			relationA->addRow( newRow );
+		}
+
+		
 
 	}
 

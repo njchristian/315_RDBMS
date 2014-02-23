@@ -133,6 +133,8 @@ class Parser{
 	
 	int readAlphaNumWordStartsAlpha( stringstream& command, string& result );
 
+	string readWord( stringstream& command );
+
 	//DONE - needs testing
 	// reads and returns an entry for the insert into function, opening parenthesis
 	// will already be consumed and this should not consume the closing parenthesis
