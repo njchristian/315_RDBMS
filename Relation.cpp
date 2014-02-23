@@ -114,6 +114,19 @@ bool Relation::hasTuple( vector<Entry*> tuple )  {
 	return false;
 }
 
+bool Relation::hasAttribute(string s){
+
+	for(int i = 0; i < attributes.size(); ++i){
+
+		if( attributes.at(i).name == s ){
+			return true;
+		}
+
+	}
+
+	return false;
+}
+
 bool Relation::isEmpty(){
 
 	if( table.size() > 0 ){

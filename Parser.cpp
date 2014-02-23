@@ -570,6 +570,34 @@ int Parser::update( stringstream& command ) {
 		return INVALID;
 	}
 
+	//make sure to be updated attributes exist
+	for(int i = 0; i < attributeNames.size(); ++i){
+
+		if( !targetRelation.hasAttribute( attributeNames.at(i) ) ){
+			return INVALID;
+		}
+
+	}
+
+	//check that all condition variables exist in the relation!
+	for(int i = 0; i < updateConditions.size(); ++i){
+
+		Condition c = updateConditions.at(i);
+
+		if( c.firstIsVar() ){
+			if( !targetRelation.hasAttribute( c.firstVarName() ) ){
+				return INVALID;
+			}
+		}
+
+		if( c.secondIsVar() ){
+			if( !targetRelation.hasAttribute( c.secondVarName() ) ){
+				return INVALID;
+			}
+		}
+
+	}
+
 	database.update( relationName, attributeNames, newValues, updateConditions );
 
 	return SUCCESS;
@@ -606,6 +634,26 @@ int Parser::deleteFrom( stringstream& command ) {
 	if( getRelation(relationName, r) < 0 ){
 		return INVALID;
 	}
+
+	//check that all variables exist in the relation!
+	for(int i = 0; i < deleteConditions.size(); ++i){
+
+		Condition c = deleteConditions.at(i);
+
+		if( c.firstIsVar() ){
+			if( !r.hasAttribute( c.firstVarName() ) ){
+				return INVALID;
+			}
+		}
+
+		if( c.secondIsVar() ){
+			if( !r.hasAttribute( c.secondVarName() ) ){
+				return INVALID;
+			}
+		}
+
+	}
+
 
 	// Call the delete function on the relation
 	database.deleteFromRelation( relationName, deleteConditions );
@@ -760,6 +808,14 @@ int Parser::projection( stringstream& command, Relation& rel ) {
 	Relation r; 
 	if( parseExpr( command, r ) < 0 ){
 		return INVALID;
+	}
+
+	for(int i = 0; i < attributeNames.size(); ++i){
+
+		if( !r.hasAttribute( attributeNames.at(i) ) ){
+			return INVALID;
+		}
+
 	}
 
 	rel = database.projection( attributeNames, r );
@@ -1719,6 +1775,25 @@ int Parser::selection( stringstream& command, Relation& rel ) {
 	Relation targetRelation;
 	if( parseExpr( command, targetRelation ) < 0 ){
 		return INVALID;
+	}
+
+	//check that all variables exist in the relation!
+	for(int i = 0; i < conditions.size(); ++i){
+
+		Condition c = conditions.at(i);
+
+		if( c.firstIsVar() ){
+			if( !targetRelation.hasAttribute( c.firstVarName() ) ){
+				return INVALID;
+			}
+		}
+
+		if( c.secondIsVar() ){
+			if( !targetRelation.hasAttribute( c.secondVarName() ) ){
+				return INVALID;
+			}
+		}
+
 	}
 
 	rel = database.selection( conditions, targetRelation );

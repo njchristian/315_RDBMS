@@ -8,7 +8,22 @@
 #include "DBCell.h"
 #include <iostream>
 
-DBCell db;
+DBCell* db;
+
+void outputResult( vector<vector<string>>& r ){
+
+	for(int i = 0; i < r.size(); ++i){
+
+		for(int j = 0; j < r.at(i).size(); ++j){
+
+			cout<<r.at(i).at(j)<<' ';
+
+		}
+
+		cout<<'\n';
+	}
+
+}
 
 void readInput(){
 
@@ -35,7 +50,7 @@ void readInput(){
 
 	line = line + word;
 
-	if( db.execute(line) < 0 ){
+	if( db->execute(line) < 0 ){
 		cout << "ERROR in:\n" << line <<'\n';
 	}
 
@@ -44,7 +59,7 @@ void readInput(){
 }
 
 void execute( string s ){
-	int t = db.execute(s);
+	int t = db->execute(s);
 	if ( t < 0 ){
 		
 		if( t == -2 ){
@@ -65,7 +80,9 @@ int main(){
 	dml = "SHOW animals;";
 	execute(dml);
 	*/
+	vector<vector<string>> result;
 
+	db = new DBCell(result);
 	
 	string dml = "CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind)";
 	execute(dml);
@@ -93,6 +110,9 @@ int main(){
 	dml = "INSERT INTO age_rhyme VALUES FROM (1, \"Only\");";
 	execute(dml);
 	dml = "INSERT INTO age_rhyme VALUES FROM (2, \"Timely\");";
+	execute(dml);
+
+	dml = "SHOW animals;";
 	execute(dml);
 
 	dml = "SHOW age_rhyme;";

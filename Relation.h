@@ -70,6 +70,8 @@ public:
 
 	bool hasTuple( vector<Entry*> tuple );
 
+	bool hasAttribute( string s );
+
 	bool isEmpty();
 
 	void setAttributes( vector<Attribute> newAttributes );
