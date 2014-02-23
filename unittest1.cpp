@@ -29,24 +29,18 @@ namespace UnitTest1
 		
 		SportsLeague league;
 		Database d;
+		vector<vector<string>> r;
 		
-		DBCell database;
 		vector<Relation*> localRelations;
 
 		vector<Attribute> testAtts;
 		vector<int> keys;
 		vector<vector<Entry>> entries;
 		vector<vector<Entry>> e2;
+		
 
 		TEST_METHOD_INITIALIZE(init234)
 		{
-			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
-			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
-			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
-			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
-			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
-
-
 			testAtts.push_back(Attribute("Name", VARCHAR, 10));
 			testAtts.push_back(Attribute("Owner", VARCHAR, 10));
 			testAtts.push_back(Attribute("Age", INTEGER));
@@ -160,7 +154,7 @@ namespace UnitTest1
 
 		TEST_METHOD(deleteFromTableCommand)
 		{
-			Parser p(d);
+			Parser p( d , r );
 			string dml = "DELETE FROM Dogs WHERE (Owner == \"Melodie\");";
 			p.parse(dml);
 
@@ -656,7 +650,7 @@ namespace UnitTest1
 
 		TEST_METHOD(selectionCommand)
 		{
-			Parser p (d );
+			Parser p( d , r );
 			string dml = "puppies <- select (Age == 1) Dogs;";
 
 			p.parse( dml );
@@ -670,7 +664,7 @@ namespace UnitTest1
 
 		TEST_METHOD(differenceCommand)
 		{
-			Parser p (d );
+			Parser p( d , r );
 			string dml = "both_dogsA <- Dogs - More_Dogs;";
 
 			p.parse( dml );
@@ -708,7 +702,7 @@ namespace UnitTest1
 
 		TEST_METHOD(projectionCommand)
 		{
-			Parser p (d );
+			Parser p( d , r );
 			string dml = "a <- project (Name, Age) Dogs;";
 
 			p.parse( dml );
@@ -727,7 +721,7 @@ namespace UnitTest1
 
 		TEST_METHOD(unionCommand)
 		{
-			Parser p (d );
+			Parser p( d , r );
 			string dml = "both_dogsA <- Dogs + More_Dogs;";
 			p.parse( dml );
 
@@ -744,7 +738,7 @@ namespace UnitTest1
 
 		TEST_METHOD(renameCommand)
 		{
-			Parser p (d );
+			Parser p( d , r );
 			string dml = "a <- rename (AName, AAge) (project (Name, Age) Dogs);";
 
 			p.parse( dml );
@@ -763,7 +757,7 @@ namespace UnitTest1
 
 		TEST_METHOD(insertIntoCommand)
 		{
-			Parser p( d );
+			Parser p( d , r );
 			string dml = "INSERT INTO Dogs VALUES FROM (\"Spot\", \"Timmy\", 4);";
 
 			p.parse( dml );
@@ -787,7 +781,7 @@ namespace UnitTest1
 
 		TEST_METHOD(dropTableCommand)
 		{
-			Parser p (d );
+			Parser p( d , r );
 			string dml = "both_dogsA <- Dogs * More_Dogs";
 
 			p.parse( dml );
@@ -803,7 +797,7 @@ namespace UnitTest1
 
 		TEST_METHOD(crossProductCommand)
 		{
-			Parser p (d );
+			Parser p( d , r );
 			string dml = "both_dogsA <- Dogs * More_Dogs";
 
 			p.parse( dml );
@@ -821,7 +815,7 @@ namespace UnitTest1
 
 		TEST_METHOD(createTableCommand)
 		{
-			Parser p(d);
+			Parser p( d , r );
 			string dml = "CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);";
 
 			p.parse(dml);
@@ -835,7 +829,7 @@ namespace UnitTest1
 
 		TEST_METHOD(writeFileCommand)
 		{
-			Parser p(d);
+			Parser p( d , r );
 			string dml = "OPEN Dogs;";
 			p.parse(dml);
 			dml = "WRITE Dogs;";
@@ -845,7 +839,7 @@ namespace UnitTest1
 
 		TEST_METHOD(closeFileCommand)
 		{
-			Parser p(d);
+			Parser p( d , r );
 			string dml = "OPEN Dogs;";
 			p.parse(dml);
 			dml = "WRITE Dogs;";
@@ -857,7 +851,7 @@ namespace UnitTest1
 
 		TEST_METHOD(openFileCommand)
 		{
-			Parser p(d);
+			Parser p( d , r );
 			string dml = "WRITE Dogs;";
 
 			Assert::AreEqual( p.parse(dml), 1);
@@ -865,7 +859,7 @@ namespace UnitTest1
 
 		TEST_METHOD(showCommand)
 		{
-			Parser p(d);
+			Parser p( d , r );
 			string dml = "SHOW Dogs;";
 
 			Assert::AreEqual( p.parse(dml), 1);
@@ -873,7 +867,7 @@ namespace UnitTest1
 
 		TEST_METHOD(updateCommand)
 		{
-			Parser p(d);
+			Parser p( d , r );
 			string dml = "UPDATE Dogs SET Age = 40 WHERE (Owner == \"Melodie\");";
 
 			p.parse(dml);
@@ -899,7 +893,7 @@ namespace UnitTest1
 
 		TEST_METHOD( parseExit )
 		{
-			Parser p( d );
+			Parser p( d , r );
 			string dml = "EXIT;";
 
 			Assert::AreEqual( p.parse( dml ), -2 );
@@ -907,7 +901,7 @@ namespace UnitTest1
 
 		TEST_METHOD( selectionCommandBad )
 		{
-			Parser p( d );
+			Parser p( d , r );
 			string dml = "puppies <- select Age == 1) Dogs;"; // missing opening (
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -916,7 +910,7 @@ namespace UnitTest1
 
 		TEST_METHOD( differenceCommandBad )
 		{
-			Parser p( d );
+			Parser p( d , r );
 			string dml = "both_dogsA <- Dogs - More_Dogsjffjgfjghf";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -924,7 +918,7 @@ namespace UnitTest1
 
 		TEST_METHOD( projectionCommandBad )
 		{
-			Parser p( d );
+			Parser p( d , r );
 		
 			string dml = "a <- project Name, Age Dogs;";
 
@@ -934,7 +928,7 @@ namespace UnitTest1
 
 		TEST_METHOD( renameCommandBad )
 		{
-			Parser p( d );
+			Parser p( d , r );
 			string dml = "a <- rename AName, AAge (project (Name, Age) Dogs);";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -947,7 +941,7 @@ namespace UnitTest1
 
 		TEST_METHOD( insertIntoCommandBad )
 		{
-			Parser p( d );
+			Parser p( d , r );
 			string dml = "INSERT INTO Dogs VALUES FORM (\"Spot\", \"Timmy\", 4);";
 
 			Assert::AreEqual( p.parse( dml ), -1 );			
@@ -955,7 +949,7 @@ namespace UnitTest1
 
 		TEST_METHOD( crossProductCommandBad )
 		{
-			Parser p( d );
+			Parser p( d , r );
 			string dml = "both_dogsA <- Dogs ** More_Dogs";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -963,7 +957,7 @@ namespace UnitTest1
 
 		TEST_METHOD( createTableCommandBad )
 		{
-			Parser p( d );
+			Parser p( d , r );
 			string dml = "CREATE TABLE animals name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -975,7 +969,7 @@ namespace UnitTest1
 
 		TEST_METHOD( deleteCommand )
 		{
-			Parser p( d );
+			Parser p( d , r );
 			string dml = "DELETE FROM Dogs WHERE (Age == 14);";
 
 			p.parse( dml );
@@ -987,7 +981,7 @@ namespace UnitTest1
 		}
 		TEST_METHOD( deleteCommandBad )
 		{
-			Parser p( d );
+			Parser p( d , r );
 			string dml = "DELETE FROM Dogs WHREE (Age == 14);";
 
 			Assert::AreEqual( p.parse( dml ), -1 );
@@ -1004,6 +998,13 @@ namespace UnitTest1
 
 		TEST_METHOD(addGame)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"1/13/2014\", \"2:30\", \"soccer\", 1234 );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1012,6 +1013,13 @@ namespace UnitTest1
 
 		TEST_METHOD(addPlayer)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "INSERT INTO players VALUES FROM (\"Jimmy\", \"Johns\", 52015875, 1234 );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1019,6 +1027,13 @@ namespace UnitTest1
 
 		TEST_METHOD(addReferee)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "INSERT INTO referees VALUES FROM (\"Zebra\", \"boy\", 78154564, 1234 );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1026,6 +1041,13 @@ namespace UnitTest1
 
 		TEST_METHOD(addSport)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "INSERT INTO sports VALUES FROM (\"soccer\", 1234, \"spring\" );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1033,6 +1055,13 @@ namespace UnitTest1
 
 		TEST_METHOD(addTeam)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "INSERT INTO teams VALUES FROM (\"Firecrakers\", 5678 );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1040,6 +1069,13 @@ namespace UnitTest1
 
 		TEST_METHOD(changeGameLocation)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 
 			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"12014\", \"230\", \"soccer\", 1234 );";
 
@@ -1052,6 +1088,13 @@ namespace UnitTest1
 
 		TEST_METHOD(changeGameTime)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "INSERT INTO games VALUES FROM (\"earth\",  \"12014\", \"230\", \"soccer\", 1234 );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1063,6 +1106,13 @@ namespace UnitTest1
 
 		TEST_METHOD(changeSportSeason)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "INSERT INTO sports VALUES FROM (\"soccer\", 1234, \"spring\" );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1074,6 +1124,13 @@ namespace UnitTest1
 
 		TEST_METHOD(displaySportGame)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "newView <- select (sport == \"soccer\") games;";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1081,6 +1138,13 @@ namespace UnitTest1
 
 		TEST_METHOD(displaySportsPlayed)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "playerPlays <- select (netID == 858386873) players;";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1088,6 +1152,13 @@ namespace UnitTest1
 
 		TEST_METHOD(listNamesOfSports)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "sportName <- project (name) sports;";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1095,6 +1166,13 @@ namespace UnitTest1
 
 		TEST_METHOD(removeGame)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "DELETE FROM games WHERE (gameID == 796 );";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1102,6 +1180,13 @@ namespace UnitTest1
 
 		TEST_METHOD(removePlayer)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "DELETE FROM players WHERE (netID == 858386873);";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1109,6 +1194,13 @@ namespace UnitTest1
 
 		TEST_METHOD(removeReferee)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "DELETE FROM referees WHERE (netID == 4785693);";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1116,6 +1208,13 @@ namespace UnitTest1
 
 		TEST_METHOD(removeSport)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "DELETE FROM sports WHERE (sportID == 1234);";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
@@ -1123,6 +1222,13 @@ namespace UnitTest1
 
 		TEST_METHOD(removeTeam)
 		{
+			DBCell database( r );
+			database.execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sport VARCHAR(10), gameID INTEGER ) PRIMARY KEY (gameID);" );
+			database.execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+			database.execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);");
+			database.execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
+			database.execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);");
+
 			string parserCommand = "DELETE FROM teams WHERE (teamID == 6846);";
 
 			Assert::AreEqual( database.execute( parserCommand ), 1 );
