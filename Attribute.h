@@ -12,10 +12,11 @@ struct Attribute{
 	Type t;
 	string name;
 	int vcSize;
+	bool hasSize;
 
 	// Constructor
 	Attribute(string n, Type ty) : t(ty), name(n) { }
-	Attribute(string n, Type ty, int size) : t(ty), name(n), vcSize(size) { }
+	Attribute(string n, Type ty, int size) : t(ty), name(n), vcSize(size), hasSize(true) { }
 
 	Attribute() : t(INTEGER), name("default") { }
 
