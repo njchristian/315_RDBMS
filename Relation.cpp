@@ -239,11 +239,35 @@ bool operator==(Relation& relationA, Relation& relationB){
 }
 
 
+
+string evalStrLength(string target, int TBL_ENTRY){
+
+	if(target.size()<TBL_ENTRY){
+		return target;
+	}
+
+	string result = "";
+
+	//The minus 5 reduces as follows - 3 for the "..." and the extra 2 for appropiate spacing
+	for(int i = 0; i < TBL_ENTRY - 5; i++){
+		result = result + target.at(i);
+	}
+
+	result = result + "...";
+
+	return result;
+
+}
+
 // Output operator
 ostream& operator<<(ostream& os, Relation& a){
 
-	int INTSIZE = 15;
+	//assume all ints have a max length of 12 (encompasses most all types of numbers
+	int INTSIZE = 12;
 	vector<Attribute> att = a.getAttributes();
+	int entries = att.size();
+	int WINDOWSIZE = 80;
+	int MAXSIZE = WINDOWSIZE/ (entries + 1);
 
 	int max = 0;
 
@@ -253,8 +277,8 @@ ostream& operator<<(ostream& os, Relation& a){
 			if(att.at(i).vcSize > max){
 				max = att.at(i).vcSize;
 
-				if( max > 17 ){
-					max = 17;
+				if( max > MAXSIZE ){
+					max = MAXSIZE;
 					break;
 				}
 				
@@ -273,11 +297,11 @@ ostream& operator<<(ostream& os, Relation& a){
 
 	for(int i = 0; i < a.attributeSize(); ++i){
 
-		os<<setw(max)<<a.getAttributeNameAt(i)<<": ";
+		os<<setw(max)<<evalStrLength( a.getAttributeNameAt(i), max );
 
 	}
 
-	os<<"\n\n";
+	os<<"\n-------------------------------------------------------------------------------\n";
 
 	for(int i = 0; i < a.getNumTuples(); i++){
 
@@ -295,7 +319,7 @@ ostream& operator<<(ostream& os, Relation& a){
 			}
 
 			tempS = ss.str();
-			os<<setw(max)<<tempS<<' ';
+			os<<setw(max)<<evalStrLength( tempS, max );
 
 			ss.clear();
 		}
