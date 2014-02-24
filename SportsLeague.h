@@ -9,12 +9,8 @@ class SportsLeague {
 
 	bool firstTime;
 
-public:
+	// Private member functions
 
-	// Constructor
-	SportsLeague( );
-
-	// Member functions
 	void addGame( );
 
 	void addMenu( );
@@ -73,13 +69,11 @@ public:
 
 	void removeSport( );
 
-	void removeTeam( );	
+	void removeTeam( );
 
 	void removeWinningTeam( );
 
 	bool retry( );
-
-	void run( );	
 
 	void showGames( );
 
@@ -94,5 +88,14 @@ public:
 	void showTeams( );
 
 	void showWinningTeams( );
+
+public:
+
+	// Constructor
+	SportsLeague( );
+
+	// Member functions
+
+	void run( );
 
 };
