@@ -9,8 +9,12 @@ class SportsLeague {
 
 	bool firstTime;
 
-	// Private member functions
+public:
 
+	// Constructor
+	SportsLeague( );
+
+	// Member functions
 	void addGame( );
 
 	void addMenu( );
@@ -22,8 +26,6 @@ class SportsLeague {
 	void addSport( );
 
 	void addTeam( );
-
-	void addWinningTeam( );
 
 	void changeGameLocation( );
 
@@ -37,13 +39,13 @@ class SportsLeague {
 
 	void exit( );
 
+	void exitWithoutSave( );
+
 	void firstTimeMess( );
 
 	void getAllReferees( );
 
 	void getNonReferees( );
-
-	void getLosingTeams( );
 
 	void gamesWhenTeamCouldPlay( );
 
@@ -69,11 +71,13 @@ class SportsLeague {
 
 	void removeSport( );
 
-	void removeTeam( );
-
-	void removeWinningTeam( );
+	void removeTeam( );	
 
 	bool retry( );
+
+	void run( );	
+
+	void save();
 
 	void showGames( );
 
@@ -86,16 +90,5 @@ class SportsLeague {
 	void showSports( );
 
 	void showTeams( );
-
-	void showWinningTeams( );
-
-public:
-
-	// Constructor
-	SportsLeague( );
-
-	// Member functions
-
-	void run( );
 
 };
