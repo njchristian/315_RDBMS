@@ -74,15 +74,19 @@ string SportsLeague::readString( ) {
 	while ( !validInput ) {
 		getline( cin, input );
 		
-		if ( !cin.fail( ) && input[ 0 ] == '\"' && input[ input.size( ) - 1 ] == '\"' ) {
+		if ( !cin.fail( ) ) {
 			validInput = true;
 		}
 		else {
 			cin.clear( );
 			cin.sync( );
-			cout << "Invalid string format. Please make sure your string input is in quotes.\n";
+			cout << "Invalid input. Please try again.\n";
 		}
 	}
+
+	// add quotes for the parser
+	input = "\"" + input + "\"";
+
 	return input;
 }
 
@@ -92,6 +96,7 @@ void SportsLeague::addGame( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 		string parserCommand = "INSERT INTO games VALUES FROM";
 
 		cout << "Please enter the location of the new game.\n";
@@ -127,7 +132,7 @@ void SportsLeague::addGame( ) {
 			}
 		}
 
-		parserCommand += "\"" + to_string( sportID ) + "\", ";
+		parserCommand += to_string( sportID ) + ", ";
 
 		cout << "Please enter the game's ID.\n";
 		int gameID;
@@ -145,7 +150,7 @@ void SportsLeague::addGame( ) {
 			}
 		}
 
-		parserCommand += "\"" + to_string( gameID ) + "\");";
+		parserCommand += to_string( gameID ) + ");";
 
 		if ( database->execute( parserCommand ) == 1 ) {
 			cout << "Command: " << parserCommand << endl;
@@ -220,6 +225,7 @@ void SportsLeague::addPlayer( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 		string parserCommand = "INSERT INTO players VALUES FROM";
 
 		cout << "Please enter the first name of the player.\n";
@@ -329,6 +335,7 @@ void SportsLeague::addReferee( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 		string parserCommand = "INSERT INTO referees VALUES FROM";
 
 		cout << "Please enter the first name of the referee.\n";
@@ -377,7 +384,7 @@ void SportsLeague::addReferee( ) {
 			}
 		}
 
-		parserCommand += "\"" + to_string( sportID ) + "\");";
+		parserCommand += to_string( sportID ) + ");";
 
 		if ( database->execute( parserCommand ) == 1 ) {
 			cout << "Referee successfully added to the database.\n\n";
@@ -401,6 +408,7 @@ void SportsLeague::addSport( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 		string parserCommand = "INSERT INTO sports VALUES FROM";
 
 		cout << "Please enter the name of the sport.\n";
@@ -424,7 +432,7 @@ void SportsLeague::addSport( ) {
 			}
 		}
 
-		parserCommand += "\"" + to_string( sportID ) + "\", ";
+		parserCommand += to_string( sportID ) + ", ";
 
 
 		cout << "Please enter the season associated with the sport.\n";
@@ -454,6 +462,7 @@ void SportsLeague::addTeam( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 		string parserCommand = "INSERT INTO teams VALUES FROM";
 
 		cout << "Please enter the name of the team.\n";
@@ -477,7 +486,7 @@ void SportsLeague::addTeam( ) {
 			}
 		}
 
-		parserCommand += "\"" + to_string( teamID ) + "\");";
+		parserCommand += to_string( teamID ) + ");";
 
 		if ( database->execute( parserCommand ) == 1 ) {
 			cout << "Team successfully added to the database.\n\n";
@@ -501,6 +510,7 @@ void SportsLeague::changeGameLocation( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 		string parserCommand = "UPDATE games SET location = ";
 
 		cout << "Please enter in the gameID \n";
@@ -546,6 +556,7 @@ void SportsLeague::changeGameTime( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 		string parserCommand = "UPDATE games SET time = ";
 
 		cout << "Please enter in the gameID \n";
@@ -590,7 +601,7 @@ void SportsLeague::changeSportSeason( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
-
+		validInput = false;
 		string parserCommand = "UPDATE sports SET season = ";
 
 		cout << "Please enter in the sportID \n";
@@ -635,6 +646,7 @@ void SportsLeague::displaySportsGames( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 	 	string parserCommand = "DROP TABLE newView;"; //if newView exists delete it
 		database->execute( parserCommand );
 
@@ -680,6 +692,7 @@ void SportsLeague::displaySportsPlayed( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 		string parserCommand = "DROP TABLE playerPlays;"; //if playerPlays exists delete it
 		database->execute( parserCommand );
 		parserCommand = "playerPlays <- select";
@@ -831,6 +844,7 @@ void SportsLeague::listPlayersOnTeam( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 		cout << "Please enter a team ID to display the players on that team.\n";
 		int teamID;
 		while ( !validInput ) {
@@ -889,6 +903,7 @@ void SportsLeague::removeGame( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 		string parserCommand = "DELETE FROM games WHERE (gameID == ";
 
 		int gameID;
@@ -975,6 +990,7 @@ void SportsLeague::removePlayer( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 		string parserCommand = "DELETE FROM players WHERE (netID == ";
 
 		// get the net ID
@@ -1017,6 +1033,7 @@ void SportsLeague::removeReferee( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 		string parserCommand = "DELETE FROM referees WHERE (netID == ";
 
 		// get the net ID
@@ -1059,6 +1076,7 @@ void SportsLeague::removeSport( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 		string parserCommand = "DELETE FROM sports WHERE (sportID == ";
 
 		// get the sport ID
@@ -1101,6 +1119,7 @@ void SportsLeague::removeTeam( ) {
 	bool validInput = false;
 
 	for ( ;; ) {
+		validInput = false;
 		string parserCommand = "DELETE FROM teams WHERE (teamID == ";
 
 		// get the Team ID
