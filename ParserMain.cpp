@@ -89,11 +89,13 @@ int main(){
 
 	dml = "INSERT INTO animals VALUES FROM (\"Joe\", \"cat\", 4);";
 	execute(dml);
+	dml = "INSERT INTO animals VALUES FROM (\"Joey\", \"cat\", 7);";
+	execute(dml);
 	dml = "INSERT INTO animals VALUES FROM (\"Spot\", \"dog\", 10);";
 	execute(dml);
 	dml = "INSERT INTO animals VALUES FROM (\"Snoopy\", \"dog\", 3);";
 	execute(dml);
-	dml = "INSERT INTO animals VALUES FROM (\"Tweety\", \"bird\", 1);";
+	dml = "INSERT INTO animals VALUES FROM (\"The Tweety Bird\", \"bird\", 1);";
 	execute(dml);
 	dml = "INSERT INTO animals VALUES FROM (\"Joe\", \"bird\", 2);";
 	execute(dml);

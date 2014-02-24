@@ -771,6 +771,10 @@ int Parser::insertInto( stringstream& command ) {
 		char close;
 		command.get( close );
 
+		if( targetRelation.hasTuple( tuple ) ){
+			return INVALID;
+		}
+
 		database.addTupleToRelation( tuple, database.accessRelationPointer( relationName ) );
 	}
 	// If there is no opening parenthesis then it must be dealing with a relation

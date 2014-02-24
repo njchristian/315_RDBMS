@@ -69,6 +69,7 @@ public:
 	vector<Entry*> getRow( int index ){ return table.at( index ); }
 
 	bool hasTuple( vector<Entry*> tuple );
+	bool hasTuple( vector<Entry> tuple );
 
 	bool hasAttribute( string s );
 

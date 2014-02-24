@@ -72,6 +72,7 @@ public:
 	int findRelationinDatabase( );
 
 	int findTuple( );
+	bool hasTuple( vector<Entry*> tuple );
 
 	vector<vector<string>> getResultMatrix();
 
