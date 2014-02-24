@@ -59,6 +59,8 @@ class SportsLeague {
 
 	void printMenu( );
 
+	int readInt( );
+
 	string readString( );
 
 	void removeGame( );
