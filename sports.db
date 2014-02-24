@@ -1,0 +1,3 @@
+CREATE TABLE sports(name VARCHAR(20),sportID INTEGER,season VARCHAR(20)) PRIMARY KEY (sportID);
+INSERT INTO sports VALUES FROM ("Football",1,"Fall");
+INSERT INTO sports VALUES FROM ("soccer",2,"spring");

@@ -1,0 +1,2 @@
+CREATE TABLE games(location VARCHAR(20),date VARCHAR(20),time VARCHAR(20),sportID INTEGER,gameID INTEGER) PRIMARY KEY (gameID);
+INSERT INTO games VALUES FROM ("KyleField","1/12/2014","2:00",1,1);

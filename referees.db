@@ -1,0 +1,2 @@
+CREATE TABLE referees(firstname VARCHAR(20),lastname VARCHAR(20),netID INTEGER,sportID INTEGER) PRIMARY KEY (netID);
+INSERT INTO referees VALUES FROM ("Bob","NoLast",1234213,1);
