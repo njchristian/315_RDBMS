@@ -57,6 +57,8 @@ class SportsLeague {
 
 	void listPlayersOnTeam( );
 
+	void listPlayersWithTeamName( );
+
 	void printMenu( );
 
 	int readInt( );

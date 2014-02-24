@@ -779,6 +779,25 @@ void SportsLeague::listPlayersOnTeam( ) {
 }
 
 
+void SportsLeague::listPlayersWithTeamName( ) {
+
+	string parserCommand = "DROP TABLE playersTeamNames;";
+	if ( database->execute( parserCommand ) < 0 ) {
+		cout << "invalid parser command\n";
+	}
+
+	parserCommand = "playersTeamNames <- players JOIN teams;";
+	if ( database->execute( parserCommand ) < 0 ) {
+		cout << "invalid parser command\n";
+	}
+
+	parserCommand = "SHOW playersTeamNames;";
+	if ( database->execute( parserCommand ) < 0 ) {
+		cout << "invalid parser command\n";
+	}
+}
+
+
 // Function to print the main menu
 void SportsLeague::printMenu( ) {
 	cout << "\nMain Menu:\n";
@@ -1256,7 +1275,8 @@ void SportsLeague::showMenu( ) {
 		cout << "Enter '9' to list the players on a team.\n";
 		cout << "Enter '10' to show the winning teams relation.\n";
 		cout << "Enter '11' to show the losing teams.\n";
-		cout << "Enter '12' to go back to main menu.\n";
+		cout << "Enter '12' to display the list of players with their team names.\n";
+		cout << "Enter '13' to go back to main menu.\n";
 		inputPrompt( );
 
 		cin >> userChoice;
@@ -1306,6 +1326,10 @@ void SportsLeague::showMenu( ) {
 			backToMenu = true;
 			break;
 		case 12:
+			listPlayersWithTeamName( );
+			backToMenu = true;
+			break;
+		case 13:
 			backToMenu = true;
 			break;
 		default:
