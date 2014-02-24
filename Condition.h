@@ -5,6 +5,31 @@
 #include "Connector.h"
 #include "Operation.h"
 
+
+/*************************
+Condition.h
+
+The basis of a condition is:
+(Operand1) (Operator) (Operand2) (Connector)
+
+Then once we evaluate the condition it becomes
+a boolean literal (true/false).
+
+The problem with storing these operands is that
+they themselves are either attribute names or
+literals, and we need to distinguish them and store
+the correct value respectively. Thus an operand
+has the following values
+
+isVar - is it a variable
+varIndex - we calculate the index of the variable
+once in order to save time
+varName - the name of the variable (if it is one)
+operand - if it is a literal, simply store it as an operand
+
+The only other value here is the priority, which
+is further explained in ConditionList.h
+*************************/
 class Condition{
 
 	bool isLiteral;
