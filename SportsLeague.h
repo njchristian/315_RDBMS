@@ -7,6 +7,8 @@ class SportsLeague {
 
 	DBCell* database;
 
+	bool firstTime;
+
 public:
 
 	// Constructor
@@ -39,13 +41,19 @@ public:
 
 	void exit( );
 
+	void firstTimeMess( );
+
 	void getAllReferees( );
 
 	void getNonReferees( );
 
-	void getNonWinningTeams( );
+	void getLosingTeams( );
 
 	void gamesWhenTeamCouldPlay( );
+
+	void inputPrompt( );
+
+	void instructions( );
 
 	void listNamesOfSports( );
 
