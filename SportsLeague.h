@@ -27,6 +27,8 @@ public:
 
 	void addTeam( );
 
+	void addWinningTeam( );
+
 	void changeGameLocation( );
 
 	void changeGameTime( );
@@ -45,7 +47,11 @@ public:
 
 	void getNonReferees( );
 
+	void getLosingTeams( );
+
 	void gamesWhenTeamCouldPlay( );
+
+	void inputPrompt( );
 
 	void instructions( );
 
@@ -69,6 +75,8 @@ public:
 
 	void removeTeam( );	
 
+	void removeWinningTeam( );
+
 	bool retry( );
 
 	void run( );	
@@ -84,5 +92,7 @@ public:
 	void showSports( );
 
 	void showTeams( );
+
+	void showWinningTeams( );
 
 };
