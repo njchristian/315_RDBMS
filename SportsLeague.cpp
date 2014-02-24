@@ -303,6 +303,9 @@ void SportsLeague::addPlayer( ) {
 			}
 		}
 
+		parserCommand += to_string( isRef ) + ");";
+
+		cout << "ParserCommand: " << parserCommand << endl; //for debug
 		if ( database->execute( parserCommand ) == 1 ) {
 			cout << "Player successfully added to the database.\n\n";
 			return;
