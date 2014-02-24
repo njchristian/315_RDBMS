@@ -814,6 +814,7 @@ void SportsLeague::exit( ) {
 	database->execute( "WRITE referees;" );
 	database->execute( "WRITE sports;" );
 	database->execute( "WRITE teams;" );
+	database->execute( "WRITE winningTeams;" );
 
 	// close file
 	database->execute( "CLOSE games;" );
@@ -821,6 +822,7 @@ void SportsLeague::exit( ) {
 	database->execute( "CLOSE referees;" );
 	database->execute( "CLOSE sports;" );
 	database->execute( "CLOSE teams;" );
+	database->execute( "CLOSE winningTeams;" );
 	
 	// exit
 	database->execute( "EXIT;" );
