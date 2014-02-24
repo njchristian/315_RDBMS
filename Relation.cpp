@@ -114,6 +114,32 @@ bool Relation::hasTuple( vector<Entry*> tuple )  {
 	return false;
 }
 
+// Check to see if a relation has the specified tuple in it already.
+bool Relation::hasTuple( vector<Entry> tuple )  {
+
+	for ( int i = 0; i < table.size( ); ++i ) {
+		
+		bool currentTuple = true;
+
+		/****************
+		This checks through all the KEYS to see if the 
+		tuples are the same.
+		****************/
+		for(int j = 0; j <keys.size(); j++){
+			if( * table.at(i).at(keys.at(j) ) != tuple.at(keys.at(j))){
+				currentTuple = false;
+			}
+		}
+
+		if(currentTuple){
+			return true;
+		}
+
+	}
+
+	return false;
+}
+
 bool Relation::hasAttribute(string s){
 
 	for(int i = 0; i < attributes.size(); ++i){
@@ -216,13 +242,38 @@ bool operator==(Relation& relationA, Relation& relationB){
 // Output operator
 ostream& operator<<(ostream& os, Relation& a){
 
-	int WIDTH = 15;
+	int INTSIZE = 15;
+	vector<Attribute> att = a.getAttributes();
+
+	int max = 0;
+
+	for(int i = 0; i < att.size(); ++i){
+		if(att.at(i).hasSize){
+
+			if(att.at(i).vcSize > max){
+				max = att.at(i).vcSize;
+
+				if( max > 17 ){
+					max = 17;
+					break;
+				}
+				
+			}
+
+		}else{
+			
+			if( INTSIZE > max ){
+				max = INTSIZE;
+			}
+
+		}
+	}
 
 	os<<"\n\nRelation Name: "<<a.getName()<<"\n\n";
 
 	for(int i = 0; i < a.attributeSize(); ++i){
 
-		os<<setw(WIDTH)<<a.getAttributeNameAt(i)<<": ";
+		os<<setw(max)<<a.getAttributeNameAt(i)<<": ";
 
 	}
 
@@ -230,9 +281,11 @@ ostream& operator<<(ostream& os, Relation& a){
 
 	for(int i = 0; i < a.getNumTuples(); i++){
 
-		stringstream ss;
+		
 		string tempS;
 		for(int j = 0; j < a.attributeSize(); j++){
+
+			stringstream ss;
 
 			Entry* t = a.getEntry(i, j);
 			if(t->isInt()){
@@ -241,8 +294,8 @@ ostream& operator<<(ostream& os, Relation& a){
 				ss<<t->getEntryVC();
 			}
 
-			ss>>tempS;
-			os<<setw(WIDTH)<<tempS<<' ';
+			tempS = ss.str();
+			os<<setw(max)<<tempS<<' ';
 
 			ss.clear();
 		}

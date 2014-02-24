@@ -255,7 +255,6 @@ int Database::findCorrespondingRow( vector<Entry*> rowA,
 	return 0;
 }
 
-
 //
 int Database::findTuple( ) {
 
@@ -280,8 +279,6 @@ Relation* Database::insertIntoFromRelation( Relation* relationA, Relation* relat
 		if( !relationA ->hasTuple( newRow ) ){
 			relationA->addRow( newRow );
 		}
-
-		
 
 	}
 
