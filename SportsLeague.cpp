@@ -264,7 +264,7 @@ void SportsLeague::addPlayer( ) {
 		}
 
 		
-		parserCommand += "\"" + to_string( (long long) netID ) + "\", ";
+		parserCommand += to_string( (long long) netID ) + ", ";
 		cout << "Please enter the Team ID of the player.\n";
 		int teamID;
 		validInput = false;
@@ -301,7 +301,7 @@ void SportsLeague::addPlayer( ) {
 			}
 		}
 		
-		parserCommand += "\"" + to_string( (long long) sportID ) + "\");";
+		parserCommand += to_string( (long long) sportID ) + ", ";
 		cout << "Please enter '1' if the player is a referee also, or '0' if the player is not.\n";
 		int isRef;
 		validInput = false;

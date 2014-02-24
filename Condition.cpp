@@ -1,5 +1,7 @@
 #include "Condition.h"
 
+//CONSTRUCTORS
+//We have four ways of creating a condition, with the different permutations of variables and literals
 
 //two literals (Rarely Used..)
 Condition::Condition( Entry o1, Operation givenOp, Entry o2, Connector givenC, int p ) : priority( p ) {
@@ -66,7 +68,11 @@ Condition::Condition( string var1, Operation givenOp, string var2, Connector giv
 
 
 
-//sets the condition to a literal value;
+//sets the condition to a literal value
+
+//eval is a simple evaluation of the literals stored in the condition.
+//It is setting up the operands which requires most of the work. This
+//is all done in ConditionList
 void Condition::eval( ) {
 
 	//if integer argument do one switch

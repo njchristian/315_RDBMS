@@ -8,6 +8,21 @@
 
 using namespace std;
 
+/********************************
+*See Condition.h first*
+
+A complex condition in our program is stored 
+as a list of individual condition objects. As we
+have already seen, a condition contains a connector
+and a priority. The connector is the AND or OR that
+connects conditions, and the priority is a numerical
+representation of the order of operations. By this,
+we primarily mean nested parentheses. Our method of
+evaluation is simply to evaluate all conditions at
+the highest priority first (surrounded by the most
+parentheses) and then work our way down. 
+********************************/
+
 class ConditionList {
 
 	// Data members
