@@ -30,7 +30,7 @@ SportsLeague::SportsLeague( ) {
 	}
 	else {
 		database->execute( "OPEN players;" );
-		database->execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
+		database->execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, teamID INTEGER, sportID INTEGER, isRef INTEGER ) PRIMARY KEY (netID);" );
 	}
 
 	if( ifstream( "referees.db" ) ) {
@@ -214,7 +214,9 @@ void SportsLeague::addPlayer( ) {
 	// Firstname
 	// Lastname
 	// Net-ID
+	// Team ID
 	// Sport ID
+	// Is ref
 	bool validInput = false;
 
 	for ( ;; ) {
@@ -247,7 +249,25 @@ void SportsLeague::addPlayer( ) {
 			}
 		}
 
-		parserCommand += "\"" + to_string( netID ) + "\", ";
+		parserCommand += to_string( netID ) + ", ";
+
+		cout << "Please enter the Team ID of the player.\n";
+		int teamID;
+		validInput = false;
+		while ( !validInput ) {
+			cin >> teamID;
+			if ( !cin.fail( ) ) {
+				validInput = true;
+			}
+			else {
+				cin.ignore( 1024, '\n' );
+				cin.clear( );
+				cin.sync( );
+				cout << "Invalid input, please try again.\n";
+			}
+		}
+
+		parserCommand += to_string( teamID ) + ", ";
 
 		cout << "Please enter the sport ID that the player plays.\n";
 		int sportID; 
@@ -265,7 +285,23 @@ void SportsLeague::addPlayer( ) {
 			}
 		}
 		
-		parserCommand += "\"" + to_string( sportID ) + "\");";
+		parserCommand += to_string( sportID ) + ", ";
+
+		cout << "Please enter '1' if the player is a referee also, or '0' if the player is not.\n";
+		int isRef;
+		validInput = false;
+		while ( !validInput ) {
+			cin >> isRef;
+			if ( !cin.fail( ) && ( isRef == 0 || isRef == 1 ) ) {
+				validInput = true;
+			}
+			else {
+				cin.ignore( 1024, '\n' );
+				cin.clear( );
+				cin.sync( );
+				cout << "Invalid input, please try again. The input must be '1' or '0'.\n";
+			}
+		}
 
 		if ( database->execute( parserCommand ) == 1 ) {
 			cout << "Player successfully added to the database.\n\n";
