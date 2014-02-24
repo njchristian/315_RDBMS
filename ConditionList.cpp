@@ -1,6 +1,8 @@
 #include "ConditionList.h"
 
 // Constructor
+//The constructor does the majority of the work here. It sets up the Conditions
+//with the variable indexes and prepares the list for quick evaluations. 
 ConditionList::ConditionList( vector<Condition> givenConditions, Relation* r ) :
 	targetRelation( r ) {
 
@@ -41,6 +43,8 @@ bool ConditionList::evalOnTuple( int tupleIndex ) {
 	list<Condition> localConditions = conditions;
 	int localHP = highestPriority;
 
+	//Turn the condition list into a list of true/false literals by substituting
+	//in the attribute values for the tuple, and then evaluating the conditions
 	for ( list<Condition>::iterator i = localConditions.begin( ); 
 		i != localConditions.end( ); i++ ) {
 
@@ -58,10 +62,13 @@ bool ConditionList::evalOnTuple( int tupleIndex ) {
 
 	}
 
+	//An often used special case. If we just had one condition go ahead and return
 	if( localConditions.size() == 1 ){
 		return localConditions.front().getLiteral();
 	}
 
+	//After consolidating two literals, we reduce their priority by one. Thus
+	//we loop until all priorities are 0 which means we have only one value left
 	while ( localHP > 0 ) {
 
 
@@ -70,9 +77,6 @@ bool ConditionList::evalOnTuple( int tupleIndex ) {
 
 			if ( i->getPriority( ) == highestPriority ){
 
-				/*************
-				I don't know how else to get i.next..
-				*************/
 				i++;
 				list<Condition>::iterator next = i;
 				i--;
@@ -104,6 +108,7 @@ bool ConditionList::evalOnTuple( int tupleIndex ) {
 
 	}
 
+	//and now the one value left is the literal respresentation of the complex condition
 	return localConditions.front( ).getLiteral( );
 
 }
@@ -118,6 +123,8 @@ int ConditionList::findVarNameIndex( Relation* r, string target ) {
 		}
 
 	}
+
+	cout<<"ERROR in findVarNameIndex in ConditionList.cpp";
 	// error value so compiler won't complain
 	return -1;
 }
