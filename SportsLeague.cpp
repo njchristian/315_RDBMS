@@ -101,6 +101,8 @@ void SportsLeague::addGame( ) {
 		cout << "Please enter the game's associated sport ID.\n";
 		int sportID = readInt( );
 
+
+		//All to_string commands are casted to long long to ensure they comile with VS2010
 		parserCommand += to_string( ( long long ) sportID ) + ", ";
 
 		// get the game ID
@@ -386,7 +388,7 @@ void SportsLeague::addWinningTeam( ) {
 		cout << "Please enter the ID of the winning team.\n";
 		int teamID = readInt( );
 
-		parserCommand += to_string( teamID ) + ");";
+		parserCommand += to_string( (long long) teamID ) + ");";
 
 		if ( database->execute( parserCommand ) == 1 ) {
 			cout << "Winning team successfully added to the database.\n\n";
@@ -1088,7 +1090,7 @@ void SportsLeague::removeWinningTeam( ) {
 		cout << "Please enter the ID of the winning team you would like to remove.\n";
 		int teamID = readInt( );
 
-		parserCommand += to_string( teamID );
+		parserCommand += to_string( (long long) teamID );
 		parserCommand += ");";
 
 		// pass the command to the parser; if it fails ask the user if they want
@@ -1110,7 +1112,8 @@ void SportsLeague::removeWinningTeam( ) {
 // If a parser command fails then this is called which asks
 // the user if they want to retry by using new input or not.
 bool SportsLeague::retry( ) {
-	cout << "The input you entered was invalid.\n";
+	cout << "The input you entered was invalid. This could be due to a number of factors\nincluding duplicate id numbers. Please"
+		<<" refer to the instructions\nfor more information\n\n";
 	cout << "Would you like to try again?\n";
 
 	string answer;
