@@ -98,6 +98,19 @@ int Parser::writeFile( string relationName ) {
 	return SUCCESS;
 }
 
+void Parser::deleteView( string relationName){
+	
+	vector<Relation>::iterator it;
+	
+	for( it = views.begin(); it!= views.end(); ++it ) {
+		if( it->getName() == relationName ) {
+			views.erase( it );
+			break;
+		}
+	}
+}
+
+
 
 int Parser::openFile( string relationName ) {
 
@@ -995,8 +1008,10 @@ int Parser::parseCommand( stringstream& command ){
 		if( readAlphaNumWordStartsAlpha( command, relationName ) < 0 ){
 			return INVALID;
 		}
-		//need to delete from views not database
-		database.removeRelationFromDatabase(relationName);
+
+		deleteView( relationName );
+		//need to delete from view not database
+
 
 		return SUCCESS;
 	}

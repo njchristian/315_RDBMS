@@ -613,6 +613,7 @@ void SportsLeague::exitWithoutSave( ) {
 	database->execute( "CLOSE referees;" );
 	database->execute( "CLOSE sports;" );
 	database->execute( "CLOSE teams;" );
+	database->execute( "CLOSE winningTeams;" );
 	
 	// exit
 	database->execute( "EXIT;" );
@@ -762,7 +763,7 @@ void SportsLeague::listPlayersOnTeam( ) {
 		parserCommand = "playersOnTeam <- select (teamID == ";
 
 		parserCommand += to_string( ( long long ) teamID );
-		parserCommand += ") teams;";
+		parserCommand += ") players;";
 
 		if ( database->execute( parserCommand ) == 1 ) {
 			parserCommand = "SHOW playersOnTeam;";
@@ -1243,6 +1244,7 @@ void SportsLeague::save( ) {
 	database->execute( "WRITE referees;" );
 	database->execute( "WRITE sports;" );
 	database->execute( "WRITE teams;" );
+	database->execute( "WRITE winningTeams;" );
 
 	cout << "Files saved!\n";
 
