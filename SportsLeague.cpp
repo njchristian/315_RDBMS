@@ -14,9 +14,7 @@ SportsLeague::SportsLeague( ) {
 	}
 	else {
 		database->execute( "OPEN games;" );
-		string games = "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), ";
-		games += "time VARCHAR( 10 ), sportID INTEGER, gameID INTEGER ) PRIMARY KEY( gameID );";
-		database->execute( games );
+		database->execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sportID INTEGER, gameID INTEGER ) PRIMARY KEY (gameID);" );
 
 	}
 
@@ -26,9 +24,7 @@ SportsLeague::SportsLeague( ) {
 	}
 	else {
 		database->execute( "OPEN players;" );
-		string players = "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), ";
-		players += "netID INTEGER, teamID INTEGER, sportID INTEGER, isRef INTEGER ) PRIMARY KEY (netID);";
-		database->execute( players );
+		database->execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, teamID INTEGER, sportID INTEGER, isRef INTEGER ) PRIMARY KEY (netID);" );
 
 	}
 
@@ -38,9 +34,7 @@ SportsLeague::SportsLeague( ) {
 	}
 	else {
 		database->execute( "OPEN referees;" );
-		string refs = "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), ";
-		refs += "netID INTEGER, sportID INTEGER ) PRIMARY KEY( netID );";
-		database->execute( refs );
+		database->execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
 
 	}
 
@@ -54,9 +48,7 @@ SportsLeague::SportsLeague( ) {
 	}
 	else {
 		database->execute( "OPEN sports;" );
-		string sport = "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, ";
-		sport += "season VARCHAR( 10 )) PRIMARY KEY( sportID );";
-		database->execute( sport );
+		database->execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
 
 		firstTime = true;
 	}
@@ -67,9 +59,7 @@ SportsLeague::SportsLeague( ) {
 	}
 	else {
 		database->execute( "OPEN teams;" );
-		string team = "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) ";
-		team += "PRIMARY KEY( teamID );";
-		database->execute( team );
+		database->execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);" );
 
 	}
 
@@ -79,9 +69,7 @@ SportsLeague::SportsLeague( ) {
 	}
 	else {
 		database->execute( "OPEN winningTeams;" );
-		string winningTeam = "CREATE TABLE winningTeams (name VARCHAR(20), ";
-		winningTeam += "teamID INTEGER ) PRIMARY KEY( teamID );";
-		database->execute( winningTeam );
+		database->execute( "CREATE TABLE winningTeams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);" );
 
 	}
 }
@@ -345,6 +333,8 @@ void SportsLeague::addSport( ) {
 		string season = readString( );
 
 		parserCommand += "" + season + ");";
+
+		cout << parserCommand << endl;
 
 		if ( database->execute( parserCommand ) == 1 ) {
 			cout << "Sport successfully added to the database.\n\n";
