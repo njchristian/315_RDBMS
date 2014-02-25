@@ -145,7 +145,7 @@ void SportsLeague::addMenu( ) {
 	bool backToMenu = false;
 
 	while ( backToMenu == false ) {
-		cout << "Add Menu:\n";
+		cout << "\nAdd Menu:\n";
 		cout << "Enter '1' to add to the game relation.\n";
 		cout << "Enter '2' to add to the player relation.\n";
 		cout << "Enter '3' to add to the referee relation.\n";
@@ -929,7 +929,7 @@ void SportsLeague::removeMenu( ) {
 	int userChoice;
 	bool backToMenu = false;
 	while ( backToMenu == false ) {
-		cout << "Remove Menu:\n";
+		cout << "\nRemove Menu:\n";
 		cout << "Enter '1' to remove from the game relation.\n";
 		cout << "Enter '2' to remove from the player relation.\n";
 		cout << "Enter '3' to remove from referee relation.\n";
@@ -1288,7 +1288,7 @@ void SportsLeague::showMenu( ) {
 	int userChoice;
 	bool backToMenu = false;
 	while ( backToMenu == false ) {
-		cout << "Show Menu:\n";
+		cout << "\nShow Menu:\n";
 		cout << "Enter '1' to show the game relation.\n";
 		cout << "Enter '2' to show the player relation.\n";
 		cout << "Enter '3' to show the referee relation.\n";
