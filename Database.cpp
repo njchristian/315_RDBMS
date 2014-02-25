@@ -495,6 +495,8 @@ Relation Database::unionTwoRelations( Relation* relationA, Relation* relationB )
 
 
 // Perform the natural join operation on two relations
+
+//This is by far the most complex of the relational algebra functions
 Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 {
 
@@ -502,15 +504,22 @@ Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 
 	vector<Attribute> attA = relationA->getAttributes( );
 	vector<Attribute> attB = relationB->getAttributes( );
+	
 	vector<Attribute> jointAttributes;
+	//The index in the relations of the joint attributes
 	vector<int> indexInA;
 	vector<int> indexInB;
+	
+	//the index of the attributes that only each relation has
 	vector<int> indexAOnly;
 	vector<int> indexBOnly;
 
 	//find the different of attributes of relationB
 	//then project that new relation
 
+	
+	//Find all common attributes. Since A is the base loop we can find the
+	//indexAOnly values too
 	for ( unsigned i = 0; i < attA.size( ); i++ ){
 
 		bool found = false;
@@ -532,7 +541,7 @@ Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 	}
 
 
-
+	//Now find the indexBOnly values
 	for ( unsigned i = 0; i < attB.size( ); i++ ){
 
 		bool found = false;
@@ -549,6 +558,8 @@ Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 
 	}
 
+	
+	//Set up the result attributes
 	vector<Attribute> rA;
 	for ( unsigned i = 0; i < indexAOnly.size( ); i++ ){
 		rA.push_back( attA.at( indexAOnly.at( i ) ) );
@@ -564,10 +575,13 @@ Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 
 	myResult.setAttributes( rA );
 
+	//Compose this as three relations side by side
 	vector<Relation> aOnly;
 	vector<Relation> bOnly;
 	vector<Relation> shared;
 
+	
+	//Push values into aOnly using our indexes
 	for ( unsigned i = 0; i < indexAOnly.size( ); i++ ){
 		vector<string> att;
 		att.push_back( relationA->getAttributeAt( indexAOnly.at( i ) ).name );
@@ -576,6 +590,7 @@ Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 
 	}
 
+	//Push values into joint using our indexes
 	for ( unsigned i = 0; i < indexInA.size( ); i++ ){
 		vector<string> att;
 		att.push_back( relationA->getAttributeAt( indexInA.at( i ) ).name );
@@ -584,6 +599,7 @@ Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 
 	}
 
+	//Push values into bOnly using our indexes
 	for ( unsigned i = 0; i < indexBOnly.size( ); i++ ){
 		vector<string> att;
 		att.push_back( relationB->getAttributeAt( indexBOnly.at( i ) ).name );
@@ -594,6 +610,9 @@ Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 
 	int numRows = relationA->getNumTuples( );
 
+	
+	//This for loop consturcts a tuple based on the three preceding relatinos. We add
+	//a helper function which maps a row in a to a row in b since they may be in a different order
 	for ( int i = 0; i < numRows; i++ ){
 
 		vector<Entry*> newRow;
