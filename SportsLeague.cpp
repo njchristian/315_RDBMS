@@ -806,7 +806,7 @@ void SportsLeague::printMenu( ) {
 	cout << "Enter '2' to remove from a relation.\n";
 	cout << "Enter '3' to show information from a relation.\n";
 	cout << "Enter '4' to display the games associated with a specific sport.\n";
-	cout << "Enter '5' to display the sports that a player plays.\n";
+	cout << "Enter '5' to display the sport that a player plays.\n";
 	cout << "Enter '6' to display games in which a team could participate.\n";
 	cout << "Enter '7' to change the location of a game.\n";
 	cout << "Enter '8' to change the time of a game.\n";
