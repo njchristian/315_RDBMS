@@ -14,9 +14,7 @@ SportsLeague::SportsLeague( ) {
 	}
 	else {
 		database->execute( "OPEN games;" );
-		string games = "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), ";
-		games += "time VARCHAR( 10 ), sportID INTEGER, gameID INTEGER ) PRIMARY KEY( gameID );";
-		database->execute( games );
+		database->execute( "CREATE TABLE games (location VARCHAR(20), date VARCHAR(10), time VARCHAR(10), sportID INTEGER, gameID INTEGER ) PRIMARY KEY (gameID);" );
 	}
 
 	if ( ifstream( "players.db" ) ) {
@@ -25,9 +23,7 @@ SportsLeague::SportsLeague( ) {
 	}
 	else {
 		database->execute( "OPEN players;" );
-		string players = "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), ";
-		players += "netID INTEGER, teamID INTEGER, sportID INTEGER, isRef INTEGER ) PRIMARY KEY (netID);";
-		database->execute( players );
+		database->execute( "CREATE TABLE players (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, teamID INTEGER, sportID INTEGER, isRef INTEGER ) PRIMARY KEY (netID);" );
 	}
 
 	if ( ifstream( "referees.db" ) ) {
@@ -36,9 +32,7 @@ SportsLeague::SportsLeague( ) {
 	}
 	else {
 		database->execute( "OPEN referees;" );
-		string refs = "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), ";
-		refs += "netID INTEGER, sportID INTEGER ) PRIMARY KEY( netID );";
-		database->execute( refs );
+		database->execute( "CREATE TABLE referees (firstname VARCHAR(20), lastname VARCHAR(20), netID INTEGER, sportID INTEGER ) PRIMARY KEY (netID);" );
 	}
 
 
@@ -51,9 +45,7 @@ SportsLeague::SportsLeague( ) {
 	}
 	else {
 		database->execute( "OPEN sports;" );
-		string sport = "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, ";
-		sport += "season VARCHAR( 10 )) PRIMARY KEY( sportID );";
-		database->execute( sport );
+		database->execute( "CREATE TABLE sports (name VARCHAR(20), sportID INTEGER, season VARCHAR(10)) PRIMARY KEY (sportID);" );
 		firstTime = true;
 	}
 
@@ -63,9 +55,7 @@ SportsLeague::SportsLeague( ) {
 	}
 	else {
 		database->execute( "OPEN teams;" );
-		string team = "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) ";
-		team += "PRIMARY KEY( teamID );";
-		database->execute( team );
+		database->execute( "CREATE TABLE teams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);" );
 	}
 
 	if ( ifstream( "winningTeams.db" ) ) {
@@ -74,9 +64,7 @@ SportsLeague::SportsLeague( ) {
 	}
 	else {
 		database->execute( "OPEN winningTeams;" );
-		string winningTeam = "CREATE TABLE winningTeams (name VARCHAR(20), ";
-		winningTeam += "teamID INTEGER ) PRIMARY KEY( teamID );";
-		database->execute( winningTeam );
+		database->execute( "CREATE TABLE winningTeams (name VARCHAR(20), teamID INTEGER ) PRIMARY KEY (teamID);" );
 	}
 }
 
@@ -113,8 +101,6 @@ void SportsLeague::addGame( ) {
 		cout << "Please enter the game's associated sport ID.\n";
 		int sportID = readInt( );
 
-
-		//All to_string commands are casted to long long to ensure they comile with VS2010
 		parserCommand += to_string( ( long long ) sportID ) + ", ";
 
 		// get the game ID
@@ -145,7 +131,7 @@ void SportsLeague::addMenu( ) {
 	bool backToMenu = false;
 
 	while ( backToMenu == false ) {
-		cout << "\nAdd Menu:\n";
+		cout << "Add Menu:\n";
 		cout << "Enter '1' to add to the game relation.\n";
 		cout << "Enter '2' to add to the player relation.\n";
 		cout << "Enter '3' to add to the referee relation.\n";
@@ -235,14 +221,11 @@ void SportsLeague::addPlayer( ) {
 		parserCommand += to_string( ( long long ) sportID ) + ", ";
 
 		// get isRef
-		cout << "Please enter '1' if the player is a referee also, "
-			 << "or '0' if the player is not.\n";
+		cout << "Please enter '1' if the player is a referee also, or '0' if the player is not.\n";
 		int isRef;
 		while ( !validInput ) {
 			inputPrompt( );
 			cin >> isRef;
-
-			// check for the input to be a 0 or 1
 			if ( !cin.fail( ) && ( isRef == 0 || isRef == 1 ) ) {
 				validInput = true;
 			}
@@ -403,7 +386,7 @@ void SportsLeague::addWinningTeam( ) {
 		cout << "Please enter the ID of the winning team.\n";
 		int teamID = readInt( );
 
-		parserCommand += to_string( (long long) teamID ) + ");";
+		parserCommand += to_string( teamID ) + ");";
 
 		if ( database->execute( parserCommand ) == 1 ) {
 			cout << "Winning team successfully added to the database.\n\n";
@@ -434,8 +417,7 @@ void SportsLeague::changeGameLocation( ) {
 		cout << "Please enter the game's new location\n";
 		string newLocation = readString( );
 
-		parserCommand += newLocation + " WHERE (gameID == ";
-		parserCommand += to_string( ( long long ) gameID ) + ");";
+		parserCommand += newLocation + " WHERE (gameID == " + to_string( ( long long ) gameID ) + ");";
 
 		if ( database->execute( parserCommand ) == 1 ) {
 			cout << "Changed game's location successfully.\n\n";
@@ -466,8 +448,7 @@ void SportsLeague::changeGameTime( ) {
 		cout << "Please enter the game's new time\n";
 		string newTime = readString( );
 
-		parserCommand += newTime + " WHERE (gameID == ";
-		parserCommand += to_string( ( long long ) gameID ) + ");";
+		parserCommand += newTime + " WHERE (gameID == " + to_string( ( long long ) gameID ) + ");";
 
 		if ( database->execute( parserCommand ) == 1 ) {
 			cout << "Changed game's time successfully.\n\n";
@@ -498,8 +479,7 @@ void SportsLeague::changeSportSeason( ) {
 		cout << "Please enter the sport's new season\n";
 		string newSeason = readString( );
 
-		parserCommand += newSeason + " WHERE (sportID == ";
-		parserCommand += to_string( ( long long ) sportID ) + ");";
+		parserCommand += newSeason + " WHERE (sportID == " + to_string( ( long long ) sportID ) + ");";
 
 		if ( database->execute( parserCommand ) == 1 ) {
 			cout << "Changed sport's season successfully.\n\n";
@@ -551,17 +531,16 @@ void SportsLeague::displaySportsPlayed( ) {
 
 	for ( ;; ) {
 
-		//if playerPlays exists delete it
-		string parserCommand = "DROP TABLE playerPlays;"; 
+		string parserCommand = "DROP TABLE playerPlays;"; //if playerPlays exists delete it
 		database->execute( parserCommand );
 
-		parserCommand = "playerPlays <- project (sportID) (select";
+		parserCommand = "playerPlays <- select";
 
 		// get the player's netID
 		cout << "Please enter the player's netID \n";
 		int netID = readInt( );
 
-		parserCommand += " (netID == " + to_string( ( long long ) netID ) + ") players);";
+		parserCommand += " (netID == " + to_string( ( long long ) netID ) + ") players;";
 
 		if ( database->execute( parserCommand ) == 1 ) {
 			parserCommand = "SHOW playerPlays;";
@@ -658,8 +637,7 @@ void SportsLeague::getAllReferees( ) {
 	database->execute( parserCommand );
 
 	// get the player refs in a relation that is union compatible with refs
-	parserCommand = "playerRefs <- project (firstname, lastname, netID, ";
-	parserCommand += "sportID) ( select( isRef == 1 ) players ); ";
+	parserCommand = "playerRefs <- project (firstname, lastname, netID, sportID) (select (isRef == 1) players);";
 	database->execute( parserCommand );
 
 	// get the union of player refs and non player refs
@@ -929,7 +907,7 @@ void SportsLeague::removeMenu( ) {
 	int userChoice;
 	bool backToMenu = false;
 	while ( backToMenu == false ) {
-		cout << "\nRemove Menu:\n";
+		cout << "Remove Menu:\n";
 		cout << "Enter '1' to remove from the game relation.\n";
 		cout << "Enter '2' to remove from the player relation.\n";
 		cout << "Enter '3' to remove from referee relation.\n";
@@ -1110,7 +1088,7 @@ void SportsLeague::removeWinningTeam( ) {
 		cout << "Please enter the ID of the winning team you would like to remove.\n";
 		int teamID = readInt( );
 
-		parserCommand += to_string( (long long) teamID );
+		parserCommand += to_string( teamID );
 		parserCommand += ");";
 
 		// pass the command to the parser; if it fails ask the user if they want
@@ -1132,8 +1110,7 @@ void SportsLeague::removeWinningTeam( ) {
 // If a parser command fails then this is called which asks
 // the user if they want to retry by using new input or not.
 bool SportsLeague::retry( ) {
-	cout << "The input you entered was invalid. This could be due to a number of factors\nincluding duplicate id numbers. Please"
-		<<" refer to the instructions\nfor more information\n\n";
+	cout << "The input you entered was invalid.\n";
 	cout << "Would you like to try again?\n";
 
 	string answer;
@@ -1288,7 +1265,7 @@ void SportsLeague::showMenu( ) {
 	int userChoice;
 	bool backToMenu = false;
 	while ( backToMenu == false ) {
-		cout << "\nShow Menu:\n";
+		cout << "Show Menu:\n";
 		cout << "Enter '1' to show the game relation.\n";
 		cout << "Enter '2' to show the player relation.\n";
 		cout << "Enter '3' to show the referee relation.\n";
