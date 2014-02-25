@@ -555,13 +555,13 @@ void SportsLeague::displaySportsPlayed( ) {
 		string parserCommand = "DROP TABLE playerPlays;"; 
 		database->execute( parserCommand );
 
-		parserCommand = "playerPlays <- select";
+		parserCommand = "playerPlays <- project (sportID) (select";
 
 		// get the player's netID
 		cout << "Please enter the player's netID \n";
 		int netID = readInt( );
 
-		parserCommand += " (netID == " + to_string( ( long long ) netID ) + ") players;";
+		parserCommand += " (netID == " + to_string( ( long long ) netID ) + ") players);";
 
 		if ( database->execute( parserCommand ) == 1 ) {
 			parserCommand = "SHOW playerPlays;";
