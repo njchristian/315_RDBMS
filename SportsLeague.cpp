@@ -636,7 +636,7 @@ void SportsLeague::getAllReferees( ) {
 	database->execute( parserCommand );
 
 	// get the player refs in a relation that is union compatible with refs
-	parserCommand = "playerRefs <- project (firstName, lastName, netID, sportID) (select (isRef == 1) players);";
+	parserCommand = "playerRefs <- project (firstname, lastname, netID, sportID) (select (isRef == 1) players);";
 	database->execute( parserCommand );
 
 	// get the union of player refs and non player refs

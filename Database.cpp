@@ -292,6 +292,7 @@ Relation Database::projection( vector<string> attributeNames,
 	result.clear( );
 
 	//get types of attributes
+	result.setKeys( targetRelation->getKeys() );
 
 	vector<int> attributeIndeces;
 
