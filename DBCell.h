@@ -8,7 +8,7 @@
 //THE DATABASE CELL IS THE GLUE BETWEEN THE PARSER AND THE DATABASE OBJECT
 //IT IS ALSO WHAT THE USER SEES
 
-class DBCell{
+class DBCell {
 
 	// Data Members
 	Parser* parser;
@@ -20,15 +20,15 @@ class DBCell{
 
 public:
 
-	DBCell(vector<vector<string>>& r) : result(r) {
-		parser = new Parser(database, result);
+	DBCell( vector<vector<string>>& r ) : result( r ) {
+		parser = new Parser( database, result );
 	}
 
 	// Public Functions
-	int execute(string dmlCommand){
-	
-		return parser -> parse(dmlCommand);
-	
+	int execute( string dmlCommand ) {
+
+		return parser->parse( dmlCommand );
+
 	}
 
 };

@@ -66,8 +66,6 @@ Condition::Condition( string var1, Operation givenOp, string var2, Connector giv
 
 }
 
-
-
 //sets the condition to a literal value
 
 //eval is a simple evaluation of the literals stored in the condition.
@@ -83,7 +81,7 @@ void Condition::eval( ) {
 		int a = operand1.getEntryI( );
 		int b = operand2.getEntryI( );
 
-		switch ( o ){
+		switch ( o ) {
 
 		case EQUALS:
 			//LIKEWISE FOR THE REST OF THE FUNCTION

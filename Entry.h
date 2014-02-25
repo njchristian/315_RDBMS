@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class Entry{
+class Entry {
 
 	// Data Members
 	Type t;
@@ -15,18 +15,18 @@ class Entry{
 	string vcEntry;
 	int vcLength;
 
-	void storeStr( string s ){
+	void storeStr( string s ) {
 
-		if( s.size() <= vcLength ){
+		if ( s.size( ) <= vcLength ) {
 			vcEntry = s;
 			return;
 		}
-		
+
 		string result = "";
 
-		for(int i = 0; i < vcLength; ++i){
+		for ( int i = 0; i < vcLength; ++i ) {
 
-			result.push_back(s.at(i));
+			result.push_back( s.at( i ) );
 
 		}
 
@@ -37,51 +37,51 @@ class Entry{
 public:
 
 	// Constructors
-	Entry(){}
+	Entry( ) {}
 
-	Entry(int givenInt) : intEntry(givenInt) {
+	Entry( int givenInt ) : intEntry( givenInt ) {
 		t = INTEGER;
 	}
 
-	Entry(string givenVC, int len) : vcLength(len) {
-		storeStr(givenVC);
+	Entry( string givenVC, int len ) : vcLength( len ) {
+		storeStr( givenVC );
 		t = VARCHAR;
 	}
 
-	void setInt( int i ){
+	void setInt( int i ) {
 		intEntry = i;
 		t = INTEGER;
 	}
 
-	void setVC( string str ){
-		storeStr(str);
+	void setVC( string str ) {
+		storeStr( str );
 		t = VARCHAR;
 	}
 
-	void setL( int length ){
+	void setL( int length ) {
 		vcLength = length;
 	}
 
 	// Public Functions
-	bool isInt(){
-		return t==INTEGER;
+	bool isInt( ) {
+		return t == INTEGER;
 	}
 
-	int getEntryI(){
+	int getEntryI( ) {
 		return intEntry;
 	}
 
-	Type getEntryType(){
+	Type getEntryType( ) {
 		return t;
 	}
 
-	string getEntryVC(){
+	string getEntryVC( ) {
 		return vcEntry;
 	}
 
-	int getVCLength(){
+	int getVCLength( ) {
 		return vcLength;
-	} 
+	}
 
 };
 

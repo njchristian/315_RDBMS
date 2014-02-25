@@ -8,7 +8,7 @@
 #include <vector>
 #include <iomanip>
 
-class Relation{
+class Relation {
 
 	// Data Members
 	string relationName;
@@ -25,7 +25,8 @@ public:
 	Relation( ) {}
 
 	Relation( string givenName, vector<Attribute> givenAttributes, vector<int> givenKeys )
-		: relationName( givenName ), attributes( givenAttributes ), keys( givenKeys ){}
+		: relationName( givenName ), attributes( givenAttributes ), keys( givenKeys ) {
+	}
 
 	Relation( vector<Attribute> givenAttributes ) : attributes( givenAttributes ) {}
 
@@ -34,67 +35,67 @@ public:
 	// Public Functions	
 	void addRow( vector<Entry*> rowToAdd );
 
-	int attributeSize( ){ return attributes.size( ); }
+	int attributeSize( ) { return attributes.size( ); }
 
-	void changeAttributeName( int index, string newName ){
+	void changeAttributeName( int index, string newName ) {
 		attributes.at( index ).name = newName;
 	}
 
 	void clear( );
 
-	void deleteRow(int i);
+	void deleteRow( int i );
 
-	vector<Attribute> getAttributes( ){ return attributes; }
+	vector<Attribute> getAttributes( ) { return attributes; }
 
 	vector<Attribute>* getAttributesPointer( ) { return &attributes; }
 
-	Attribute getAttributeAt(int i) { return attributes.at(i); }
+	Attribute getAttributeAt( int i ) { return attributes.at( i ); }
 
 	vector<string> Relation::getAttributeNames( );
-	
-	string getAttributeNameAt( int i ){ return attributes.at( i ).name; }
 
-	vector<vector<Entry*>> getAllEntries() { return table; }	
+	string getAttributeNameAt( int i ) { return attributes.at( i ).name; }
+
+	vector<vector<Entry*>> getAllEntries( ) { return table; }
 
 	bool removeTuple( vector<Entry> tuple );
-	
-	Entry* getEntry( int i, int j ){ return table.at( i ).at( j ); }
+
+	Entry* getEntry( int i, int j ) { return table.at( i ).at( j ); }
 
 	vector<int> getKeys( ) { return keys; }
 
-	string getName(){ return relationName; }
-	
-	int getNumTuples(){ return table.size(); }
+	string getName( ) { return relationName; }
 
-	vector<Entry*> getRow( int index ){ return table.at( index ); }
+	int getNumTuples( ) { return table.size( ); }
+
+	vector<Entry*> getRow( int index ) { return table.at( index ); }
 
 	bool hasTuple( vector<Entry*> tuple );
 	bool hasTuple( vector<Entry> tuple );
 
 	bool hasAttribute( string s );
 
-	bool isEmpty();
+	bool isEmpty( );
 
 	void setAttributes( vector<Attribute> newAttributes );
 
 	void setAttributeNames( vector<string> newNames );
 
-	void setKeys( vector<int> k ){ keys = k; }
+	void setKeys( vector<int> k ) { keys = k; }
 
-	void setName( string n ){ relationName = n; }
+	void setName( string n ) { relationName = n; }
 
-	void setTable( vector<vector<Entry*> > newTable ) { table = newTable;  }
+	void setTable( vector<vector<Entry*> > newTable ) { table = newTable; }
 
-	void updateRow(vector<Entry*> row, int i){ table.at(i) = row; }
+	void updateRow( vector<Entry*> row, int i ) { table.at( i ) = row; }
 
-	Relation& operator=(Relation& b);
+	Relation& operator=( Relation& b );
 
 
-	
+
 };
 
 bool operator==( Relation& relationA, Relation& relationB );
 
-ostream& operator<<(ostream& os, Relation& a);
+ostream& operator<<( ostream& os, Relation& a );
 
 #endif

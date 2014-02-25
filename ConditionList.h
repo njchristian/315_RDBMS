@@ -29,15 +29,15 @@ class ConditionList {
 	list<Condition> conditions;
 
 	Relation* targetRelation;
-	
+
 	int highestPriority;
-	
-	int findVarNameIndex(Relation* r, string target);
-	
+
+	int findVarNameIndex( Relation* r, string target );
+
 public:
 
 	// Constructor
-	ConditionList(vector<Condition> givenConditions, Relation* r);
+	ConditionList( vector<Condition> givenConditions, Relation* r );
 
 	// Functions
 	bool evalOnTuple( int index );

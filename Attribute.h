@@ -6,7 +6,7 @@
 
 using namespace std;
 
-struct Attribute{
+struct Attribute {
 
 	// Data members
 	Type t;
@@ -15,14 +15,14 @@ struct Attribute{
 	bool hasSize;
 
 	// Constructor
-	Attribute(string n, Type ty) : t(ty), name(n) { }
-	Attribute(string n, Type ty, int size) : t(ty), name(n), vcSize(size), hasSize(true) { }
+	Attribute( string n, Type ty ) : t( ty ), name( n ) {}
+	Attribute( string n, Type ty, int size ) : t( ty ), name( n ), vcSize( size ), hasSize( true ) {}
 
-	Attribute() : t(INTEGER), name("default") { }
+	Attribute( ) : t( INTEGER ), name( "default" ) {}
 
 	// Functions
-	static bool compareAttribute(Attribute a,Attribute b) {
-		return ( a.name < b.name ); 
+	static bool compareAttribute( Attribute a, Attribute b ) {
+		return ( a.name < b.name );
 	}
 
 };

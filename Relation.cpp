@@ -1,16 +1,16 @@
 #include "Relation.h"
 
 // Copy constructor
-Relation::Relation( Relation* r ){
+Relation::Relation( Relation* r ) {
 
 	relationName = r->getName( );
 	attributes = r->getAttributes( );
 
-	for ( int i = 0; i < r->getNumTuples( ); i++ ){
+	for ( int i = 0; i < r->getNumTuples( ); i++ ) {
 
 		table.push_back( vector<Entry*>( ) );
 
-		for ( int j = 0; j < r->attributeSize( ); j++ ){
+		for ( int j = 0; j < r->attributeSize( ); j++ ) {
 
 			table.at( i ).push_back( new Entry( *r->getEntry( i, j ) ) );
 
@@ -27,23 +27,27 @@ void Relation::addRow( vector<Entry*> rowToAdd ) {
 	table.push_back( rowToAdd );
 }
 
-void Relation::deleteRow(int index){
+
+// delete a row of the relation table
+void Relation::deleteRow( int index ) {
 
 	int count = 0;
 
-	for(vector<vector<Entry*>>::iterator i = table.begin(); i != table.end(); i++){
+	for ( vector<vector<Entry*>>::iterator i = table.begin( ); i != table.end( ); i++ ) {
 
-		if(count == index){
-			table.erase(i);
+		if ( count == index ) {
+			table.erase( i );
 			return;
 		}
 
 		++count;
 	}
 
-	cout<<"Error in delete row";
+	cout << "Error in delete row";
 
 }
+
+
 // Empties all of the attributes, tuples and keys from the relation.
 void Relation::clear( ){
 
@@ -54,13 +58,137 @@ void Relation::clear( ){
 }
 
 
+string evalStrLength( string target, int TBL_ENTRY ) {
+
+	if ( target.size( )<TBL_ENTRY ) {
+		return target;
+	}
+
+	string result = "";
+
+	//The minus 5 reduces as follows - 3 for the "..." and the extra 2 for appropiate spacing
+	for ( int i = 0; i < TBL_ENTRY - 5; i++ ) {
+		result = result + target.at( i );
+	}
+
+	result = result + "...";
+
+	return result;
+
+}
+
+
+// Get the names of the relation's attributes.
+vector<string> Relation::getAttributeNames( ) {
+
+	vector<string> result;
+
+	for ( int i = 0; i < attributes.size( ); i++ ) {
+		result.push_back( attributes.at( i ).name );
+	}
+
+	return result;
+}
+
+
+// Check to see if a relation has the specified tuple in it already.
+bool Relation::hasTuple( vector<Entry*> tuple ) {
+
+	for ( int i = 0; i < table.size( ); ++i ) {
+
+		bool currentTuple = true;
+
+		/****************
+		This checks through all the KEYS to see if the
+		tuples are the same.
+		****************/
+		for ( int j = 0; j < keys.size( ); j++ ) {
+			if ( *table.at( i ).at( keys.at( j ) ) != *tuple.at( keys.at( j ) ) ) {
+				currentTuple = false;
+			}
+		}
+
+		if ( currentTuple ) {
+			return true;
+		}
+
+	}
+
+	return false;
+}
+
+
+// Check to see if a relation has the specified tuple in it already.
+bool Relation::hasTuple( vector<Entry> tuple ) {
+
+	for ( int i = 0; i < table.size( ); ++i ) {
+
+		bool currentTuple = true;
+
+		/****************
+		This checks through all the KEYS to see if the
+		tuples are the same.
+		****************/
+		for ( int j = 0; j < keys.size( ); j++ ) {
+			if ( *table.at( i ).at( keys.at( j ) ) != tuple.at( keys.at( j ) ) ) {
+				currentTuple = false;
+			}
+		}
+
+		if ( currentTuple ) {
+			return true;
+		}
+
+	}
+
+	return false;
+}
+
+
+// check to see if the relation has the attribute 
+// the string is the attribute name
+bool Relation::hasAttribute( string s ) {
+
+	for ( int i = 0; i < attributes.size( ); ++i ) {
+
+		if ( attributes.at( i ).name == s ) {
+			return true;
+		}
+
+	}
+
+	return false;
+}
+
+
+// check to see if the relation is empty
+bool Relation::isEmpty( ) {
+
+	if ( table.size( ) > 0 ) {
+		return false;
+	}
+
+	if ( attributes.size( ) != 0 ) {
+		return false;
+	}
+
+	if ( relationName != "" ) {
+		return false;
+	}
+
+	return true;
+
+}
+
+
+// remove the tuple from the relation
 bool Relation::removeTuple( vector<Entry> tuple ) {
 	bool isSame;
 	unsigned i = 0;
 	for ( auto it = table.begin( ); it != table.end( ); ++it ) {
 		isSame = false;
 		for ( unsigned j = 0; j < it->size( ); ++j ) {
-			if ( tuple[ j ] == *table[i][j] ) {
+			if ( tuple[ j ] == *table[ i ][ j ] ) {
 				isSame = true;
 			}
 		}
@@ -75,105 +203,9 @@ bool Relation::removeTuple( vector<Entry> tuple ) {
 }
 
 
-// Get the names of the relation's attributes.
-vector<string> Relation::getAttributeNames(){
-
-	vector<string> result;
-
-	for (int i = 0; i < attributes.size(); i++){
-		result.push_back(attributes.at(i).name);
-	}
-
-	return result;
-}
-
-
-// Check to see if a relation has the specified tuple in it already.
-bool Relation::hasTuple( vector<Entry*> tuple )  {
-
-	for ( int i = 0; i < table.size( ); ++i ) {
-		
-		bool currentTuple = true;
-
-		/****************
-		This checks through all the KEYS to see if the 
-		tuples are the same.
-		****************/
-		for(int j = 0; j <keys.size(); j++){
-			if( * table.at(i).at(keys.at(j) ) != *tuple.at(keys.at(j))){
-				currentTuple = false;
-			}
-		}
-
-		if(currentTuple){
-			return true;
-		}
-
-	}
-
-	return false;
-}
-
-// Check to see if a relation has the specified tuple in it already.
-bool Relation::hasTuple( vector<Entry> tuple )  {
-
-	for ( int i = 0; i < table.size( ); ++i ) {
-		
-		bool currentTuple = true;
-
-		/****************
-		This checks through all the KEYS to see if the 
-		tuples are the same.
-		****************/
-		for(int j = 0; j <keys.size(); j++){
-			if( * table.at(i).at(keys.at(j) ) != tuple.at(keys.at(j))){
-				currentTuple = false;
-			}
-		}
-
-		if(currentTuple){
-			return true;
-		}
-
-	}
-
-	return false;
-}
-
-bool Relation::hasAttribute(string s){
-
-	for(int i = 0; i < attributes.size(); ++i){
-
-		if( attributes.at(i).name == s ){
-			return true;
-		}
-
-	}
-
-	return false;
-}
-
-bool Relation::isEmpty(){
-
-	if( table.size() > 0 ){
-		return false;
-	}
-
-	if( attributes.size() != 0 ){
-		return false;
-	}
-
-	if( relationName != "" ){
-		return false;
-	}
-
-	return true;
-
-}
-
 // Set the relation's attributes to the newly given ones.
-void Relation::setAttributes( vector<Attribute> newAttributes ) { 
-	attributes = newAttributes; 
+void Relation::setAttributes( vector<Attribute> newAttributes ) {
+	attributes = newAttributes;
 }
 
 
@@ -184,7 +216,7 @@ void Relation::setAttributeNames( vector<string> newNames ) {
 		cout << "Error, tried to setAttributeNames but did not"
 			 << " have the right number of names!\n";
 	}
-	
+
 	// Set the new names.
 	for ( unsigned i = 0; i < attributes.size( ); ++i ) {
 		attributes[ i ].name = newNames[ i ];
@@ -193,20 +225,20 @@ void Relation::setAttributeNames( vector<string> newNames ) {
 
 
 // Overloaded assignment operator.
-Relation& Relation::operator=(Relation& b){
+Relation& Relation::operator=( Relation& b ) {
 
-	relationName = b.getName();
-	attributes = b.getAttributes();
-	table = b.getAllEntries();
+	relationName = b.getName( );
+	attributes = b.getAttributes( );
+	table = b.getAllEntries( );
 
-	keys = b.getKeys();
+	keys = b.getKeys( );
 
 	return *this;
 
 }
 
 
-bool operator==(Relation& relationA, Relation& relationB){
+bool operator==( Relation& relationA, Relation& relationB ) {
 
 	// Check to see if name is the same
 	if ( relationA.getName( ) != relationB.getName( ) ) {
@@ -238,26 +270,6 @@ bool operator==(Relation& relationA, Relation& relationB){
 	return true;
 }
 
-
-
-string evalStrLength(string target, int TBL_ENTRY){
-
-	if(target.size()<TBL_ENTRY){
-		return target;
-	}
-
-	string result = "";
-
-	//The minus 5 reduces as follows - 3 for the "..." and the extra 2 for appropiate spacing
-	for(int i = 0; i < TBL_ENTRY - 5; i++){
-		result = result + target.at(i);
-	}
-
-	result = result + "...";
-
-	return result;
-
-}
 
 // Output operator
 ostream& operator<<(ostream& os, Relation& a){

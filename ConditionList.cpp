@@ -4,14 +4,14 @@
 //The constructor does the majority of the work here. It sets up the Conditions
 //with the variable indexes and prepares the list for quick evaluations. 
 ConditionList::ConditionList( vector<Condition> givenConditions, Relation* r ) :
-	targetRelation( r ) {
+targetRelation( r ) {
 
 	highestPriority = 0;
 
 	//initialize linked list - also set highest priority
-	for ( unsigned int i = 0; i < givenConditions.size( ); i++ ){
+	for ( unsigned int i = 0; i < givenConditions.size( ); i++ ) {
 
-		if ( givenConditions.at( i ).getPriority( ) > highestPriority ){
+		if ( givenConditions.at( i ).getPriority( ) > highestPriority ) {
 			highestPriority = givenConditions.at( i ).getPriority( );
 		}
 
@@ -20,16 +20,16 @@ ConditionList::ConditionList( vector<Condition> givenConditions, Relation* r ) :
 	}
 
 	//replace any variable names with the proper index
-	for ( list<Condition>::iterator i = conditions.begin( ); 
-		i != conditions.end( ); i++ ){
+	for ( list<Condition>::iterator i = conditions.begin( );
+		i != conditions.end( ); i++ ) {
 
-		if ( i->firstIsVar( ) ){
-			i->setVar1Index( findVarNameIndex( targetRelation, 
+		if ( i->firstIsVar( ) ) {
+			i->setVar1Index( findVarNameIndex( targetRelation,
 				i->firstVarName( ) ) );
 		}
 
-		if ( i->secondIsVar( ) ){
-			i->setVar2Index( findVarNameIndex( targetRelation, 
+		if ( i->secondIsVar( ) ) {
+			i->setVar2Index( findVarNameIndex( targetRelation,
 				i->secondVarName( ) ) );
 		}
 	}
@@ -45,16 +45,16 @@ bool ConditionList::evalOnTuple( int tupleIndex ) {
 
 	//Turn the condition list into a list of true/false literals by substituting
 	//in the attribute values for the tuple, and then evaluating the conditions
-	for ( list<Condition>::iterator i = localConditions.begin( ); 
+	for ( list<Condition>::iterator i = localConditions.begin( );
 		i != localConditions.end( ); i++ ) {
 
 		if ( i->firstIsVar( ) ) {
-			i->setOperand1Entry( *targetRelation->getEntry( tupleIndex, 
+			i->setOperand1Entry( *targetRelation->getEntry( tupleIndex,
 				i->getVar1Index( ) ) );
 		}
 
 		if ( i->secondIsVar( ) ) {
-			i->setOperand2Entry( *targetRelation->getEntry( tupleIndex, 
+			i->setOperand2Entry( *targetRelation->getEntry( tupleIndex,
 				i->getVar2Index( ) ) );
 		}
 
@@ -63,8 +63,8 @@ bool ConditionList::evalOnTuple( int tupleIndex ) {
 	}
 
 	//An often used special case. If we just had one condition go ahead and return
-	if( localConditions.size() == 1 ){
-		return localConditions.front().getLiteral();
+	if ( localConditions.size( ) == 1 ) {
+		return localConditions.front( ).getLiteral( );
 	}
 
 	//After consolidating two literals, we reduce their priority by one. Thus
@@ -72,10 +72,10 @@ bool ConditionList::evalOnTuple( int tupleIndex ) {
 	while ( localHP > 0 ) {
 
 
-		for ( list<Condition>::iterator i = localConditions.begin( ); 
-			i != localConditions.end( ); i++ ){
+		for ( list<Condition>::iterator i = localConditions.begin( );
+			i != localConditions.end( ); i++ ) {
 
-			if ( i->getPriority( ) == highestPriority ){
+			if ( i->getPriority( ) == highestPriority ) {
 
 				i++;
 				list<Condition>::iterator next = i;
@@ -83,7 +83,7 @@ bool ConditionList::evalOnTuple( int tupleIndex ) {
 
 
 				//update current value
-				switch ( i->getConnector( ) ){
+				switch ( i->getConnector( ) ) {
 				case ( AND ) :
 					i->setLiteral( i->getLiteral( ) && next->getLiteral( ) );
 					i->decPriority( );
@@ -117,14 +117,14 @@ bool ConditionList::evalOnTuple( int tupleIndex ) {
 // Returns the index of the given variable name in the specified relation.
 int ConditionList::findVarNameIndex( Relation* r, string target ) {
 
-	for ( int i = 0; i < r->attributeSize( ); i++ ){
-		if ( target == r->getAttributeNameAt( i ) ){
+	for ( int i = 0; i < r->attributeSize( ); i++ ) {
+		if ( target == r->getAttributeNameAt( i ) ) {
 			return i;
 		}
 
 	}
 
-	cout<<"ERROR in findVarNameIndex in ConditionList.cpp";
+	cout << "ERROR in findVarNameIndex in ConditionList.cpp";
 	// error value so compiler won't complain
 	return -1;
 }

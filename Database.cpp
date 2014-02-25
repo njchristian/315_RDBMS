@@ -150,6 +150,8 @@ Relation Database::crossProduct( Relation* relationA, Relation* relationB ) {
 	return result;
 }
 
+
+// Delete from a relation based on the specified conditions
 Relation Database::deleteFromRelation( Relation* targetRelation, vector<Condition> conditions ){
 
 	ConditionList cl = ConditionList( conditions, targetRelation );
@@ -174,6 +176,7 @@ Relation Database::deleteFromRelation( Relation* targetRelation, vector<Conditio
 
 	return targetRelation;
 }
+
 
 // Find the difference of two relations given their names.
 // Produces the set of tuples from the first that are not in the second
@@ -212,15 +215,8 @@ Relation Database::differenceTwoRelation( Relation* relationA, Relation* relatio
 	return result;
 }
 
-// 	
-int Database::findAttribute( ) {
 
-	int index = 0;
-
-	return index;
-}
-
-
+// Find the corresponding row in the given relation
 int Database::findCorrespondingRow( vector<Entry*> rowA, 
 	vector<int> indexA, Relation* b, vector<int> indexB ){
 
@@ -232,10 +228,7 @@ int Database::findCorrespondingRow( vector<Entry*> rowA,
 
 		for ( unsigned j = 0; j < indexB.size( ); j++ ){
 
-
-
 			for ( unsigned k = 0; k < indexA.size( ); k++ ){
-
 
 				if ( *( rowA.at( indexA.at( k ) ) ) != *( 
 					tableB.at( i ).at( indexB.at( j ) ) ) ){
@@ -255,24 +248,17 @@ int Database::findCorrespondingRow( vector<Entry*> rowA,
 	return 0;
 }
 
-//
-int Database::findTuple( ) {
 
-	int index = 0;
-
-	return index;
-
-}
-
-Relation* Database::insertIntoFromRelation( Relation* relationA, Relation* relationB ){
+// Inserts values from one relation into the other
+Relation* Database::insertIntoFromRelation( Relation* relationA, Relation* relationB ) {
 
 	//Relation* targetRelation = findRelation( relationA );
 
-	if ( relationA->attributeSize( ) != relationB->attributeSize( ) ){
+	if ( relationA->attributeSize( ) != relationB->attributeSize( ) ) {
 		return relationA;
 	}
 
-	for ( int i = 0; i < relationB->getNumTuples( ); i++ ){
+	for ( int i = 0; i < relationB->getNumTuples( ); i++ ) {
 
 		vector<Entry*> newRow = relationB->getRow( i );
 
@@ -284,6 +270,7 @@ Relation* Database::insertIntoFromRelation( Relation* relationA, Relation* relat
 
 	return relationA;
 }
+
 
 //subset of attributes in a relation
 Relation Database::projection( vector<string> attributeNames,
@@ -335,11 +322,11 @@ Relation Database::projection( vector<string> attributeNames,
 		result.addRow( newRow );
 	}
 
-
-
 	return result;
 }
 
+
+// Check to see if a relation with the name given as the string exists
 bool Database::relationExists( string r ){
 
 	for(int i = 0; i < relations.size() ; ++i){
@@ -350,6 +337,8 @@ bool Database::relationExists( string r ){
 
 	return false;
 }
+
+
 
 vector<vector<string>> Database::getResultMatrix(){
 
@@ -381,6 +370,8 @@ vector<vector<string>> Database::getResultMatrix(){
 
 }
 
+
+// remove the specified relation from the database
 void Database::removeRelationFromDatabase( string relationName ) {
 	Relation* targetRelation = findRelation( relationName );
 
@@ -395,7 +386,7 @@ void Database::removeRelationFromDatabase( string relationName ) {
 }
 
 
-//
+// Delete the specified tuple from the relation.
 void Database::removeTupleFromRelation( vector<Entry> tuple, string relationName ) {
 	Relation* targetRelation = findRelation( relationName );
 
@@ -422,8 +413,6 @@ Relation Database::renameAttributes( vector<string> newNames, Relation* targetRe
 
 }
 
-
-//COMPLETE
 
 // Return a relation of tuples that satisfy the conditions. The new relation 
 // is stored in the result data member.
@@ -490,12 +479,11 @@ Relation Database::unionTwoRelations( Relation* relationA, Relation* relationB )
 
 	// Set result to have relationA's tuples. This also sets up result's 
 	// attributes and keys.
-	// --------------------------------------------------------------Do we need to set a name for the new relation??
+
 	result = *relationA;
 
 	// Add the tuples from relationB to the new relation that do not already
 	// exist in it.
-	// --------------------------------------------------------------Does it need to remove duplicates??
 	for ( int i = 0; i < relationB->getNumTuples( ); i++ ){
 		if ( !result.hasTuple( relationB->getRow( i ) ) ) {
 			result.addRow( relationB->getRow( i ) );
@@ -505,6 +493,8 @@ Relation Database::unionTwoRelations( Relation* relationA, Relation* relationB )
 	return result;
 }
 
+
+// Perform the natural join operation on two relations
 Relation Database::naturalJoin( Relation* relationA, Relation* relationB )
 {
 
