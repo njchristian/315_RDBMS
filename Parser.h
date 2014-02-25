@@ -29,7 +29,7 @@ class Parser{
 		views.push_back( r );
 	}
 
-	void deleteView( string relationName);
+	int deleteView( string relationName);
 	
 
 	//Is c alpha numeric or '_'?

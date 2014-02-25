@@ -98,16 +98,18 @@ int Parser::writeFile( string relationName ) {
 	return SUCCESS;
 }
 
-void Parser::deleteView( string relationName){
+int Parser::deleteView( string relationName){
 	
 	vector<Relation>::iterator it;
 	
 	for( it = views.begin(); it!= views.end(); ++it ) {
 		if( it->getName() == relationName ) {
 			views.erase( it );
-			break;
+			return SUCCESS;
 		}
 	}
+	
+	return INVALID;
 }
 
 
